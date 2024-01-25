@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StudyJunction.Infrastructure.Data;
+using StudyJunction.Infrastructure.Data.Models;
 
 namespace StudyJunction.Web
 {
@@ -12,12 +12,12 @@ namespace StudyJunction.Web
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            builder.Services.AddDbContext<SJDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddDefaultIdentity<UserDb>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<SJDbContext>();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();

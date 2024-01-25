@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyJunction.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using StudyJunction.Infrastructure.Data;
 namespace StudyJunction.Web.Data.Migrations
 {
     [DbContext(typeof(SJDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240125200551_InitialDbStructure")]
+    partial class InitialDbStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,12 +238,6 @@ namespace StudyJunction.Web.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -274,16 +270,10 @@ namespace StudyJunction.Web.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
@@ -318,16 +308,10 @@ namespace StudyJunction.Web.Data.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -359,12 +343,6 @@ namespace StudyJunction.Web.Data.Migrations
                     b.Property<string>("CreatorId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("LectureId")
                         .HasColumnType("uniqueidentifier");
@@ -421,16 +399,10 @@ namespace StudyJunction.Web.Data.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
