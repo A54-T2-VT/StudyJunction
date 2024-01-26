@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using StudyJunction.Core.Services;
+using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Data;
 using StudyJunction.Infrastructure.Data.Models;
+using StudyJunction.Infrastructure.Repositories;
+using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Web
 {
@@ -15,6 +19,21 @@ namespace StudyJunction.Web
             builder.Services.AddDbContext<SJDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            //Repos
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<ILectureRepository, LectureRepository>();
+            builder.Services.AddScoped<INoteRepository, NoteRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+            //Services
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<ILectureService, LectureService>();
+            builder.Services.AddScoped<INoteService, NoteService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
 
             builder.Services.AddDefaultIdentity<UserDb>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<SJDbContext>();
