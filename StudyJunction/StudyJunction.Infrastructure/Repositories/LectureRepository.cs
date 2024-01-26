@@ -1,4 +1,5 @@
-﻿using StudyJunction.Infrastructure.Repositories.Contracts;
+﻿using StudyJunction.Infrastructure.Data.Models;
+using StudyJunction.Infrastructure.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,36 @@ using System.Threading.Tasks;
 
 namespace StudyJunction.Infrastructure.Repositories
 {
-	internal class LectureRepository : ILectureRepository
+	public class LectureRepository : ILectureRepository
 	{
+		public Task<LectureDb> Create(LectureDb newLecture)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<LectureDb> Delete(Guid id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<LectureDb> Get(Guid id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<LectureDb> Get(string title)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<ICollection<LectureDb>> GetAll()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<LectureDb> Update(Guid toUpdate, LectureDb newData)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
