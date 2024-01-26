@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using StudyJunction.Infrastructure.Data.Models;
+﻿using StudyJunction.Infrastructure.Data.Models;
 
 namespace StudyJunction.Infrastructure.Repositories.Contracts
 {
