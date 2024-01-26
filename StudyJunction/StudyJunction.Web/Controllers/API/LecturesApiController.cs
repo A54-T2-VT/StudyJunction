@@ -19,7 +19,7 @@ namespace StudyJunction.Web.Controllers.API
         }
 
         [HttpGet("{id}")]
-		public IActionResult Get(string id)
+		public IActionResult GetById(string id)
 		{
 			try
 			{
@@ -54,11 +54,11 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		public IActionResult CreateLecture([FromBody] AddLectureRequestDto newLecture)
+		public IActionResult CreateLecture([FromBody] AddLectureRequestDto newLecture, [FromHeader] string username)
 		{
 			try
 			{
-				var lecture = lectureService.Create(newLecture);
+				var lecture = lectureService.Create(newLecture, username);
 				return Ok(lecture);
 			}
 			catch (UnauthorizedUserException e)
@@ -72,11 +72,11 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("{id}")]
-		public IActionResult UpdateLecture(string id, [FromBody] LectureRequestDto newData)
+		public IActionResult UpdateLecture(string id, [FromBody] LectureRequestDto newData, [FromHeader] string username)
 		{
 			try
 			{
-				var updated = lectureService.Update(new Guid(id), newData);
+				var updated = lectureService.Update(new Guid(id), newData, username);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
@@ -90,11 +90,11 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpDelete("{id}")]
-		public IActionResult DeleteLecture(string id)
+		public IActionResult DeleteLecture(string id, [FromHeader] string username)
 		{
 			try
 			{
-				var deleted = lectureService.Delete(new Guid(id));
+				var deleted = lectureService.Delete(new Guid(id), username);
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)

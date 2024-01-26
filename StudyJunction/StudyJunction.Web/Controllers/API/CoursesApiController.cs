@@ -8,16 +8,16 @@ namespace StudyJunction.Web.Controllers.API
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class CourseApiController : ControllerBase
+	public class CoursesApiController : ControllerBase
 	{
 		private ICourseService courseService;
-        public CourseApiController(ICourseService _courseService)
+        public CoursesApiController(ICourseService _courseService)
         {
             courseService = _courseService;
         }
 
 		[HttpGet("{id}")]
-		public IActionResult Get(string id)
+		public IActionResult GetById(string id)
 		{
 			try
 			{
@@ -51,12 +51,12 @@ namespace StudyJunction.Web.Controllers.API
 			return Ok(courses);
 		}
 
-		[HttpPost("")]
-		public IActionResult CreateCourse([FromBody] AddCourseRequestDto newCourse)
+		[HttpPost("")] // TODO: possible change with session introduction
+		public IActionResult CreateCourse([FromBody] AddCourseRequestDto newCourse, [FromHeader] string username)
 		{
 			try
 			{
-				var course = courseService.Create(newCourse);
+				var course = courseService.Create(newCourse, username);
 				return Ok(course);
 			}
 			catch (UnauthorizedUserException e)
@@ -69,12 +69,12 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		[HttpPut("{id}")]
-		public IActionResult UpdateCourse(string id, [FromBody] CourseRequestDto newData)
+		[HttpPut("{id}")] // TODO: possible change with session introduction
+		public IActionResult UpdateCourse(string id, [FromBody] CourseRequestDto newData, [FromHeader] string username) 
 		{
 			try
 			{
-				var updated = courseService.Update(new Guid(id), newData);
+				var updated = courseService.Update(new Guid(id), newData, username);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
@@ -87,12 +87,12 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		[HttpDelete("{id}")]
-		public IActionResult DeleteCourse(string id)
+		[HttpDelete("{id}")] // TODO: possible change with session introduction
+		public IActionResult DeleteCourse(string id, [FromHeader] string username)
 		{
 			try
 			{
-				var deleted = courseService.Delete(new Guid(id));
+				var deleted = courseService.Delete(new Guid(id), username);
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)
@@ -104,6 +104,7 @@ namespace StudyJunction.Web.Controllers.API
 				return BadRequest(e.Message);
 			}
 		}
+
 		
 	}
 }

@@ -19,7 +19,7 @@ namespace StudyJunction.Web.Controllers.API
         }
 
         [HttpGet("{id}")]
-		public IActionResult Get(string id)
+		public IActionResult GetById(string id)
 		{
 			try
 			{
@@ -54,11 +54,11 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		public IActionResult CreateUser([FromBody] AddUserRequestDto newUser)
+		public IActionResult CreateUser([FromBody] AddUserRequestDto newUser, [FromHeader] string username)
 		{
 			try
 			{
-				var user = userService.Create(newUser);
+				var user = userService.Create(newUser, username);
 				return Ok(user);
 			}
 			catch (UnauthorizedUserException e)
@@ -72,11 +72,11 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("{id}")]
-		public IActionResult UpdateUser(string id, [FromBody] UserRequestDto newData)
+		public IActionResult UpdateUser(string id, [FromBody] UserRequestDto newData, [FromHeader] string username)
 		{
 			try
 			{
-				var updated = userService.Update(/*TODO: add id of userToUpdate*/newData);
+				var updated = userService.Update(/*TODO: add id of userToUpdate*/newData, username);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
@@ -90,11 +90,11 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpDelete("{id}")]
-		public IActionResult DeleteUser(string id)
+		public IActionResult DeleteUser(string id, [FromHeader] string username)
 		{
 			try
 			{
-				var deleted = userService.Delete(id);
+				var deleted = userService.Delete(id, username);
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)
