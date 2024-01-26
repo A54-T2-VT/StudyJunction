@@ -1,4 +1,5 @@
-﻿using StudyJunction.Core.ResponseDTOs;
+﻿using StudyJunction.Core.RequestDTOs;
+using StudyJunction.Core.ResponseDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace StudyJunction.Core.Services.Contracts
 		CourseResponseDTO GetCourse(Guid courseId);
 		CourseResponseDTO GetCourse(string title);
 		ICollection<CourseResponseDTO> GetAll();
-		CourseResponseDTO Create(/*add requestDTO*/);
-		CourseResponseDTO Update(/*same*/);
+		CourseResponseDTO Create(AddCourseRequestDto newCourse);
+		CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData);
 		CourseResponseDTO Delete(Guid toDelete);
 
 	}
