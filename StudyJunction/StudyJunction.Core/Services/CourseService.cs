@@ -10,5 +10,6 @@ namespace StudyJunction.Core.Services
 {
 	public class CourseService : ICourseService
 	{
+
 	}
 }

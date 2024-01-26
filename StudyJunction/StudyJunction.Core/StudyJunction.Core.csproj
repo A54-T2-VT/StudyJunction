@@ -10,4 +10,8 @@
     <ProjectReference Include="..\StudyJunction.Infrastructure\StudyJunction.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="RequestDTOs\" />
+  </ItemGroup>
+
 </Project>
