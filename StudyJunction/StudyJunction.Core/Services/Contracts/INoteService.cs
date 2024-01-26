@@ -7,8 +7,8 @@ namespace StudyJunction.Core.Services.Contracts
 	{
         IEnumerable<NoteResponseDTO> GetAll();
         NoteResponseDTO GetById(Guid id);
-        NoteResponseDTO Create(AddNoteRequestDto newNote);
-        NoteResponseDTO Update(Guid id, NoteRequestDto updatedNote);
-        NoteResponseDTO Delete(Guid id);
+        NoteResponseDTO Create(AddNoteRequestDto newNote, string username);
+        NoteResponseDTO Update(Guid id, NoteRequestDto updatedNote, string username);
+        NoteResponseDTO Delete(Guid id, string username);
     }
 }

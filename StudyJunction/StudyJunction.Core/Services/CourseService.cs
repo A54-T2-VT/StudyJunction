@@ -1,17 +1,20 @@
 ﻿using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Core.Services
 {
     public class CourseService : ICourseService
     {
-        public CourseResponseDTO Create(AddCourseRequestDto newCourse)
+        private readonly ICourseRepository courseRepository;
+        private readonly IUserRepository userRepository;
+        public CourseService(ICourseRepository _courseRepository, IUserRepository _userRepository)
         {
-            throw new NotImplementedException();
-        }
-
-        public CourseResponseDTO Delete(Guid toDelete)
+			courseRepository = _courseRepository;
+            userRepository = _userRepository;
+		}
+        public CourseResponseDTO Create(AddCourseRequestDto newCourse, string username)
         {
             throw new NotImplementedException();
         }
@@ -31,9 +34,13 @@ namespace StudyJunction.Core.Services
             throw new NotImplementedException();
         }
 
-        public CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData)
+        public CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData, string username)
         {
             throw new NotImplementedException();
         }
-    }
+		public CourseResponseDTO Delete(Guid toDelete, string username)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

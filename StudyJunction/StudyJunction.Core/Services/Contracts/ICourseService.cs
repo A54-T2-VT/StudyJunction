@@ -8,9 +8,9 @@ namespace StudyJunction.Core.Services.Contracts
 		CourseResponseDTO GetCourse(Guid courseId);
 		CourseResponseDTO GetCourse(string title);
 		ICollection<CourseResponseDTO> GetAll();
-		CourseResponseDTO Create(AddCourseRequestDto newCourse);
-		CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData);
-		CourseResponseDTO Delete(Guid toDelete);
+		CourseResponseDTO Create(AddCourseRequestDto newCourse, string username);
+		CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData, string username);
+		CourseResponseDTO Delete(Guid toDelete, string username);
 
 	}
 }

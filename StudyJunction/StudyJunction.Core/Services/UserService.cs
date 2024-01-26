@@ -1,17 +1,23 @@
 ﻿using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Core.Services
 {
     public class UserService : IUserService
     {
-        public UserResponseDTO Create(AddUserRequestDto newUser)
+		private readonly IUserRepository userRepository;
+		public UserService(IUserRepository _userRepository)
+		{
+			userRepository = _userRepository;
+		}
+		public UserResponseDTO Create(AddUserRequestDto newUser, string username)
         {
             throw new NotImplementedException();
         }
 
-        public UserResponseDTO Delete(string id)
+        public UserResponseDTO Delete(string id, string username)
         {
             throw new NotImplementedException();
         }
@@ -31,7 +37,7 @@ namespace StudyJunction.Core.Services
             throw new NotImplementedException();
         }
 
-        public UserResponseDTO Update(UserRequestDto updatedUser)
+        public UserResponseDTO Update(UserRequestDto updatedUser, string username)
         {
             throw new NotImplementedException();
         }

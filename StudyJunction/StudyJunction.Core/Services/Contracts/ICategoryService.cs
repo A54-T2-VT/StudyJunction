@@ -8,8 +8,11 @@ namespace StudyJunction.Core.Services.Contracts
 		IEnumerable<CategoryResponseDTO> GetAll();
 		CategoryResponseDTO GetById(Guid id);
 		CategoryResponseDTO GetByName(string name);
-		CategoryResponseDTO Create(AddCategoryRequestDto newCategory);
-		CategoryResponseDTO Update(Guid id, CategoryRequestDto updatedCategory);
-		CategoryResponseDTO Delete(Guid id);
+		CategoryResponseDTO Create(AddCategoryRequestDto newCategory, string username);
+		CategoryResponseDTO CreateSubCategory(AddCategoryRequestDto newCategory, string username);
+		CategoryResponseDTO Update(Guid id, CategoryRequestDto updatedCategory, string username);
+		CategoryResponseDTO Delete(Guid id, string username);
+
+		
 	}
 }

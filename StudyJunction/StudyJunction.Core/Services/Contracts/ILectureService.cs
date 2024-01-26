@@ -8,8 +8,8 @@ namespace StudyJunction.Core.Services.Contracts
 		LectureResponseDTO Get(Guid id);
 		LectureResponseDTO Get(string title);
 		ICollection<LectureResponseDTO> GetAll();
-		LectureResponseDTO Create(AddLectureRequestDto newLecture);
-		LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData);
-		LectureResponseDTO Delete(Guid id);
+		LectureResponseDTO Create(AddLectureRequestDto newLecture, string username);
+		LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData, string username);
+		LectureResponseDTO Delete(Guid id, string username);
 	}
 }
