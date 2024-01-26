@@ -2,7 +2,7 @@
 
 namespace StudyJunction.Core.RequestDTOs
 {
-    internal class NotesRequestDto
+    public class NotesRequestDto
     {
     }
 }
