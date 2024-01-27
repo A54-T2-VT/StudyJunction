@@ -1,38 +1,75 @@
-﻿using StudyJunction.Infrastructure.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using StudyJunction.Infrastructure.Constants;
+using StudyJunction.Infrastructure.Data;
+using StudyJunction.Infrastructure.Data.Models;
+using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
+using System.Xml.Linq;
 
 namespace StudyJunction.Infrastructure.Repositories
 {
 	public class LectureRepository : ILectureRepository
 	{
-		public Task<LectureDb> Create(LectureDb newLecture)
+		private readonly SJDbContext context;
+		public LectureRepository(SJDbContext _context)
 		{
-			throw new NotImplementedException();
+			context = _context;
 		}
 
-		public Task<LectureDb> Delete(Guid id)
+		public async Task<LectureDb> CreateAsync(LectureDb newLecture)
 		{
-			throw new NotImplementedException();
+			await context.Lectures.AddAsync(newLecture);
+			await context.SaveChangesAsync();
+			return newLecture;
 		}
 
-		public Task<LectureDb> Get(Guid id)
+		public async Task<LectureDb> DeleteAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			var toDelete = await context.Lectures.FirstOrDefaultAsync(c => c.Id == id)
+				?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.LECTURE_WITH_ID_NOT_FOUND_MESSAGE, id));
+
+			context.Lectures.Remove(toDelete);
+			context.SaveChanges();
+			return toDelete;
 		}
 
-		public Task<LectureDb> Get(string title)
+		public async Task<LectureDb> GetAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			var lec = await context.Lectures.FirstOrDefaultAsync(c => c.Id.Equals(id))
+			   ?? throw new EntityNotFoundException
+			   (String.Format(ExceptionMessages.LECTURE_WITH_ID_NOT_FOUND_MESSAGE, id));
+
+			return lec;
 		}
 
-		public Task<ICollection<LectureDb>> GetAll()
+		public async Task<LectureDb> GetAsync(string title)
 		{
-			throw new NotImplementedException();
+			var lec = await context.Lectures.FirstOrDefaultAsync(lec => lec.Title.Equals(title))
+				?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.LECTURE_WITH_TITLE_NOT_FOUND_MESSAGE, title));
+
+			return lec;
 		}
 
-		public Task<LectureDb> Update(Guid toUpdate, LectureDb newData)
+		public async Task<ICollection<LectureDb>> GetAllAsync()
 		{
-			throw new NotImplementedException();
+			var lectures = await context.Lectures.ToListAsync();
+
+			return lectures;
+		}
+
+		public async Task<LectureDb> UpdateAsync(Guid toUpdate, LectureDb newData)
+		{
+			var lectureToUpdate = await context.Lectures.FirstOrDefaultAsync(lec => lec.Id.Equals(toUpdate))
+				?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.LECTURE_WITH_ID_NOT_FOUND_MESSAGE, toUpdate));
+
+			lectureToUpdate.Title = newData.Title;
+			lectureToUpdate.Description = newData.Description;
+
+			await context.SaveChangesAsync();
+			return lectureToUpdate;
 		}
 	}
 }

@@ -1,38 +1,76 @@
-﻿using StudyJunction.Infrastructure.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using StudyJunction.Infrastructure.Constants;
+using StudyJunction.Infrastructure.Data;
+using StudyJunction.Infrastructure.Data.Models;
+using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StudyJunction.Infrastructure.Repositories
 {
 	public class UserRepository : IUserRepository
 	{
-		public Task<UserDb> Create(UserDb user)
+		private readonly SJDbContext context;
+		public UserRepository(SJDbContext _context)
 		{
-			throw new NotImplementedException();
+			context = _context;
 		}
 
-		public Task<UserDb> Delete(string id)
+		public async Task<UserDb> CreateAsync(UserDb user)
 		{
-			throw new NotImplementedException();
+			await context.Users.AddAsync(user);
+			await context.SaveChangesAsync();
+			return user;
 		}
 
-		public Task<ICollection<UserDb>> GetAll()
+		public async Task<UserDb> DeleteAsync(string id)
 		{
-			throw new NotImplementedException();
+			var toDelete = await context.Users.FirstOrDefaultAsync(c => c.Id == id)
+				?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.USER_WITH_ID_NOT_FOUND_MESSAGE, id));
+
+			context.Users.Remove(toDelete);
+			context.SaveChanges();
+			return toDelete;
 		}
 
-		public Task<UserDb> GetUser(string id)
+		public async Task<ICollection<UserDb>> GetAllAsync()
 		{
-			throw new NotImplementedException();
+			var users = await context.Users.ToListAsync();
+
+			return users;
 		}
 
-		public Task<UserDb> GetUserByUsername(string username)
+		public async Task<UserDb> GetByIdAsync(string id)
 		{
-			throw new NotImplementedException();
+			var user = await context.Users.FirstOrDefaultAsync(u => u.Id.Equals(id))
+			   ?? throw new EntityNotFoundException
+			   (String.Format(ExceptionMessages.USER_WITH_ID_NOT_FOUND_MESSAGE, id));
+
+			return user;
 		}
 
-		public Task<UserDb> Update(string toUpdateid, UserDb newData)
+		public async Task<UserDb> GetByUsernameAsync(string username)
 		{
-			throw new NotImplementedException();
+			var user = await context.Users.FirstOrDefaultAsync(u => u.UserName.Equals(username))
+				?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.USER_WITH_USERNAME_NOT_FOUND_MESSAGE, username));
+
+			return user;
+		}
+
+		public async Task<UserDb> UpdateAsync(string toUpdateid, UserDb newData)
+		{
+			var userToUpdate = await context.Users.FirstOrDefaultAsync(u => u.Id.Equals(toUpdateid))
+			?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.USER_WITH_ID_NOT_FOUND_MESSAGE, toUpdateid));
+
+			userToUpdate.UserName = newData.UserName;
+			userToUpdate.FirstName = newData.FirstName;
+			userToUpdate.LastName = newData.LastName;
+
+			await context.SaveChangesAsync();
+			return userToUpdate;
 		}
 	}
 }

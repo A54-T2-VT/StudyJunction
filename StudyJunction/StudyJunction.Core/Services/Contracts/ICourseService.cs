@@ -11,6 +11,7 @@ namespace StudyJunction.Core.Services.Contracts
 		CourseResponseDTO Create(AddCourseRequestDto newCourse, string username);
 		CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData, string username);
 		CourseResponseDTO Delete(Guid toDelete, string username);
+		CourseResponseDTO UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string username);
 
 	}
 }

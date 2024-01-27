@@ -1,38 +1,75 @@
-﻿using StudyJunction.Infrastructure.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using StudyJunction.Infrastructure.Constants;
+using StudyJunction.Infrastructure.Data;
+using StudyJunction.Infrastructure.Data.Models;
+using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Infrastructure.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
-        public async Task<CategoryDb> Create(CategoryDb newCategory)
+        private readonly SJDbContext context;
+        public CategoryRepository(SJDbContext _context)
         {
-            throw new NotImplementedException();
+            context = _context;
         }
 
-        public async Task<CategoryDb> Delete(Guid id)
+        public async Task<CategoryDb> CreateAsync(CategoryDb newCategory)
         {
-            throw new NotImplementedException();
+            await context.Categories.AddAsync(newCategory);
+            await context.SaveChangesAsync();
+            return newCategory;
         }
 
-        public async Task<IEnumerable<CategoryDb>> GetAll()
+        public async Task<CategoryDb> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var categoryToDelete = await context.Categories.FirstOrDefaultAsync(c => c.Id == id)
+                ?? throw new EntityNotFoundException
+                (String.Format(ExceptionMessages.CATEGORY_WITH_ID_NOT_FOUND_MESSAGE, id));
+
+            context.Categories.Remove(categoryToDelete);
+            context.SaveChanges();
+            return categoryToDelete;
         }
 
-        public async Task<CategoryDb> GetById(Guid id)
+        public async Task<IEnumerable<CategoryDb>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var categories = await context.Categories.ToListAsync();
+
+            return categories;
         }
 
-        public async Task<CategoryDb> GetByName(string name)
+        public async Task<CategoryDb> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var c = await context.Categories.FirstOrDefaultAsync(c => c.Id.Equals(id))
+                ?? throw new EntityNotFoundException
+                (String.Format(ExceptionMessages.CATEGORY_WITH_ID_NOT_FOUND_MESSAGE, id));
+
+            return c;
         }
 
-        public async Task<CategoryDb> Update(Guid id, CategoryDb updatedCategory)
+        public async Task<CategoryDb> GetByNameAsync(string name)
         {
-            throw new NotImplementedException();
-        }
+			var c = await context.Categories.FirstOrDefaultAsync(c => c.Name.Equals(name))
+				?? throw new EntityNotFoundException
+                (String.Format(ExceptionMessages.CATEGORY_WITH_NAME_NOT_FOUND_MESSAGE, name));
+            
+			return c;
+		}
+
+        public async Task<CategoryDb> UpdateAsync(Guid id, CategoryDb updatedCategory)
+        {
+            var toUpdate = await context.Categories.FirstOrDefaultAsync(c => c.Id.Equals(id))
+                ?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.CATEGORY_WITH_ID_NOT_FOUND_MESSAGE, id));
+
+            toUpdate.Name = updatedCategory.Name;
+            toUpdate.ParentCategory = updatedCategory.ParentCategory;
+            toUpdate.ParentCategoryId = updatedCategory.ParentCategoryId;
+
+            await context.SaveChangesAsync();
+            return toUpdate;
+		}
     }
 }

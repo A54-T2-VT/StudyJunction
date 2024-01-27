@@ -16,7 +16,7 @@ namespace StudyJunction.Infrastructure.Data
         {            
         }
 
-        public DbSet<UserDb> User { get; set; }
+        public DbSet<UserDb> Users { get; set; }
         public DbSet<CourseDb> Courses { get; set; }
         public DbSet<LectureDb> Lectures { get; set; }
         public DbSet<NoteDb> Notes { get; set; }

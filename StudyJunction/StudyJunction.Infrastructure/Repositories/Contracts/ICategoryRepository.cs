@@ -4,11 +4,11 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 {
 	public interface ICategoryRepository
 	{
-		Task<IEnumerable<CategoryDb>> GetAll();
-		Task<CategoryDb> GetById(Guid id);
-		Task<CategoryDb> GetByName(string name);
-		Task<CategoryDb> Create(CategoryDb newCategory);
-		Task<CategoryDb> Update(Guid id, CategoryDb updatedCategory);
-		Task<CategoryDb> Delete(Guid id);
+		Task<IEnumerable<CategoryDb>> GetAllAsync();
+		Task<CategoryDb> GetByIdAsync(Guid id);
+		Task<CategoryDb> GetByNameAsync(string name);
+		Task<CategoryDb> CreateAsync(CategoryDb newCategory);
+		Task<CategoryDb> UpdateAsync(Guid id, CategoryDb updatedCategory);
+		Task<CategoryDb> DeleteAsync(Guid id);
 	}
 }

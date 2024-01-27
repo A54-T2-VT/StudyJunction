@@ -1,33 +1,64 @@
-﻿using StudyJunction.Infrastructure.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using StudyJunction.Infrastructure.Constants;
+using StudyJunction.Infrastructure.Data;
+using StudyJunction.Infrastructure.Data.Models;
+using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Infrastructure.Repositories
 {
 	public class NoteRepository : INoteRepository
 	{
-		public Task<NoteDb> Create(NoteDb newNote)
+		private readonly SJDbContext context;
+		public NoteRepository(SJDbContext _context)
 		{
-			throw new NotImplementedException();
+			context = _context;
 		}
 
-		public Task<NoteDb> Delete(Guid id)
+		public async Task<NoteDb> CreateAsync(NoteDb newNote)
 		{
-			throw new NotImplementedException();
+			await context.Notes.AddAsync(newNote);
+			await context.SaveChangesAsync();
+			return newNote;
 		}
 
-		public Task<NoteDb> Get(Guid id)
+		public async Task<NoteDb> DeleteAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			var toDelete = await context.Notes.FirstOrDefaultAsync(n => n.Id == id)
+				?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.NOTE_WITH_ID_NOT_FOUND_MESSAGE, id));
+
+			context.Notes.Remove(toDelete);
+			context.SaveChanges();
+			return toDelete;
 		}
 
-		public Task<ICollection<NoteDb>> GetAll()
+		public async Task<NoteDb> GetAsync(Guid id)
 		{
-			throw new NotImplementedException();
+			var note = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(id))
+			   ?? throw new EntityNotFoundException
+			   (String.Format(ExceptionMessages.NOTE_WITH_ID_NOT_FOUND_MESSAGE, id));
+
+			return note;
 		}
 
-		public Task<NoteDb> Update(Guid toUpdate, NoteDb newData)
+		public async Task<ICollection<NoteDb>> GetAllAsync()
 		{
-			throw new NotImplementedException();
+			var notes = await context.Notes.ToListAsync();
+
+			return notes;
+		}
+
+		public async Task<NoteDb> UpdateAsync(Guid toUpdate, NoteDb newData)
+		{
+			var noteToUpdate = await context.Notes.FirstOrDefaultAsync(n => n.Id.Equals(toUpdate))
+				?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.NOTE_WITH_ID_NOT_FOUND_MESSAGE, toUpdate));
+
+			noteToUpdate.Content = newData.Content;
+
+			await context.SaveChangesAsync();
+			return noteToUpdate;
 		}
 	}
 }

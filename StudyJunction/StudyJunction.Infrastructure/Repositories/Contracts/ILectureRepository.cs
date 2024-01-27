@@ -4,11 +4,11 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 {
 	public interface ILectureRepository
 	{
-		Task<LectureDb> Get(Guid id);
-		Task<LectureDb> Get(string title);
-		Task<ICollection<LectureDb>> GetAll();
-		Task<LectureDb> Create(LectureDb newLecture);
-		Task<LectureDb> Update(Guid toUpdate, LectureDb newData);
-		Task<LectureDb> Delete(Guid id);
+		Task<LectureDb> GetAsync(Guid id);
+		Task<LectureDb> GetAsync(string title);
+		Task<ICollection<LectureDb>> GetAllAsync();
+		Task<LectureDb> CreateAsync(LectureDb newLecture);
+		Task<LectureDb> UpdateAsync(Guid toUpdate, LectureDb newData);
+		Task<LectureDb> DeleteAsync(Guid id);
 	}
 }
