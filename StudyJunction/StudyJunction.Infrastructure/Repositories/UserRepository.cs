@@ -50,11 +50,11 @@ namespace StudyJunction.Infrastructure.Repositories
 			return user;
 		}
 
-		public async Task<UserDb> GetByUsernameAsync(string username)
+		public async Task<UserDb> GetByEmailAsync(string email)
 		{
-			var user = await context.Users.FirstOrDefaultAsync(u => u.UserName.Equals(username))
+			var user = await context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email))
 				?? throw new EntityNotFoundException
-				(String.Format(ExceptionMessages.USER_WITH_USERNAME_NOT_FOUND_MESSAGE, username));
+				(String.Format(ExceptionMessages.USER_WITH_USERNAME_NOT_FOUND_MESSAGE, email));
 
 			return user;
 		}

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.Services;
@@ -8,7 +9,7 @@ using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Web.Controllers.API
 {
-	[Route("api/[controller]")]
+	[Route("api/users")]
 	[ApiController]
 	public class UsersApiController : ControllerBase
 	{
@@ -53,12 +54,13 @@ namespace StudyJunction.Web.Controllers.API
 			return Ok(users);
 		}
 
-		[HttpPost("")]
-		public IActionResult CreateUser([FromBody] RegisterUserRequestDto newUser, [FromHeader] string username)
+		[HttpPost("register")]
+		[AllowAnonymous]
+		public IActionResult Register([FromBody] RegisterUserRequestDto newUser)
 		{
 			try
 			{
-				var user = userService.Create(newUser, username);
+				var user = userService.Register(newUser).Result;
 				return Ok(user);
 			}
 			catch (UnauthorizedUserException e)
@@ -66,6 +68,10 @@ namespace StudyJunction.Web.Controllers.API
 				return Unauthorized(e.Message);
 			}
 			catch (NameDuplicationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+			catch(Exception ex)
 			{
 				return BadRequest(ex.Message);
 			}
