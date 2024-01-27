@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,6 +19,9 @@ namespace StudyJunction.Core.Services
 		private readonly IUserRepository userRepository;
         private readonly IConfiguration configuration;
         private readonly IMapper mapper;
+        private readonly UserManager<UserDb> userManager;
+        private readonly SignInManager<UserDb> signInManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
         public UserService(IUserRepository _userRepository
             , IConfiguration configuration
@@ -28,6 +33,9 @@ namespace StudyJunction.Core.Services
 			userRepository = _userRepository;
             this.configuration = configuration;
             this.mapper = mapper;
+            userManager = _userManager;
+            signInManager = _signInManager;
+            roleManager = _roleManager;
         }
 
 
@@ -56,8 +64,20 @@ namespace StudyJunction.Core.Services
             throw new NotImplementedException();
         }
 
-        public UserResponseDTO Register(RegisterUserRequestDto newUser)
+        public async Task<UserResponseDTO> Register(RegisterUserRequestDto newUser)
         {
+            var userDb = mapper.Map<UserDb>(newUser);
+
+            var result = await userManager.CreateAsync(userDb, newUser.Password);
+            //await CreateRoles();
+
+            if (!result.Succeeded)
+            {
+                throw new NotImplementedException();
+            }
+            var responseUser = userRepository.GetByEmailAsync(newUser.Email);
+
+            return mapper.Map<UserResponseDTO>(responseUser.Result);
             
         }
 
@@ -86,6 +106,14 @@ namespace StudyJunction.Core.Services
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
+        }
+
+        private async Task CreateRoles()
+        {
+            await roleManager.CreateAsync(new IdentityRole(RolesConstants.God));
+            await roleManager.CreateAsync(new IdentityRole(RolesConstants.Admin));
+            await roleManager.CreateAsync(new IdentityRole(RolesConstants.Teacher));
+            await roleManager.CreateAsync(new IdentityRole(RolesConstants.Student));
         }
     }
 }
