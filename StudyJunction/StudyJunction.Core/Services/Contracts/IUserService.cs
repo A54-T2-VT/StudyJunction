@@ -9,7 +9,7 @@ namespace StudyJunction.Core.Services.Contracts
 		UserResponseDTO GetById(string id);
 		UserResponseDTO GetByUsername(string username);
         Task<UserResponseDTO> Register(RegisterUserRequestDto newUser);
-		UserResponseDTO Login(LoginUserRequestDto loginUserDto);
+        Task<string> Login(LoginUserRequestDto loginUserDto);
 		UserResponseDTO Update(UserRequestDto updatedUser, string username);
 		UserResponseDTO Delete(string id, string username);
 	}

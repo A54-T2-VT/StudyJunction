@@ -59,9 +59,19 @@ namespace StudyJunction.Core.Services
             throw new NotImplementedException();
         }
 
-        public UserResponseDTO Login(LoginUserRequestDto loginUserDto)
+        public async Task<string> Login(LoginUserRequestDto loginUserDto)
         {
-            throw new NotImplementedException();
+            var user = await userManager.FindByEmailAsync(loginUserDto.Email);
+
+            var result = await signInManager.PasswordSignInAsync(user, loginUserDto.Password, false, false);
+
+            if (!result.Succeeded)
+            {
+                throw new NotImplementedException();
+            }
+
+
+            return CreateToken(userManager.FindByEmailAsync(loginUserDto.Email).Result);
         }
 
         public async Task<UserResponseDTO> Register(RegisterUserRequestDto newUser)
