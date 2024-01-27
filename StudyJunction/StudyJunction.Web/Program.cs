@@ -61,6 +61,7 @@ namespace StudyJunction.Web
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
+            //JWT
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
