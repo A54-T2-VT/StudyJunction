@@ -2,8 +2,8 @@
 
 namespace StudyJunction.Core.ResponseDTOs
 {
-	public class CategoryResponseDTO
-	{
+    public class CourseStudentResponseDto
+    {
         public string Name { get; set; }
     }
 }
