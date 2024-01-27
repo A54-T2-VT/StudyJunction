@@ -10,8 +10,16 @@ namespace StudyJunction.Core.Helpers
         public MapperProfiles()
         {
             this.CreateMap<UserDb, UserResponseDTO>();
-            this.CreateMap<RegisterUserRequestDto, UserDb>();
+            this.CreateMap<RegisterUserRequestDto, UserDb>()
+                .ForMember(d => d.UserName, p => p.MapFrom(s => ExtractUserName(s.Email)));
             this.CreateMap<LoginUserRequestDto, UserDb>();
+        }
+
+        private static string ExtractUserName(string email)
+        {
+            // Add null check or validation if needed
+            int atIndex = email.IndexOf('@');
+            return atIndex != -1 ? email.Substring(0, atIndex) : email;
         }
     }
 }
