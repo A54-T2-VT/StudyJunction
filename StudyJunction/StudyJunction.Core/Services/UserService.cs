@@ -12,7 +12,7 @@ namespace StudyJunction.Core.Services
 		{
 			userRepository = _userRepository;
 		}
-		public UserResponseDTO Create(AddUserRequestDto newUser, string username)
+		public UserResponseDTO Create(RegisterUserRequestDto newUser, string username)
         {
             throw new NotImplementedException();
         }
