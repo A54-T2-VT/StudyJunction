@@ -54,7 +54,30 @@ namespace StudyJunction.Web.Controllers.API
 			return Ok(users);
 		}
 
-		[HttpPost("register")]
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public IActionResult Register([FromBody] LoginUserRequestDto loginDto)
+        {
+            try
+            {
+                var JWT = userService.Login(loginDto).Result;
+                return Ok(JWT);
+            }
+            catch (UnauthorizedUserException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (NameDuplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("register")]
 		[AllowAnonymous]
 		public IActionResult Register([FromBody] RegisterUserRequestDto newUser)
 		{
