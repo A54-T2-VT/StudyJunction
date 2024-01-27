@@ -8,7 +8,8 @@ namespace StudyJunction.Core.Services.Contracts
 		IEnumerable<UserResponseDTO> GetAll();
 		UserResponseDTO GetById(string id);
 		UserResponseDTO GetByUsername(string username);
-		UserResponseDTO Create(RegisterUserRequestDto newUser, string username);
+		UserResponseDTO Register(RegisterUserRequestDto newUser);
+		UserResponseDTO Login(LoginUserRequestDto loginUserDto);
 		UserResponseDTO Update(UserRequestDto updatedUser, string username);
 		UserResponseDTO Delete(string id, string username);
 	}
