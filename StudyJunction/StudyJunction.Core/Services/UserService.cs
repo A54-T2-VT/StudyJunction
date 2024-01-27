@@ -71,6 +71,9 @@ namespace StudyJunction.Core.Services
             var result = await userManager.CreateAsync(userDb, newUser.Password);
             //await CreateRoles();
 
+            var user = await userManager.FindByEmailAsync(newUser.Email);
+            await userManager.AddToRolesAsync(user, new string[] { RolesConstants.Student });
+
             if (!result.Succeeded)
             {
                 throw new NotImplementedException();
