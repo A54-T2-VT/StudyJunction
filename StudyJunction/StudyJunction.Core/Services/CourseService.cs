@@ -42,5 +42,10 @@ namespace StudyJunction.Core.Services
 		{
 			throw new NotImplementedException();
 		}
+
+		public CourseResponseDTO UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string username)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

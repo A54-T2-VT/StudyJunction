@@ -20,7 +20,7 @@ namespace StudyJunction.Core.Services
 
         public CategoryResponseDTO Create(AddCategoryRequestDto newCategory, string username)
         {
-			var user = usersRepository.GetUser(username).Result;
+			//var user = usersRepository.GetUser(username).Result;
 			// TODO: UserDb hasnt got property IsAdmin
 			//if(!user.IsAdmin) 
 			//{

@@ -65,7 +65,7 @@ namespace StudyJunction.Infrastructure.Data
 
                 e.Property(c => c.Description)
                 .IsRequired()
-                .HasMaxLength(ModelsConstants.CourseDecsriptionMaxLength);
+                .HasMaxLength(ModelsConstants.CouresDecsriptionMaxLength);
 
                 e.HasOne(c => c.CreatedBy)
                 .WithMany(u => u.MyCreatedCourses)

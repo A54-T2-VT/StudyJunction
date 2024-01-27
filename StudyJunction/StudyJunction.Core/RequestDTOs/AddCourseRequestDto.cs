@@ -9,7 +9,7 @@ namespace StudyJunction.Core.RequestDTOs
         [StringLength(ModelsConstants.CourseTitleMaxLength, MinimumLength = ModelsConstants.CourseTitleMinLength)]
         public string Title { get; set; }
         [Required]
-        [StringLength(ModelsConstants.CourseDecsriptionMaxLength)]
+        [StringLength(ModelsConstants.CouresDecsriptionMaxLength)]
         public string Description { get; set; }
         [Required]
         public string Category { get; set; }
