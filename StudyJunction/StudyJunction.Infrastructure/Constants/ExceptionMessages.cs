@@ -29,7 +29,8 @@ namespace StudyJunction.Infrastructure.Constants
 		public const string NAME_DUPLICATION_MESSAGE = "Name {0} already exists.";
 
 		public const string INVALID_CREDENTIALS_MESSAGE = "Invalid credentials.";
+		public const string INVALID_USER_PROPERTY_LENGTH_MESSAGE = "{0} must be betweet {1} and {2} chars long.";
 
-		public const string COURSE_NOT_STARTED_MESSAGE = "Course hasn't started yet.";
+        public const string COURSE_NOT_STARTED_MESSAGE = "Course hasn't started yet.";
 	}
 }

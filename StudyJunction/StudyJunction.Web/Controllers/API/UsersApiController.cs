@@ -54,7 +54,7 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		public IActionResult CreateUser([FromBody] AddUserRequestDto newUser, [FromHeader] string username)
+		public IActionResult CreateUser([FromBody] RegisterUserRequestDto newUser, [FromHeader] string username)
 		{
 			try
 			{

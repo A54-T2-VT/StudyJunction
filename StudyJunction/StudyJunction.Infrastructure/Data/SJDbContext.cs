@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Interceptors;
-using System.Diagnostics;
-using System.Reflection.Emit;
 
 namespace StudyJunction.Infrastructure.Data
 {
@@ -67,7 +65,7 @@ namespace StudyJunction.Infrastructure.Data
 
                 e.Property(c => c.Description)
                 .IsRequired()
-                .HasMaxLength(ModelsConstants.CouresDecsriptionMaxLength);
+                .HasMaxLength(ModelsConstants.CourseDecsriptionMaxLength);
 
                 e.HasOne(c => c.CreatedBy)
                 .WithMany(u => u.MyCreatedCourses)

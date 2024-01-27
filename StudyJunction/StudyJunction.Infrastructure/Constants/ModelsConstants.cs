@@ -14,7 +14,7 @@ namespace StudyJunction.Infrastructure.Constants
         //Course
         public const int CourseTitleMaxLength = 50;
         public const int CourseTitleMinLength = 5;
-        public const int CouresDecsriptionMaxLength = 1000;
+        public const int CourseDecsriptionMaxLength = 1000;
 
         //Lecture
         public const int LectureTitleMaxLength = 50;

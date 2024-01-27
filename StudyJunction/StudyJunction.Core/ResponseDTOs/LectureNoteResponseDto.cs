@@ -2,8 +2,8 @@
 
 namespace StudyJunction.Core.ResponseDTOs
 {
-	public class NoteResponseDTO
-	{
+    public class LectureNoteResponseDto
+    {
         public string Content { get; set; }
     }
 }
