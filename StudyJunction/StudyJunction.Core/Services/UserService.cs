@@ -8,6 +8,7 @@ using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
+using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -102,10 +103,24 @@ namespace StudyJunction.Core.Services
         public UserResponseDTO Update(UserRequestDto updatedUser, string username)
         {
             
-            var toUpdate = userRepository.GetByEmailAsync(updatedUser.Email).Result;
+            var toUpdate = userManager.FindByNameAsync(username).Result;
+
+            if(toUpdate.UserName != username)
+            {
+                throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
+            }
+
 
             toUpdate.FirstName = updatedUser.Firstname;
             toUpdate.LastName = updatedUser.Lastname;
+            //userManager.ChangePasswordAsync(toUpdate, updatedUser.Password);
+
+            var result = userManager.UpdateAsync(toUpdate).Result;
+
+            if (!result.Succeeded)
+            {
+                throw new NotImplementedException();
+            }
 
             return mapper.Map<UserResponseDTO>(toUpdate);
         }

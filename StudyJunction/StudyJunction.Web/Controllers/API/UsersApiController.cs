@@ -6,11 +6,13 @@ using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
+using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
 {
 	[Route("api/users")]
 	[ApiController]
+	[Authorize]
 	public class UsersApiController : ControllerBase
 	{
 		private IUserService userService;
@@ -56,7 +58,7 @@ namespace StudyJunction.Web.Controllers.API
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public IActionResult Register([FromBody] LoginUserRequestDto loginDto)
+        public IActionResult Login([FromBody] LoginUserRequestDto loginDto)
         {
             try
             {
@@ -101,11 +103,12 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("")]
-		public IActionResult UpdateUser([FromBody] UserRequestDto newData, [FromHeader] string username)
+		public IActionResult Update([FromBody] UserRequestDto newData/*, [FromHeader] string authorization*/)
 		{
 			try
 			{
-				var updated = userService.Update(/*TODO: add id of userToUpdate*/newData, username);
+				var username = User.FindFirstValue(ClaimTypes.Name);
+				var updated = userService.Update(newData, username);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
