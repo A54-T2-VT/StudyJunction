@@ -33,19 +33,19 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		[HttpGet("{username}")]
-		public IActionResult GetByUsername(string username)
-		{
-			try
-			{
-				var user = userService.GetByUsername(username);
-				return Ok(user);
-			}
-			catch (EntityNotFoundException e)
-			{
-				return BadRequest(e.Message);
-			}
-		}
+		//[HttpGet("{username}")]
+		//public IActionResult GetByUsername(string username)
+		//{
+		//	try
+		//	{
+		//		var user = userService.GetByUsername(username);
+		//		return Ok(user);
+		//	}
+		//	catch (EntityNotFoundException e)
+		//	{
+		//		return BadRequest(e.Message);
+		//	}
+		//}
 
 		[HttpGet("")]
 		public IActionResult GetUsers()
@@ -100,8 +100,8 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		[HttpPut("{id}")]
-		public IActionResult UpdateUser(string id, [FromBody] UserRequestDto newData, [FromHeader] string username)
+		[HttpPut("")]
+		public IActionResult UpdateUser([FromBody] UserRequestDto newData, [FromHeader] string username)
 		{
 			try
 			{

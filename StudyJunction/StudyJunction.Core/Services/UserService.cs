@@ -46,12 +46,18 @@ namespace StudyJunction.Core.Services
 
         public IEnumerable<UserResponseDTO> GetAll()
         {
-            throw new NotImplementedException();
+            var result = userRepository.GetAllAsync().Result;
+
+            return result.Select(
+                r => mapper.Map<UserResponseDTO>(r))
+                .ToList();
         }
 
         public UserResponseDTO GetById(string id)
         {
-            throw new NotImplementedException();
+            var result = userRepository.GetByIdAsync(id).Result;
+
+            return mapper.Map<UserResponseDTO>(result);
         }
 
         public UserResponseDTO GetByUsername(string username)
@@ -79,7 +85,6 @@ namespace StudyJunction.Core.Services
             var userDb = mapper.Map<UserDb>(newUser);
 
             var result = await userManager.CreateAsync(userDb, newUser.Password);
-            //await CreateRoles();
 
             var user = await userManager.FindByEmailAsync(newUser.Email);
             await userManager.AddToRolesAsync(user, new string[] { RolesConstants.Student });
@@ -96,7 +101,13 @@ namespace StudyJunction.Core.Services
 
         public UserResponseDTO Update(UserRequestDto updatedUser, string username)
         {
-            throw new NotImplementedException();
+            
+            var toUpdate = userRepository.GetByEmailAsync(updatedUser.Email).Result;
+
+            toUpdate.FirstName = updatedUser.Firstname;
+            toUpdate.LastName = updatedUser.Lastname;
+
+            return mapper.Map<UserResponseDTO>(toUpdate);
         }
 
         private string CreateToken(UserDb user)
