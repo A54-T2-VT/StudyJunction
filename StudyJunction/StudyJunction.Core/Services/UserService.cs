@@ -56,14 +56,38 @@ namespace StudyJunction.Core.Services
 
         public UserResponseDTO GetById(string id)
         {
-            var result = userRepository.GetByIdAsync(id).Result;
+            var user = userManager.FindByIdAsync(id).Result;
+            
+            if(user is null)
+            {
+                throw new EntityNotFoundException(string.Format(ExceptionMessages.USER_WITH_ID_NOT_FOUND_MESSAGE, id));
+            }
 
-            return mapper.Map<UserResponseDTO>(result);
+            return mapper.Map<UserResponseDTO>(user);
         }
 
         public UserResponseDTO GetByUsername(string username)
         {
-            throw new NotImplementedException();
+            var user = userManager.FindByNameAsync(username).Result;
+
+            if (user is null)
+            {
+                throw new EntityNotFoundException(string.Format(ExceptionMessages.USER_WITH_USERNAME_NOT_FOUND_MESSAGE, username));
+            }
+
+            return mapper.Map<UserResponseDTO>(user);
+        }
+
+        public UserResponseDTO GetByEmail(string email)
+        {
+            var user = userManager.FindByEmailAsync(email).Result;
+
+            if (user is null)
+            {
+                throw new EntityNotFoundException(string.Format(ExceptionMessages.USER_WITH_EMAIL_NOT_FOUND_MESSAGE, email));
+            }
+
+            return mapper.Map<UserResponseDTO>(user);
         }
 
         public async Task<string> Login(LoginUserRequestDto loginUserDto)
@@ -140,7 +164,7 @@ namespace StudyJunction.Core.Services
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
