@@ -5,6 +5,9 @@ using StudyJunction.Infrastructure.Repositories.Contracts;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using AutoMapper;
 
 namespace StudyJunction.Core.Services
 {
@@ -12,24 +15,30 @@ namespace StudyJunction.Core.Services
     {
         private readonly IUserRepository usersRepository;
         private readonly ICategoryRepository categoryRepository;
-        public CategoryService(IUserRepository _usersRepository, ICategoryRepository _categoryRepository)
+		private readonly IMapper mapper;
+		private readonly UserManager<UserDb> userManager;
+		public CategoryService(IUserRepository _usersRepository, ICategoryRepository _categoryRepository,
+            IMapper _mapper, UserManager<UserDb> _userManager)
         {
             usersRepository = _usersRepository;
             categoryRepository = _categoryRepository;
-        }
+            mapper = _mapper;
+			userManager = _userManager;
+		}
 
         public CategoryResponseDTO Create(AddCategoryRequestDto newCategory, string username)
-        {
-			//var user = usersRepository.GetUser(username).Result;
-			// TODO: UserDb hasnt got property IsAdmin
-			//if(!user.IsAdmin) 
-			//{
-			//    throw new UnauthorizedUserException
-			//        (String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
-			//}
-            //categoryRepository.Create()
+		{
+            //backup plan, besides [Authorize(Role)]
+            //var user = userManager.FindByNameAsync(username).Result;
 
-            throw new NotImplementedException();
+            //if (!userManager.IsInRoleAsync(user, RolesConstants.Admin).Result)
+            //{
+            //	throw new UnauthorizedUserException(String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
+            //}
+
+            var created = categoryRepository.CreateAsync(mapper.Map<CategoryDb>(newCategory)).Result;
+
+            return mapper.Map<CategoryResponseDTO>(created);
 		}
 
 		//TODO: add way to access the parent category here

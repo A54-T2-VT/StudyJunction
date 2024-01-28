@@ -1,20 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
+using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
 {
-	[Route("api/[controller]")]
+	[Route("api/categories")]
 	[ApiController]
 	public class CategoriesApiController : ControllerBase
 	{
-        private ICategoryService categoryService;
-        public CategoriesApiController(ICategoryService _categoryService)
-        {
-            categoryService = _categoryService;
-        }
+		private ICategoryService categoryService;
+		public CategoriesApiController(ICategoryService _categoryService)
+		{
+			categoryService = _categoryService;
+		}
 
 		[HttpGet("{id}")]
 		public IActionResult GetById(string id)
@@ -24,7 +27,7 @@ namespace StudyJunction.Web.Controllers.API
 				var category = categoryService.GetById(new Guid(id));
 				return Ok(category);
 			}
-			catch(EntityNotFoundException ex)
+			catch (EntityNotFoundException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -38,7 +41,7 @@ namespace StudyJunction.Web.Controllers.API
 				var category = categoryService.GetByName(name);
 				return Ok(category);
 			}
-			catch(EntityNotFoundException ex)
+			catch (EntityNotFoundException ex)
 			{
 				return BadRequest(ex.Message);
 			}
@@ -51,10 +54,12 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		public IActionResult CreateCategory([FromBody] AddCategoryRequestDto dto, [FromHeader] string username)
+		[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
+		public IActionResult CreateCategory([FromBody] AddCategoryRequestDto dto/*, [FromHeader] string username*/)
 		{
 			try
 			{
+				var username = User.FindFirstValue(ClaimTypes.Name);
 				var newCategory = categoryService.Create(dto, username);
 				return Ok(newCategory);
 			}

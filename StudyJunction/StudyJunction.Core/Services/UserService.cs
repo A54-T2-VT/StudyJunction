@@ -102,7 +102,7 @@ namespace StudyJunction.Core.Services
             }
 
 
-            return CreateToken(userManager.FindByEmailAsync(loginUserDto.Email).Result);
+            return CreateToken(user);
         }
 
         public async Task<UserResponseDTO> Register(RegisterUserRequestDto newUser)
@@ -128,7 +128,7 @@ namespace StudyJunction.Core.Services
         {
             
             var toUpdate = userManager.FindByNameAsync(username).Result;
-
+            
             if(toUpdate.UserName != username)
             {
                 throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
