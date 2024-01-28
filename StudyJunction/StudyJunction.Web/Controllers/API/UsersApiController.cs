@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.RequestDTOs;
+using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
+using StudyJunction.Web.CustomAttributes;
 using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
@@ -16,41 +19,57 @@ namespace StudyJunction.Web.Controllers.API
 	public class UsersApiController : ControllerBase
 	{
 		private IUserService userService;
+
         public UsersApiController(IUserService _userService)
         {
 			userService = _userService;
         }
 
-        [HttpGet("{id}")]
-		public IActionResult GetById(string id)
+        [HttpGet("find")]
+        [JwtAuthorization]
+        public IActionResult FindUser(string searchTerm)
 		{
 			try
 			{
-				var user = userService.GetById(id);
+				UserResponseDTO user;
+
+				// Check if the searchTerm is a valid email
+				if (searchTerm.Contains("@"))
+				{
+					user =  userService.GetByEmail(searchTerm);
+				}
+				// Check if the searchTerm is a valid ID
+				else if (Guid.TryParse(searchTerm, out var userId))
+				{
+					user =  userService.GetById(userId.ToString());
+				}
+				// Assume it's a username
+				else
+				{
+					user =  userService.GetByUsername(searchTerm);
+				}
+
+				if (user == null)
+				{
+					return NotFound("User not found");
+				}
+
+				// You may want to customize the response based on your requirements
 				return Ok(user);
 			}
 			catch (EntityNotFoundException ex)
 			{
+				return NotFound(ex.Message);
+			}
+			catch(Exception ex)
+			{
 				return BadRequest(ex.Message);
 			}
-		}
-
-		//[HttpGet("{username}")]
-		//public IActionResult GetByUsername(string username)
-		//{
-		//	try
-		//	{
-		//		var user = userService.GetByUsername(username);
-		//		return Ok(user);
-		//	}
-		//	catch (EntityNotFoundException e)
-		//	{
-		//		return BadRequest(e.Message);
-		//	}
-		//}
+        }
 
 		[HttpGet("")]
-		public IActionResult GetUsers()
+        [JwtAuthorization]
+        public IActionResult GetUsers()
 		{
 			var users = userService.GetAll();
 			return Ok(users);
@@ -103,7 +122,8 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("")]
-		public IActionResult Update([FromBody] UserRequestDto newData/*, [FromHeader] string authorization*/)
+        [JwtAuthorization]
+        public IActionResult Update([FromBody] UserRequestDto newData/*, [FromHeader] string authorization*/)
 		{
 			try
 			{
@@ -122,7 +142,8 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpDelete("{id}")]
-		public IActionResult DeleteUser(string id, [FromHeader] string username)
+        [JwtAuthorization]
+        public IActionResult DeleteUser(string id, [FromHeader] string username)
 		{
 			try
 			{
