@@ -14,6 +14,7 @@ namespace StudyJunction.Core.Helpers
                 .ForMember(d => d.UserName, p => p.MapFrom(s => ExtractUserName(s.Email)));
             this.CreateMap<LoginUserRequestDto, UserDb>();
             this.CreateMap<AddCategoryRequestDto, CategoryDb>();
+            this.CreateMap<CategoryDb, CategoryResponseDTO>();
         }
 
         private static string ExtractUserName(string email)
