@@ -10,5 +10,6 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 		Task<UserDb> CreateAsync(UserDb user);
 		Task<UserDb> UpdateAsync(string toUpdateid, UserDb newData);
 		Task<UserDb> DeleteAsync(string id);
+		bool HasCreatedCourse(UserDb user, string courseTitle);
 	}
 }

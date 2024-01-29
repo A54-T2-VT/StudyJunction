@@ -72,5 +72,9 @@ namespace StudyJunction.Infrastructure.Repositories
 			await context.SaveChangesAsync();
 			return userToUpdate;
 		}
+		public bool HasCreatedCourse(UserDb user, string courseTitle)
+		{
+			return user.MyCreatedCourses.Any(x => x.Title == courseTitle);
+		}
 	}
 }
