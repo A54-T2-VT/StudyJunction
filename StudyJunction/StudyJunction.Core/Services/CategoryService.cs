@@ -16,6 +16,7 @@ namespace StudyJunction.Core.Services
         private readonly ICategoryRepository categoryRepository;
 		private readonly IMapper mapper;
 		private readonly UserManager<UserDb> userManager;
+
 		public CategoryService(IUserRepository _usersRepository, ICategoryRepository _categoryRepository,
             IMapper _mapper, UserManager<UserDb> _userManager)
         {
@@ -27,14 +28,26 @@ namespace StudyJunction.Core.Services
 
         public CategoryResponseDTO Create(AddCategoryRequestDto newCategory)
 		{
-            var created = categoryRepository.CreateAsync(mapper.Map<CategoryDb>(newCategory)).Result;
+			if (categoryRepository.CategoryNameExists(newCategory.Name))
+			{
+				throw new NameDuplicationException(
+					String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCategory.Name));
+			}
+
+			var created = categoryRepository.CreateAsync(mapper.Map<CategoryDb>(newCategory)).Result;
 
             return mapper.Map<CategoryResponseDTO>(created);
 		}
 
 		public CategoryResponseDTO CreateSubCategory(AddCategoryRequestDto newCategory, Guid parentId)
         {
-            var parent = categoryRepository.GetByIdAsync(parentId).Result;
+			if (categoryRepository.CategoryNameExists(newCategory.Name))
+			{
+				throw new NameDuplicationException(
+					String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCategory.Name));
+			}
+
+			var parent = categoryRepository.GetByIdAsync(parentId).Result;
             var sub = mapper.Map<CategoryDb>(newCategory);
 
             return mapper.Map<CategoryResponseDTO>(categoryRepository.AddSubCategory(parent, sub).Result);
