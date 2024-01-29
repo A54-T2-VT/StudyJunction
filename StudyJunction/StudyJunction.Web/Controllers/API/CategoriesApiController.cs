@@ -33,19 +33,19 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		[HttpGet("{name}")]
-		public IActionResult GetByName(string name)
-		{
-			try
-			{
-				var category = categoryService.GetByName(name);
-				return Ok(category);
-			}
-			catch (EntityNotFoundException ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
+		//[HttpGet("{name}")]
+		//public IActionResult GetByName(string name)
+		//{
+		//	try
+		//	{
+		//		var category = categoryService.GetByName(name);
+		//		return Ok(category);
+		//	}
+		//	catch (EntityNotFoundException ex)
+		//	{
+		//		return BadRequest(ex.Message);
+		//	}
+		//}
 
 		[HttpGet("")]
 		public IActionResult GetAll()
@@ -55,13 +55,31 @@ namespace StudyJunction.Web.Controllers.API
 
 		[HttpPost("")]
 		[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
-		public IActionResult CreateCategory([FromBody] AddCategoryRequestDto dto/*, [FromHeader] string username*/)
+		public IActionResult CreateCategory([FromBody] AddCategoryRequestDto dto)
+		{
+			try
+			{
+				var newCategory = categoryService.Create(dto);
+				return Ok(newCategory);
+			}
+			catch (UnauthorizedUserException ex)
+			{
+				return Unauthorized(ex.Message);
+			}
+			catch (NameDuplicationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+		[HttpPost("{id}")]
+		[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
+		public IActionResult CreateSubCategory(string id, [FromBody] AddCategoryRequestDto dto)
 		{
 			try
 			{
 				var username = User.FindFirstValue(ClaimTypes.Name);
-				var newCategory = categoryService.Create(dto, username);
-				return Ok(newCategory);
+				var newSubCategory = categoryService.CreateSubCategory(dto, new Guid(id));
+				return Ok(newSubCategory);
 			}
 			catch (UnauthorizedUserException ex)
 			{
@@ -74,11 +92,12 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("{id}")]
-		public IActionResult UpdateCategory(string id, [FromBody] CategoryRequestDto newData, [FromHeader] string username)
+		[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
+		public IActionResult UpdateCategory(string id, [FromBody] CategoryRequestDto newData)
 		{
 			try
 			{
-				var updated = categoryService.Update(new Guid(id), newData, username);
+				var updated = categoryService.Update(new Guid(id), newData);
 				return Ok(updated);
 			}
 			catch(UnauthorizedUserException ex)
@@ -95,11 +114,12 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 		[HttpDelete("{id}")]
-		public IActionResult DeleteCategory(string id, [FromHeader] string username)
+		[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
+		public IActionResult DeleteCategory(string id)
 		{
 			try
 			{
-				var deleted = categoryService.Delete(new Guid(id), username);
+				var deleted = categoryService.Delete(new Guid(id));
 				return Ok(deleted);
 			}
 			catch(UnauthorizedUserException ex)

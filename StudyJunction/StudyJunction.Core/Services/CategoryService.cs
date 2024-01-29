@@ -1,17 +1,16 @@
-﻿using StudyJunction.Core.RequestDTOs;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Constants;
-using StudyJunction.Infrastructure.Data.Models;
-using Microsoft.AspNetCore.Identity;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using AutoMapper;
 
 namespace StudyJunction.Core.Services
 {
-    public class CategoryService : ICategoryService
+	public class CategoryService : ICategoryService
     {
         private readonly IUserRepository usersRepository;
         private readonly ICategoryRepository categoryRepository;
@@ -26,50 +25,58 @@ namespace StudyJunction.Core.Services
 			userManager = _userManager;
 		}
 
-        public CategoryResponseDTO Create(AddCategoryRequestDto newCategory, string username)
+        public CategoryResponseDTO Create(AddCategoryRequestDto newCategory)
 		{
-            //backup plan, besides [Authorize(Role)]
-            //var user = userManager.FindByNameAsync(username).Result;
-
-            //if (!userManager.IsInRoleAsync(user, RolesConstants.Admin).Result)
-            //{
-            //	throw new UnauthorizedUserException(String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
-            //}
-
             var created = categoryRepository.CreateAsync(mapper.Map<CategoryDb>(newCategory)).Result;
 
             return mapper.Map<CategoryResponseDTO>(created);
 		}
 
-		//TODO: add way to access the parent category here
-		public CategoryResponseDTO CreateSubCategory(AddCategoryRequestDto newCategory, string username)
+		public CategoryResponseDTO CreateSubCategory(AddCategoryRequestDto newCategory, Guid parentId)
         {
-			throw new NotImplementedException();
+            var parent = categoryRepository.GetByIdAsync(parentId).Result;
+            var sub = mapper.Map<CategoryDb>(newCategory);
+
+            return mapper.Map<CategoryResponseDTO>(categoryRepository.AddSubCategory(parent, sub).Result);
 		}
 
         public IEnumerable<CategoryResponseDTO> GetAll()
         {
-            throw new NotImplementedException();
+            return categoryRepository.GetAllAsync().Result
+                .Select(cat => mapper.Map<CategoryResponseDTO>(cat))
+                .ToList();
         }
 
         public CategoryResponseDTO GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var category = categoryRepository.GetByIdAsync(id).Result;
+
+            return mapper.Map<CategoryResponseDTO>(category);
         }
 
         public CategoryResponseDTO GetByName(string name)
         {
-            throw new NotImplementedException();
-        }
+			var category = categoryRepository.GetByNameAsync(name).Result;
 
-		public CategoryResponseDTO Update(Guid id, CategoryRequestDto updatedCategory, string username)
-		{
-			throw new NotImplementedException();
+			return mapper.Map<CategoryResponseDTO>(category);
 		}
 
-		public CategoryResponseDTO Delete(Guid id, string username)
+		public CategoryResponseDTO Update(Guid id, CategoryRequestDto updatedCategory)
+        {
+            var updated = mapper.Map<CategoryDb>(updatedCategory);
+
+            if(categoryRepository.CategoryNameExists(updatedCategory.Name))
+            {
+                throw new NameDuplicationException(
+                    String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, updatedCategory.Name));
+            }
+
+            return mapper.Map<CategoryResponseDTO>(categoryRepository.UpdateAsync(id, updated).Result);
+		}
+
+		public CategoryResponseDTO Delete(Guid id)
 		{
-			throw new NotImplementedException();
+			return mapper.Map<CategoryResponseDTO>(categoryRepository.DeleteAsync(id).Result);
 		}
 	}
 }

@@ -71,5 +71,19 @@ namespace StudyJunction.Infrastructure.Repositories
             await context.SaveChangesAsync();
             return toUpdate;
 		}
-    }
+
+		public async Task<CategoryDb> AddSubCategory(CategoryDb parent, CategoryDb subCategory)
+		{
+			subCategory.ParentCategory = parent;
+            subCategory.ParentCategoryId = parent.Id;
+			await context.Categories.AddAsync(subCategory);
+			await context.SaveChangesAsync();
+            return subCategory;
+		}
+
+		public bool CategoryNameExists(string name)
+		{
+            return context.Categories.Any(x => x.Name == name);
+		}
+	}
 }
