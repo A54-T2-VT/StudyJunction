@@ -16,6 +16,12 @@ namespace StudyJunction.Core.Helpers
             this.CreateMap<AddCategoryRequestDto, CategoryDb>();
             this.CreateMap<CategoryDb, CategoryResponseDTO>();
             this.CreateMap<CategoryRequestDto, CategoryDb>();
+            //this.CreateMap<AddCourseRequestDto, CourseDb>();
+
+            this.CreateMap<CourseDb, CourseResponseDTO>()
+                .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.CreatedBy.UserName))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
+            this.CreateMap<CourseRequestDto, CourseDb>();
         }
 
         private static string ExtractUserName(string email)
@@ -24,5 +30,5 @@ namespace StudyJunction.Core.Helpers
             int atIndex = email.IndexOf('@');
             return atIndex != -1 ? email.Substring(0, atIndex) : email;
         }
-    }
+	}
 }
