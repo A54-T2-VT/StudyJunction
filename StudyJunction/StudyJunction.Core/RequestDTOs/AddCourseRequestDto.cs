@@ -13,6 +13,6 @@ namespace StudyJunction.Core.RequestDTOs
         public string Description { get; set; }
         [Required]
         public string Category { get; set; }
-        public string CreatorName { get; set; }
+        //public string CreatorName { get; set; }
     }
 }

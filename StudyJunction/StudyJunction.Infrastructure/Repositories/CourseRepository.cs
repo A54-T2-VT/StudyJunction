@@ -71,5 +71,9 @@ namespace StudyJunction.Infrastructure.Repositories
 			await context.SaveChangesAsync();
 			return toUpdate;
 		}
+		public bool CourseTitleExists(string title)
+		{
+			return context.Courses.Any(x => x.Title.Equals(title));
+		}
     }
 }

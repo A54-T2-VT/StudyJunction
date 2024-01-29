@@ -1,19 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
+using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
 {
-	[Route("api/[controller]")]
+	[Route("api/courses")]
 	[ApiController]
 	public class CoursesApiController : ControllerBase
 	{
-		private ICourseService courseService;
-        public CoursesApiController(ICourseService _courseService)
+		private readonly IUserService userService;
+		private readonly ICourseService courseService;
+        public CoursesApiController(ICourseService _courseService, IUserService _userService)
         {
             courseService = _courseService;
+			userService = _userService;
         }
 
 		[HttpGet("{id}")]
@@ -51,11 +56,13 @@ namespace StudyJunction.Web.Controllers.API
 			return Ok(courses);
 		}
 
-		[HttpPost("")] // TODO: possible change with session introduction
-		public IActionResult CreateCourse([FromBody] AddCourseRequestDto newCourse, [FromHeader] string username)
+		[HttpPost("")]
+		[Authorize(Roles = RolesConstants.Teacher + "," + RolesConstants.Admin + "," + RolesConstants.God)]
+		public IActionResult CreateCourse([FromBody] AddCourseRequestDto newCourse)
 		{
 			try
 			{
+				var username = User.FindFirstValue(ClaimTypes.Name);
 				var course = courseService.Create(newCourse, username);
 				return Ok(course);
 			}
@@ -69,11 +76,14 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		[HttpPut("{id}")] // TODO: possible change with session introduction
-		public IActionResult UpdateCourse(string id, [FromBody] CourseRequestDto newData, [FromHeader] string username) 
+		[HttpPut("{id}")]
+		[Authorize(Roles = RolesConstants.Teacher + "," + RolesConstants.Admin + "," + RolesConstants.God)]
+		public IActionResult UpdateCourse(string id, [FromBody] CourseRequestDto newData) 
 		{
 			try
 			{
+				var username = User.FindFirstValue(ClaimTypes.Name);
+
 				var updated = courseService.Update(new Guid(id), newData, username);
 				return Ok(updated);
 			}
@@ -87,7 +97,8 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		[HttpDelete("{id}")] // TODO: possible change with session introduction
+		[HttpDelete("{id}")]
+		[Authorize(Roles = RolesConstants.Teacher + "," + RolesConstants.Admin + "," + RolesConstants.God)]
 		public IActionResult DeleteCourse(string id, [FromHeader] string username)
 		{
 			try
@@ -104,7 +115,5 @@ namespace StudyJunction.Web.Controllers.API
 				return BadRequest(e.Message);
 			}
 		}
-
-		
 	}
 }
