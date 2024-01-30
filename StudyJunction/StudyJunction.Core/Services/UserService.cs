@@ -42,7 +42,23 @@ namespace StudyJunction.Core.Services
 
         public UserResponseDTO Delete(string id, string username)
         {
-            throw new NotImplementedException();
+            var userToDelete = userManager.FindByIdAsync(id).Result;
+
+            if (!(userToDelete.UserName == username))
+            {
+                throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
+            }
+
+            //var result = userManager.DeleteAsync(userToDelete).Result;
+
+            //if (!result.Succeeded)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            var user = userRepository.DeleteAsync(id).Result;
+
+            return mapper.Map<UserResponseDTO>(user);
         }
 
         public IEnumerable<UserResponseDTO> GetAll()
@@ -124,15 +140,11 @@ namespace StudyJunction.Core.Services
             
         }
 
-        public UserResponseDTO Update(UserRequestDto updatedUser, string username)
+        public UserResponseDTO Update(UpdateUserDataRequestDto updatedUser, string username)
         {
             
             var toUpdate = userManager.FindByNameAsync(username).Result;
             
-            if(toUpdate.UserName != username)
-            {
-                throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
-            }
 
 
             toUpdate.FirstName = updatedUser.Firstname;
@@ -147,6 +159,21 @@ namespace StudyJunction.Core.Services
             }
 
             return mapper.Map<UserResponseDTO>(toUpdate);
+        }
+
+        public UserResponseDTO Update(UpdateUserPasswordRequestDto passData, string username)
+        {
+            var toUpdate = userManager.FindByNameAsync(username).Result;
+
+            var result = userManager.ChangePasswordAsync(toUpdate, passData.OldPassword, passData.NewPassword).Result;
+
+            if (!result.Succeeded)
+            {
+                throw new NotImplementedException();
+            }
+
+            return mapper.Map<UserResponseDTO>(toUpdate);
+
         }
 
         private string CreateToken(UserDb user)

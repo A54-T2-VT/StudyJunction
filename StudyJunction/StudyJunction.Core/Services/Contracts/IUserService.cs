@@ -11,7 +11,8 @@ namespace StudyJunction.Core.Services.Contracts
 		UserResponseDTO GetByEmail(string email);
         Task<UserResponseDTO> Register(RegisterUserRequestDto newUser);
         Task<string> Login(LoginUserRequestDto loginUserDto);
-		UserResponseDTO Update(UserRequestDto updatedUser, string username);
-		UserResponseDTO Delete(string id, string username);
+		UserResponseDTO Update(UpdateUserDataRequestDto updatedUser, string username);
+        UserResponseDTO Update(UpdateUserPasswordRequestDto passData, string username);
+        UserResponseDTO Delete(string id, string username);
 	}
 }
