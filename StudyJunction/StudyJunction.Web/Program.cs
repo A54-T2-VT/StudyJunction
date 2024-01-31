@@ -72,6 +72,8 @@ namespace StudyJunction.Web
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
                         ValidateIssuer = false,
                         ValidateAudience = false
+                        //ClockSkew = TimeSpan.FromSeconds(30),
+                        //ValidateLifetime = true
                     };
                 });
 

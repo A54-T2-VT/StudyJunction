@@ -6,6 +6,7 @@ using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using StudyJunction.Web.CustomAttributes;
@@ -69,6 +70,7 @@ namespace StudyJunction.Web.Controllers.API
 
 		[HttpGet("")]
         [JwtAuthorization]
+        [Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
         public IActionResult GetUsers()
 		{
 			var users = userService.GetAll();
