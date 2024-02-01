@@ -68,7 +68,7 @@ namespace StudyJunction.Web.Controllers.API
         }
 
 		[HttpGet]
-        [JwtAuthorization]
+        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher})]
         public IActionResult GetUsers()
 		{
 			var users = userService.GetAll();
