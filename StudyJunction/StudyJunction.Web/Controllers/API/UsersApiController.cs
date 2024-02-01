@@ -16,7 +16,6 @@ namespace StudyJunction.Web.Controllers.API
 {
 	[Route("api/users")]
 	[ApiController]
-	[Authorize]
 	public class UsersApiController : ControllerBase
 	{
 		private IUserService userService;
@@ -68,9 +67,8 @@ namespace StudyJunction.Web.Controllers.API
 			}
         }
 
-		[HttpGet("")]
+		[HttpGet]
         [JwtAuthorization]
-        [Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
         public IActionResult GetUsers()
 		{
 			var users = userService.GetAll();

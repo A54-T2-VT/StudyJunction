@@ -195,7 +195,7 @@ namespace StudyJunction.Core.Services
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddSeconds(30),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
