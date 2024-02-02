@@ -6,6 +6,7 @@ using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using StudyJunction.Web.CustomAttributes;
@@ -15,7 +16,6 @@ namespace StudyJunction.Web.Controllers.API
 {
 	[Route("api/users")]
 	[ApiController]
-	[Authorize]
 	public class UsersApiController : ControllerBase
 	{
 		private IUserService userService;
@@ -67,8 +67,8 @@ namespace StudyJunction.Web.Controllers.API
 			}
         }
 
-		[HttpGet("")]
-        [JwtAuthorization]
+		[HttpGet]
+        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher})]
         public IActionResult GetUsers()
 		{
 			var users = userService.GetAll();
@@ -123,7 +123,7 @@ namespace StudyJunction.Web.Controllers.API
 
 		[HttpPut("")]
         [JwtAuthorization]
-        public IActionResult Update([FromBody] UserRequestDto newData/*, [FromHeader] string authorization*/)
+        public IActionResult Update([FromBody] UpdateUserDataRequestDto newData/*, [FromHeader] string authorization*/)
 		{
 			try
 			{
@@ -139,15 +139,45 @@ namespace StudyJunction.Web.Controllers.API
 			{
 				return BadRequest(ex.Message);
 			}
-		}
+            catch (NotImplementedException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-		[HttpDelete("{id}")]
+        [HttpPut("password")]
         [JwtAuthorization]
-        public IActionResult DeleteUser(string id, [FromHeader] string username)
+        public IActionResult Update([FromBody] UpdateUserPasswordRequestDto passData/*, [FromHeader] string authorization*/)
+        {
+            try
+            {
+                var username = User.FindFirstValue(ClaimTypes.Name);
+                var updated = userService.Update(passData, username);
+                return Ok(updated);
+            }
+            catch (UnauthorizedUserException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+			catch(NotImplementedException ex)
+			{
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpDelete("{id}")]
+        [JwtAuthorization]
+        public IActionResult DeleteUser(string id)
 		{
 			try
 			{
-				var deleted = userService.Delete(id, username);
+                var username = User.FindFirstValue(ClaimTypes.Name);
+                var deleted = userService.Delete(id, username);
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)

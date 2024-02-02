@@ -42,7 +42,23 @@ namespace StudyJunction.Core.Services
 
         public UserResponseDTO Delete(string id, string username)
         {
-            throw new NotImplementedException();
+            var userToDelete = userManager.FindByIdAsync(id).Result;
+
+            if (!(userToDelete.UserName == username))
+            {
+                throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
+            }
+
+            //var result = userManager.DeleteAsync(userToDelete).Result;
+
+            //if (!result.Succeeded)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            var user = userRepository.DeleteAsync(id).Result;
+
+            return mapper.Map<UserResponseDTO>(user);
         }
 
         public IEnumerable<UserResponseDTO> GetAll()
@@ -94,15 +110,16 @@ namespace StudyJunction.Core.Services
         {
             var user = await userManager.FindByEmailAsync(loginUserDto.Email);
 
-            var result = await signInManager.PasswordSignInAsync(user, loginUserDto.Password, false, false);
 
-            if (!result.Succeeded)
+            var passwordIsValid = userManager.CheckPasswordAsync(user, loginUserDto.Password);
+
+            if (!(await passwordIsValid))
             {
-                throw new NotImplementedException();
+                throw new InvalidCredentialsException(ExceptionMessages.INVALID_CREDENTIALS_MESSAGE);
             }
 
 
-            return CreateToken(user);
+            return await CreateToken(user);
         }
 
         public async Task<UserResponseDTO> Register(RegisterUserRequestDto newUser)
@@ -124,20 +141,15 @@ namespace StudyJunction.Core.Services
             
         }
 
-        public UserResponseDTO Update(UserRequestDto updatedUser, string username)
+        public UserResponseDTO Update(UpdateUserDataRequestDto updatedUser, string username)
         {
             
             var toUpdate = userManager.FindByNameAsync(username).Result;
             
-            if(toUpdate.UserName != username)
-            {
-                throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
-            }
 
 
             toUpdate.FirstName = updatedUser.Firstname;
             toUpdate.LastName = updatedUser.Lastname;
-            //userManager.ChangePasswordAsync(toUpdate, updatedUser.Password);
 
             var result = userManager.UpdateAsync(toUpdate).Result;
 
@@ -149,12 +161,31 @@ namespace StudyJunction.Core.Services
             return mapper.Map<UserResponseDTO>(toUpdate);
         }
 
-        private string CreateToken(UserDb user)
+        public UserResponseDTO Update(UpdateUserPasswordRequestDto passData, string username)
         {
+            var toUpdate = userManager.FindByNameAsync(username).Result;
+
+            var result = userManager.ChangePasswordAsync(toUpdate, passData.OldPassword, passData.NewPassword).Result;
+
+            if (!result.Succeeded)
+            {
+                throw new NotImplementedException();
+            }
+
+            return mapper.Map<UserResponseDTO>(toUpdate);
+
+        }
+
+        private async Task<string> CreateToken(UserDb user)
+        {
+            var highestRole = GetHighestRoleAsync(user);
+
+
             List<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, await highestRole )
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
@@ -169,6 +200,30 @@ namespace StudyJunction.Core.Services
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
+        }
+
+        private async Task<string> GetHighestRoleAsync(UserDb user)
+        {
+            var roles = await userManager.GetRolesAsync(user);
+
+            if (roles.Count == 1)
+            {
+                return RolesConstants.Student;
+            }
+            else if (roles.Count == 2)
+            {
+                return RolesConstants.Teacher;
+            }
+            else if (roles.Count == 3)
+            {
+                return RolesConstants.Admin;
+            }
+            else //roles.Count should be 4
+            {
+                return RolesConstants.God;
+            }
+
+
         }
 
         private async Task CreateRoles()
