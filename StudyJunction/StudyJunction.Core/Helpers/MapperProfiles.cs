@@ -16,15 +16,19 @@ namespace StudyJunction.Core.Helpers
             this.CreateMap<AddCategoryRequestDto, CategoryDb>();
             this.CreateMap<CategoryDb, CategoryResponseDTO>();
             this.CreateMap<CategoryRequestDto, CategoryDb>();
-            //this.CreateMap<AddCourseRequestDto, CourseDb>();
+			//this.CreateMap<AddCourseRequestDto, CourseDb>();
 
-            this.CreateMap<CourseDb, CourseResponseDTO>()
+			CreateMap<AddCourseRequestDto, CourseDb>()
+			.ForMember(dest => dest.CategoryId, opt => opt.MapFrom
+            ((src, dest, destMember) => destMember));
+
+			this.CreateMap<CourseDb, CourseResponseDTO>()
                 .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.CreatedBy.UserName))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
             this.CreateMap<CourseRequestDto, CourseDb>();
         }
 
-        private static string ExtractUserName(string email)
+		private static string ExtractUserName(string email)
         {
             // Add null check or validation if needed
             int atIndex = email.IndexOf('@');

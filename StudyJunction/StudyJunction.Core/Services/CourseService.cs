@@ -52,23 +52,26 @@ namespace StudyJunction.Core.Services
                 CreatorId = creatorUser.UserName,
                 CreatedBy = creatorUser
 			};
-
+           
 			return mapper.Map<CourseResponseDTO>(courseRepository.CreateAsync(courseDb).Result);
         }
 
         public ICollection<CourseResponseDTO> GetAll()
         {
-            throw new NotImplementedException();
+            return courseRepository.GetAllAsync().Result
+                .Select(x => mapper.Map<CourseResponseDTO>(x))
+                .ToList();
         }
 
         public CourseResponseDTO GetCourse(Guid courseId)
         {
-            throw new NotImplementedException();
+            return mapper.Map<CourseResponseDTO>
+                (courseRepository.GetByIdAsync(courseId).Result);
         }
 
         public CourseResponseDTO GetCourse(string title)
         {
-            throw new NotImplementedException();
+            return mapper.Map<CourseResponseDTO>(courseRepository.GetByTitleAsync(title).Result);
         }
 
         public CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData, string username)
@@ -95,7 +98,8 @@ namespace StudyJunction.Core.Services
 		}
 		public CourseResponseDTO Delete(Guid toDelete, string username)
 		{
-			throw new NotImplementedException();
+            //
+            return mapper.Map<CourseResponseDTO>(courseRepository.DeleteAsync(toDelete));
 		}
 
 		public CourseResponseDTO UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string username)
