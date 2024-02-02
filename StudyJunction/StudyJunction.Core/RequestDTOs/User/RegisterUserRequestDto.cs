@@ -1,9 +1,7 @@
-﻿
-
-using StudyJunction.Infrastructure.Constants;
+﻿using StudyJunction.Infrastructure.Constants;
 using System.ComponentModel.DataAnnotations;
 
-namespace StudyJunction.Core.RequestDTOs
+namespace StudyJunction.Core.RequestDTOs.User
 {
     public class RegisterUserRequestDto
     {

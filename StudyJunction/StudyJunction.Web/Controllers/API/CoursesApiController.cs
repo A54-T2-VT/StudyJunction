@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StudyJunction.Core.RequestDTOs;
+using StudyJunction.Core.Helpers;
+using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
+using StudyJunction.Web.CustomAttributes;
 using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
 {
-	[Route("api/courses")]
+    [Route("api/courses")]
 	[ApiController]
 	public class CoursesApiController : ControllerBase
 	{
@@ -57,12 +59,16 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		[Authorize(Roles = RolesConstants.Teacher + "," + RolesConstants.Admin + "," + RolesConstants.God)]
+		//[Authorize(Roles = RolesConstants.Teacher + "," + RolesConstants.Admin + "," + RolesConstants.God)]
+		//[Authorize]
+		[JwtAuthorization]
 		public IActionResult CreateCourse([FromBody] AddCourseRequestDto newCourse)
 		{
 			try
 			{
-				var username = User.FindFirstValue(ClaimTypes.Name);
+				var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+				var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 				var course = courseService.Create(newCourse, username);
 				return Ok(course);
 			}

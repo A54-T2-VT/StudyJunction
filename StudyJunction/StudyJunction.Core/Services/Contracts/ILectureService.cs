@@ -1,9 +1,9 @@
-﻿using StudyJunction.Core.RequestDTOs;
+﻿using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.ResponseDTOs;
 
 namespace StudyJunction.Core.Services.Contracts
 {
-	public interface ILectureService
+    public interface ILectureService
 	{
 		LectureResponseDTO Get(Guid id);
 		LectureResponseDTO Get(string title);

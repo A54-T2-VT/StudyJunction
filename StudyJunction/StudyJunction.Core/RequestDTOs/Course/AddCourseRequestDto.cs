@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using static StudyJunction.Infrastructure.Constants.ModelsConstants;
 
-namespace StudyJunction.Core.RequestDTOs
+namespace StudyJunction.Core.RequestDTOs.Course
 {
     public class AddCourseRequestDto
     {
@@ -13,7 +13,7 @@ namespace StudyJunction.Core.RequestDTOs
         [StringLength(CourseDecsriptionMaxLength)]
         public string Description { get; set; }
         [Required]
-        public string Category { get; set; }
+        public string CategoryName { get; set; }
         //public string CreatorName { get; set; }
     }
 }

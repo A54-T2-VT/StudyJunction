@@ -1,4 +1,4 @@
-﻿using StudyJunction.Core.RequestDTOs;
+﻿using StudyJunction.Core.RequestDTOs.Note;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Repositories.Contracts;

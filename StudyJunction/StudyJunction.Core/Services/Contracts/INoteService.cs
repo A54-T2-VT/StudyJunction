@@ -1,9 +1,9 @@
-﻿using StudyJunction.Core.RequestDTOs;
+﻿using StudyJunction.Core.RequestDTOs.Note;
 using StudyJunction.Core.ResponseDTOs;
 
 namespace StudyJunction.Core.Services.Contracts
 {
-	public interface INoteService
+    public interface INoteService
 	{
         IEnumerable<NoteResponseDTO> GetAll();
         NoteResponseDTO GetById(Guid id);

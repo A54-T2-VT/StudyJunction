@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StudyJunction.Core.RequestDTOs;
+using StudyJunction.Core.RequestDTOs.Category;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
 {
-	[Route("api/categories")]
+    [Route("api/categories")]
 	[ApiController]
 	public class CategoriesApiController : ControllerBase
 	{
@@ -54,7 +54,7 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
+		//[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
 		public IActionResult CreateCategory([FromBody] AddCategoryRequestDto dto)
 		{
 			try

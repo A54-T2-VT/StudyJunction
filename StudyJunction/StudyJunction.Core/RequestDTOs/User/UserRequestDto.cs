@@ -1,6 +1,4 @@
-﻿
-
-namespace StudyJunction.Core.RequestDTOs
+﻿namespace StudyJunction.Core.RequestDTOs.User
 {
     public class UserRequestDto
     {

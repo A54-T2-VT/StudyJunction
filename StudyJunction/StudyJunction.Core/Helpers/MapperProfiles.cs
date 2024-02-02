@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using StudyJunction.Core.RequestDTOs;
+using StudyJunction.Core.RequestDTOs.Category;
+using StudyJunction.Core.RequestDTOs.Course;
+using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Infrastructure.Data.Models;
 
@@ -10,17 +12,19 @@ namespace StudyJunction.Core.Helpers
         public MapperProfiles()
         {
             this.CreateMap<UserDb, UserResponseDTO>();
+            this.CreateMap<CategoryDb, CategoryResponseDTO>();
+            this.CreateMap<CourseDb, CourseResponseDTO>()
+                .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.CreatedBy.UserName))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
+
             this.CreateMap<RegisterUserRequestDto, UserDb>()
                 .ForMember(d => d.UserName, p => p.MapFrom(s => ExtractUserName(s.Email)));
             this.CreateMap<LoginUserRequestDto, UserDb>();
             this.CreateMap<AddCategoryRequestDto, CategoryDb>();
-            this.CreateMap<CategoryDb, CategoryResponseDTO>();
             this.CreateMap<CategoryRequestDto, CategoryDb>();
-            //this.CreateMap<AddCourseRequestDto, CourseDb>();
+            this.CreateMap<AddCourseRequestDto, CourseDb>()
+                .ForMember(d => d.CategoryId, p => p.MapFrom(s => new Guid(s.CategoryName)));
 
-            this.CreateMap<CourseDb, CourseResponseDTO>()
-                .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.CreatedBy.UserName))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
             this.CreateMap<CourseRequestDto, CourseDb>();
         }
 

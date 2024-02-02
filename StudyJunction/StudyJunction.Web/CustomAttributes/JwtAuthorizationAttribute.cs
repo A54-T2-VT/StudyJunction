@@ -14,7 +14,7 @@ namespace StudyJunction.Web.CustomAttributes
     {
         private readonly byte[] key = Encoding.ASCII.GetBytes("0xCCFA1F3F7D74D68C7FC9BEDB7CA791BB5D2D3DE15B6E0A9729608C6B0551993E1DCF49CF1FDF1BAADF");
 
-        public string[] ClearedRoles { get; set; }
+        public string[] ClearedRoles { get; set; } = new string[0];
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
@@ -33,6 +33,12 @@ namespace StudyJunction.Web.CustomAttributes
             if (IsTokenValid(token))
             {
                 // Perform any additional authorization logic here if needed
+
+                if(ClearedRoles.Length == 0)
+                {
+                    return;
+                }
+
                 var tokenRole = GetRoleFromToken(token);
                 if (!ClearedRoles.Contains(tokenRole))
                 {

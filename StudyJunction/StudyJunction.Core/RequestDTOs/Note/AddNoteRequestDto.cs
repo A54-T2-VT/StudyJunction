@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StudyJunction.Core.RequestDTOs
+namespace StudyJunction.Core.RequestDTOs.Note
 {
     public class AddNoteRequestDto
     {

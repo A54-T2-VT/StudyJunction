@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StudyJunction.Core.RequestDTOs;
+using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Exceptions;
@@ -8,7 +8,7 @@ using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Web.Controllers.API
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class LecturesApiController : ControllerBase
 	{

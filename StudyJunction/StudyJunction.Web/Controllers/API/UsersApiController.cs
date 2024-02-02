@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using StudyJunction.Core.RequestDTOs;
+using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
@@ -14,7 +14,7 @@ using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
 {
-	[Route("api/users")]
+    [Route("api/users")]
 	[ApiController]
 	public class UsersApiController : ControllerBase
 	{

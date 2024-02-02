@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using StudyJunction.Core.RequestDTOs;
+using StudyJunction.Core.RequestDTOs.Category;
+using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
@@ -38,20 +39,22 @@ namespace StudyJunction.Core.Services
 
             //its mapped this way because of the needed conversion of string Category
             //to CategoryDb Category & Guid CategoryId
-			var category = categoryRepository.GetByNameAsync(newCourse.Category).Result;
-            var categoryId = category.Id;
+			var categoryDb = categoryRepository.GetByNameAsync(newCourse.CategoryName).Result;
+            newCourse.CategoryName = categoryDb.Id.ToString();
             var creatorUser = userManager.FindByNameAsync(username).Result;
 
 			// Map AddCourseRequestDto to CourseDb
-			var courseDb = new CourseDb
-			{
-				Title = newCourse.Title,
-				Description = newCourse.Description,
-				CategoryId = categoryId,
-				Category = category,
-                CreatorId = creatorUser.UserName,
-                CreatedBy = creatorUser
-			};
+			//var courseDb = new CourseDb
+			//{
+			//	Title = newCourse.Title,
+			//	Description = newCourse.Description,
+			//	CategoryId = categoryId,
+			//	Category = category,
+   //             CreatorId = creatorUser.UserName,
+   //             CreatedBy = creatorUser
+			//};
+
+            var courseDb = mapper.Map<CourseDb>(newCourse, opt => opt.AfterMap((src, dest) => dest.CreatorId = creatorUser.Id));
 
 			return mapper.Map<CourseResponseDTO>(courseRepository.CreateAsync(courseDb).Result);
         }

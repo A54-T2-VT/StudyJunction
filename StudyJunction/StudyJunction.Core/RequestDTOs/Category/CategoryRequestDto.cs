@@ -2,7 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace StudyJunction.Core.RequestDTOs
+namespace StudyJunction.Core.RequestDTOs.Category
 {
     public class CategoryRequestDto
     {

@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using StudyJunction.Core.RequestDTOs;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Constants;
+using StudyJunction.Core.RequestDTOs.Category;
 
 namespace StudyJunction.Core.Services
 {
-	public class CategoryService : ICategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly IUserRepository usersRepository;
         private readonly ICategoryRepository categoryRepository;
