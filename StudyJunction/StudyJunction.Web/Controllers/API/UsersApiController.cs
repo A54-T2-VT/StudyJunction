@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using StudyJunction.Core.Helpers;
 using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services;
@@ -123,11 +124,13 @@ namespace StudyJunction.Web.Controllers.API
 
 		[HttpPut("")]
         [JwtAuthorization]
-        public IActionResult Update([FromBody] UpdateUserDataRequestDto newData/*, [FromHeader] string authorization*/)
+        public IActionResult Update([FromBody] UpdateUserDataRequestDto newData)
 		{
 			try
 			{
-				var username = User.FindFirstValue(ClaimTypes.Name);
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+				var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
 				var updated = userService.Update(newData, username);
 				return Ok(updated);
 			}
@@ -147,11 +150,13 @@ namespace StudyJunction.Web.Controllers.API
 
         [HttpPut("password")]
         [JwtAuthorization]
-        public IActionResult Update([FromBody] UpdateUserPasswordRequestDto passData/*, [FromHeader] string authorization*/)
+        public IActionResult Update([FromBody] UpdateUserPasswordRequestDto passData)
         {
             try
             {
-                var username = User.FindFirstValue(ClaimTypes.Name);
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
                 var updated = userService.Update(passData, username);
                 return Ok(updated);
             }
@@ -176,7 +181,9 @@ namespace StudyJunction.Web.Controllers.API
 		{
 			try
 			{
-                var username = User.FindFirstValue(ClaimTypes.Name);
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
                 var deleted = userService.Delete(id, username);
 				return Ok(deleted);
 			}

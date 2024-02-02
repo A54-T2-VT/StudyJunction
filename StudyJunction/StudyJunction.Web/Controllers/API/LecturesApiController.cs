@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StudyJunction.Core.Helpers;
 using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
@@ -54,11 +55,14 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		public IActionResult CreateLecture([FromBody] AddLectureRequestDto newLecture, [FromHeader] string username)
+		public IActionResult CreateLecture([FromBody] AddLectureRequestDto newLecture)
 		{
 			try
 			{
-				var lecture = lectureService.Create(newLecture, username);
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
+                var lecture = lectureService.Create(newLecture, username);
 				return Ok(lecture);
 			}
 			catch (UnauthorizedUserException e)
@@ -72,11 +76,14 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("{id}")]
-		public IActionResult UpdateLecture(string id, [FromBody] LectureRequestDto newData, [FromHeader] string username)
+		public IActionResult UpdateLecture(string id, [FromBody] LectureRequestDto newData)
 		{
 			try
 			{
-				var updated = lectureService.Update(new Guid(id), newData, username);
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
+                var updated = lectureService.Update(new Guid(id), newData, username);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
@@ -90,11 +97,14 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpDelete("{id}")]
-		public IActionResult DeleteLecture(string id, [FromHeader] string username)
+		public IActionResult DeleteLecture(string id)
 		{
 			try
 			{
-				var deleted = lectureService.Delete(new Guid(id), username);
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
+                var deleted = lectureService.Delete(new Guid(id), username);
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)
