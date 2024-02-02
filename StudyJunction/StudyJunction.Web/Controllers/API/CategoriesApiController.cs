@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.Helpers;
 using StudyJunction.Core.RequestDTOs.Category;
+using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
@@ -21,12 +22,24 @@ namespace StudyJunction.Web.Controllers.API
 			categoryService = _categoryService;
 		}
 
-		[HttpGet("{id}")]
-		public IActionResult GetById(string id)
+		[HttpGet("find")]
+		public IActionResult FindCategory(string searchTerm)
 		{
 			try
 			{
-				var category = categoryService.GetById(new Guid(id));
+				CategoryResponseDTO category;
+
+				if(Guid.TryParse(searchTerm, out Guid id)) 
+				{
+                    category = categoryService.GetById(id);
+
+				}
+                else
+                {
+					category = categoryService.GetByName(searchTerm);
+                }
+
+
 				return Ok(category);
 			}
 			catch (EntityNotFoundException ex)
@@ -35,19 +48,6 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		//[HttpGet("{name}")]
-		//public IActionResult GetByName(string name)
-		//{
-		//	try
-		//	{
-		//		var category = categoryService.GetByName(name);
-		//		return Ok(category);
-		//	}
-		//	catch (EntityNotFoundException ex)
-		//	{
-		//		return BadRequest(ex.Message);
-		//	}
-		//}
 
 		[HttpGet("")]
 		public IActionResult GetAll()
