@@ -37,22 +37,11 @@ namespace StudyJunction.Core.Services
                     String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCourse.Title));
             }
 
-            //its mapped this way because of the needed conversion of string Category
-            //to CategoryDb Category & Guid CategoryId
 			var categoryDb = categoryRepository.GetByNameAsync(newCourse.CategoryName).Result;
             newCourse.CategoryName = categoryDb.Id.ToString();
             var creatorUser = userManager.FindByNameAsync(username).Result;
 
-			// Map AddCourseRequestDto to CourseDb
-			//var courseDb = new CourseDb
-			//{
-			//	Title = newCourse.Title,
-			//	Description = newCourse.Description,
-			//	CategoryId = categoryId,
-			//	Category = category,
-   //             CreatorId = creatorUser.UserName,
-   //             CreatedBy = creatorUser
-			//};
+
 
             var courseDb = mapper.Map<CourseDb>(newCourse, opt => opt.AfterMap((src, dest) => dest.CreatorId = creatorUser.Id));
 

@@ -9,7 +9,7 @@ using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Web.Controllers.API
 {
-    [Route("api/[controller]")]
+    [Route("api/lecture")]
 	[ApiController]
 	public class LecturesApiController : ControllerBase
 	{
@@ -55,15 +55,29 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		public IActionResult CreateLecture([FromBody] AddLectureRequestDto newLecture)
+		public IActionResult CreateLecture( IFormCollection form)
 		{
 			try
 			{
-                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+                // Access JSON data
+                string jsonData = form["jsonData"];
 
-                var lecture = lectureService.Create(newLecture, username);
-				return Ok(lecture);
+                // Access file
+                var file = form.Files["file"];
+
+				CloudinaryApi test = new CloudinaryApi();
+
+				test.UploadPdfToCloudinary(file);
+
+                ;
+
+    //            var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+    //            var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
+    //            var lecture = lectureService.Create(newLecture, username);
+				//return Ok(lecture);
+
+				throw new NotImplementedException();
 			}
 			catch (UnauthorizedUserException e)
 			{
