@@ -9,10 +9,9 @@ namespace StudyJunction.Core.Services.Contracts
 		LectureResponseDTO Get(Guid id);
 		LectureResponseDTO Get(string title);
 		ICollection<LectureResponseDTO> GetAll();
-		LectureResponseDTO CreateWithAssignment(AddLectureRequestDto newLecture, IFormFile assignment, string username);
-		LectureResponseDTO CreateWoutAssignement(AddLectureRequestDto newLecture, string username);
-		LectureResponseDTO AddAssignment(IFormFile assignement, Guid lectureID, string username);
-		LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData);
-		LectureResponseDTO Delete(Guid id);
+		LectureResponseDTO Create(AddLectureRequestDto newLecture, string username);
+		Task<LectureResponseDTO> AddAssignmentAsync(string lectureId, IFormFile assignment, string userId);
+		LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData, string username);
+		LectureResponseDTO Delete(Guid id, string username);
 	}
 }

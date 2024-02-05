@@ -1,6 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using StudyJunction.Infrastructure.Exceptions;
 using System.Net;
 
@@ -12,10 +13,12 @@ namespace StudyJunction.Core.ExternalApis
 
         public CloudinaryService()
         {
+            var keys = ReadApiKeysFromFile();
+
             Account account = new Account(
-              "dxhiilbyu",
-              "876566559519863",
-              "WRIbU2JBLvGuAvX0C2KUdGkbHMA");
+              keys.Cloud,
+              keys.ApiKey,
+              keys.ApiSecret);
 
             cloudinary = new Cloudinary(account);
 
@@ -64,6 +67,30 @@ namespace StudyJunction.Core.ExternalApis
         public string[] UploadVideoToCloudinary()
         {
             throw new NotImplementedException ();
+        }
+
+        private CloudinaryKeys ReadApiKeysFromFile()
+        {
+            try
+            {
+                const string fileName = "CloudinaryApiKeys.json";
+                // Get the full path to the JSON file in the same directory as the executable
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+
+                // Read the JSON file
+                string jsonContent = File.ReadAllText(filePath);
+
+                // Deserialize JSON to object
+                var apiKeys = JsonConvert.DeserializeObject<CloudinaryKeys>(jsonContent);
+
+                return apiKeys;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., file not found, invalid JSON, etc.)
+                Console.WriteLine($"Error reading API keys: {ex.Message}");
+                return null;
+            }
         }
     }
 }
