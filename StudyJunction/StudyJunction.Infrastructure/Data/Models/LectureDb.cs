@@ -9,10 +9,10 @@ namespace StudyJunction.Infrastructure.Data.Models
         public string Description { get; set; }
         public Guid CourseId { get; set; }
         public CourseDb Course { get; set; }
-        public string VideoLinkCloudinaryId { get; set; }
-        public string VideoLinkCloudinaryUri { get; set; }
-        public string AssignmentCloudinaryId { get; set; }
-        public string AssignmentCloudinaryUri { get; set; }
+        public string? VideoLinkCloudinaryId { get; set; }
+        public string? VideoLinkCloudinaryUri { get; set; }
+        public string? AssignmentCloudinaryId { get; set; }
+        public string? AssignmentCloudinaryUri { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
 
