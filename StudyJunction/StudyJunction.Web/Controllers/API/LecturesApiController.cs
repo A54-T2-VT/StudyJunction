@@ -5,10 +5,12 @@ using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
+using StudyJunction.Web.CustomAttributes;
+using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
 {
-    [Route("api/[controller]")]
+    [Route("api/lectures")]
 	[ApiController]
 	public class LecturesApiController : ControllerBase
 	{
@@ -54,10 +56,12 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		public IActionResult CreateLecture([FromBody] AddLectureRequestDto newLecture, [FromHeader] string username)
+		[JwtAuthorization]
+		public IActionResult CreateLecture([FromBody] AddLectureRequestDto newLecture)
 		{
 			try
 			{
+				var username = User.FindFirstValue(ClaimTypes.Name);
 				var lecture = lectureService.Create(newLecture, username);
 				return Ok(lecture);
 			}
@@ -72,11 +76,12 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("{id}")]
+		[JwtAuthorization]
 		public IActionResult UpdateLecture(string id, [FromBody] LectureRequestDto newData, [FromHeader] string username)
 		{
 			try
 			{
-				var updated = lectureService.Update(new Guid(id), newData, username);
+				var updated = lectureService.Update(new Guid(id), newData);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
@@ -90,11 +95,12 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpDelete("{id}")]
+		[JwtAuthorization]
 		public IActionResult DeleteLecture(string id, [FromHeader] string username)
 		{
 			try
 			{
-				var deleted = lectureService.Delete(new Guid(id), username);
+				var deleted = lectureService.Delete(new Guid(id));
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)

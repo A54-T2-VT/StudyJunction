@@ -83,12 +83,14 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("{id}")]
-		[Authorize(Roles = RolesConstants.Teacher + "," + RolesConstants.Admin + "," + RolesConstants.God)]
+		[JwtAuthorization]
 		public IActionResult UpdateCourse(string id, [FromBody] CourseRequestDto newData) 
 		{
 			try
 			{
-				var username = User.FindFirstValue(ClaimTypes.Name);
+				var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+				var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
 				var updated = courseService.Update(new Guid(id), newData, username);
 				return Ok(updated);
@@ -104,7 +106,7 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpDelete("{id}")]
-		[Authorize(Roles = RolesConstants.Teacher + "," + RolesConstants.Admin + "," + RolesConstants.God)]
+		[JwtAuthorization]
 		public IActionResult DeleteCourse(string id, [FromHeader] string username)
 		{
 			try

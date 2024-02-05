@@ -11,5 +11,6 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 		Task<CourseDb> UpdateAsync(Guid id, CourseDb updatedCourse);
 		Task<CourseDb> DeleteAsync(Guid id);
 		bool CourseTitleExists(string title);
+
 	}
 }

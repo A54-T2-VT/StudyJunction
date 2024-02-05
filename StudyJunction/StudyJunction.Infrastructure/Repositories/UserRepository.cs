@@ -74,7 +74,8 @@ namespace StudyJunction.Infrastructure.Repositories
 		}
 		public bool HasCreatedCourse(UserDb user, string courseTitle)
 		{
-			return user.MyCreatedCourses.Any(x => x.Title == courseTitle);
+			var userDb = context.Users.Include(x => x.MyCreatedCourses).FirstOrDefault(x => x.Id == user.Id);
+			return userDb.MyCreatedCourses.Any(x => x.Title == courseTitle);
 		}
 	}
 }
