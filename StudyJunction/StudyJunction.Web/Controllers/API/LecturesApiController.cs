@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.Helpers;
 using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.Services;
@@ -65,7 +66,7 @@ namespace StudyJunction.Web.Controllers.API
                 // Access file
                 var file = form.Files["file"];
 
-				CloudinaryApi test = new CloudinaryApi();
+				CloudinaryService test = new CloudinaryService();
 
 				test.UploadPdfToCloudinary(file);
 

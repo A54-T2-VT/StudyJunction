@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.Helpers;
 using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
@@ -45,6 +46,8 @@ namespace StudyJunction.Web
             builder.Services.AddScoped<INoteService, NoteService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
+            builder.Services.AddSingleton<CloudinaryService>();
+
             //AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
             AutoMapper.IConfigurationProvider cfg = new MapperConfiguration(cfg => { cfg.AddProfile<MapperProfiles>(); });
@@ -65,13 +68,6 @@ namespace StudyJunction.Web
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            //CloudinaryDotNet.Account account = new CloudinaryDotNet.Account(
-            //  "dxhiilbyu",
-            //  "876566559519863",
-            //  "WRIbU2JBLvGuAvX0C2KUdGkbHMA");
-
-            //Cloudinary cloudinary = new Cloudinary(account);
-
 
             //JWT
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -84,7 +80,6 @@ namespace StudyJunction.Web
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ClockSkew = TimeSpan.FromSeconds(30)
-                        //ValidateLifetime = true
                     };
                 });
 
