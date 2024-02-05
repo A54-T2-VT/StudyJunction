@@ -8,8 +8,8 @@ namespace StudyJunction.Infrastructure.Data.Models
         //first name, last name, email, passwor, profile image
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public byte[] ProfileImage { get; set; }
-
+        public string ProfileImageCloudinaryId { get; set; }
+        public string ProfileImageCloudinaryUri { get; set; }
         public ICollection<NoteDb> MyNotes { get; set; } = new List<NoteDb>();
         public ICollection<UsersLecturesDb> MyLectures { get; set; } = new List<UsersLecturesDb>();
         public ICollection<UsersCoursesDb> MyEnrolledCourses { get; set; } = new List<UsersCoursesDb>();

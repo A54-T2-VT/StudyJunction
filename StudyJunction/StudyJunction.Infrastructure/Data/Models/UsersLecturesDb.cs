@@ -9,7 +9,8 @@ namespace StudyJunction.Infrastructure.Data.Models
         public string UserId { get; set; }
         public UserDb User { get; set; }
 
-        public byte[]? UserAssignment { get; set; }
+        public string? AssignmentCloudinaryId { get; set; }
+        public string? AssignmentCloudinaryUri { get; set; }
 
         public bool IsFinished { get; set; }
     }
