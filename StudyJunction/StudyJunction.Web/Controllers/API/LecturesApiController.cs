@@ -105,11 +105,11 @@ namespace StudyJunction.Web.Controllers.API
             }
 			catch(UnauthorizedUserException ex)
 			{
-				return Unauthorized();
+				return Unauthorized(ex.Message);
 			}
 			catch(NameDuplicationException ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
