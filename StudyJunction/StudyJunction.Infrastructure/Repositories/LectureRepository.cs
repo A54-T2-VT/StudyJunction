@@ -67,9 +67,26 @@ namespace StudyJunction.Infrastructure.Repositories
 
 			lectureToUpdate.Title = newData.Title;
 			lectureToUpdate.Description = newData.Description;
+			lectureToUpdate.VideoLinkCloudinaryId = newData.VideoLinkCloudinaryId;
+			lectureToUpdate.VideoLinkCloudinaryUri = newData.VideoLinkCloudinaryUri;
+			lectureToUpdate.AssignmentCloudinaryId = newData.AssignmentCloudinaryId;
+			lectureToUpdate.AssignmentCloudinaryUri = newData.AssignmentCloudinaryUri;
+
 
 			await context.SaveChangesAsync();
 			return lectureToUpdate;
 		}
+
+		public async Task<bool> IsUserOwner(string userId, Guid lectureId)
+		{
+			var course = await context.Courses
+				.Include(c => c.CreatedBy)
+				.Include(c => c.Lectures)
+				.FirstOrDefaultAsync(c => c.CreatorId == userId) ?? throw new EntityNotFoundException(string.Format(ExceptionMessages.USER_WITH_ID_NOT_FOUND_MESSAGE, userId));
+
+			return course.Lectures.Any(l => l.Id == lectureId);
+		}
+
+
 	}
 }

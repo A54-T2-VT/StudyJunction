@@ -10,5 +10,7 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 		Task<LectureDb> CreateAsync(LectureDb newLecture);
 		Task<LectureDb> UpdateAsync(Guid toUpdate, LectureDb newData);
 		Task<LectureDb> DeleteAsync(Guid id);
-	}
+		Task<bool> IsUserOwner(string userId, Guid lectureId);
+
+    }
 }
