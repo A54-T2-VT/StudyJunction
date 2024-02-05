@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Assignments\**" />
+    <Compile Remove="wwwroot\Submitted\**" />
+    <Content Remove="wwwroot\Assignments\**" />
+    <Content Remove="wwwroot\Submitted\**" />
+    <EmbeddedResource Remove="wwwroot\Assignments\**" />
+    <EmbeddedResource Remove="wwwroot\Submitted\**" />
+    <None Remove="wwwroot\Assignments\**" />
+    <None Remove="wwwroot\Submitted\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.26" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.26">
       <PrivateAssets>all</PrivateAssets>
@@ -19,11 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StudyJunction.Core\StudyJunction.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Assignments\" />
-    <Folder Include="wwwroot\Submitted\" />
   </ItemGroup>
 
 </Project>
