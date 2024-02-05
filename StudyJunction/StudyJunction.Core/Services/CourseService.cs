@@ -38,14 +38,10 @@ namespace StudyJunction.Core.Services
                     String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCourse.Title));
             }
 
-            var creatorUser = userManager.FindByNameAsync(username).Result;
-
 			var categoryDb = categoryRepository.GetByNameAsync(newCourse.CategoryName).Result;
 			newCourse.CategoryName = categoryDb.Id.ToString();
 
-			var courseDb = mapper.Map<CourseDb>(newCourse);
-            courseDb.CreatorId = creatorUser.Id;
-            creatorUser.MyCreatedCourses.Add(courseDb);
+
 
 			return mapper.Map<CourseResponseDTO>(courseRepository.CreateAsync(courseDb).Result);
         }

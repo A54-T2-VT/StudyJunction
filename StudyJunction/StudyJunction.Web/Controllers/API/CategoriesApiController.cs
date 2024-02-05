@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StudyJunction.Core.Helpers;
 using StudyJunction.Core.RequestDTOs.Category;
+using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
+using StudyJunction.Web.CustomAttributes;
 using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
@@ -19,12 +22,24 @@ namespace StudyJunction.Web.Controllers.API
 			categoryService = _categoryService;
 		}
 
-		[HttpGet("{id}")]
-		public IActionResult GetById(string id)
+		[HttpGet("find")]
+		public IActionResult FindCategory(string searchTerm)
 		{
 			try
 			{
-				var category = categoryService.GetById(new Guid(id));
+				CategoryResponseDTO category;
+
+				if(Guid.TryParse(searchTerm, out Guid id)) 
+				{
+                    category = categoryService.GetById(id);
+
+				}
+                else
+                {
+					category = categoryService.GetByName(searchTerm);
+                }
+
+
 				return Ok(category);
 			}
 			catch (EntityNotFoundException ex)
@@ -33,19 +48,6 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		//[HttpGet("{name}")]
-		//public IActionResult GetByName(string name)
-		//{
-		//	try
-		//	{
-		//		var category = categoryService.GetByName(name);
-		//		return Ok(category);
-		//	}
-		//	catch (EntityNotFoundException ex)
-		//	{
-		//		return BadRequest(ex.Message);
-		//	}
-		//}
 
 		[HttpGet("")]
 		public IActionResult GetAll()
@@ -54,8 +56,8 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		//[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
-		public IActionResult CreateCategory([FromBody] AddCategoryRequestDto dto)
+        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God })]
+        public IActionResult CreateCategory([FromBody] AddCategoryRequestDto dto)
 		{
 			try
 			{
@@ -72,13 +74,14 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 		[HttpPost("{id}")]
-		[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
-		public IActionResult CreateSubCategory(string id, [FromBody] AddCategoryRequestDto dto)
+        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God })]
+        public IActionResult CreateSubCategory(string id, [FromBody] AddCategoryRequestDto dto)
 		{
 			try
 			{
-				var username = User.FindFirstValue(ClaimTypes.Name);
-				var newSubCategory = categoryService.CreateSubCategory(dto, new Guid(id));
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+                var newSubCategory = categoryService.CreateSubCategory(dto, new Guid(id));
 				return Ok(newSubCategory);
 			}
 			catch (UnauthorizedUserException ex)
@@ -92,8 +95,8 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("{id}")]
-		[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
-		public IActionResult UpdateCategory(string id, [FromBody] CategoryRequestDto newData)
+        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God })]
+        public IActionResult UpdateCategory(string id, [FromBody] CategoryRequestDto newData)
 		{
 			try
 			{
@@ -114,7 +117,7 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 		[HttpDelete("{id}")]
-		[Authorize(Roles = $"{RolesConstants.Admin}, {RolesConstants.God}")]
+		[JwtAuthorization(ClearedRoles = new string[] {RolesConstants.Admin, RolesConstants.God })]
 		public IActionResult DeleteCategory(string id)
 		{
 			try

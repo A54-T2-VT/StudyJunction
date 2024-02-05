@@ -1,4 +1,5 @@
 using AutoMapper;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace StudyJunction.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            
 
             builder.Services.AddControllersWithViews();
             // Add services to the container.
@@ -62,6 +64,14 @@ namespace StudyJunction.Web
                 });
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
+
+            //CloudinaryDotNet.Account account = new CloudinaryDotNet.Account(
+            //  "dxhiilbyu",
+            //  "876566559519863",
+            //  "WRIbU2JBLvGuAvX0C2KUdGkbHMA");
+
+            //Cloudinary cloudinary = new Cloudinary(account);
+
 
             //JWT
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

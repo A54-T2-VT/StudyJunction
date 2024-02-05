@@ -16,6 +16,6 @@ namespace StudyJunction.Core.RequestDTOs.Lecture
         public string CourseName { get; set; }
         [Required]
         public string VideoLink { get; set; }
-        public IFormFile Assignment { get; set; }
+        //public IFormFile Assignment { get; set; }
     }
 }

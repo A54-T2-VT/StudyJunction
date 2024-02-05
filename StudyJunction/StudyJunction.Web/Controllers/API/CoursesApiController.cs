@@ -59,16 +59,14 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		//[Authorize(Roles = RolesConstants.Teacher + "," + RolesConstants.Admin + "," + RolesConstants.God)]
-		//[Authorize]
-		[JwtAuthorization]
-		public IActionResult CreateCourse([FromBody] AddCourseRequestDto newCourse)
+        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher, RolesConstants.Admin, RolesConstants.God })]
+        public IActionResult CreateCourse([FromBody] AddCourseRequestDto newCourse)
 		{
 			try
 			{
 				var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
 				var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
 				var course = courseService.Create(newCourse, username);
 				return Ok(course);
 			}
@@ -83,16 +81,15 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPut("{id}")]
-		[JwtAuthorization]
-		public IActionResult UpdateCourse(string id, [FromBody] CourseRequestDto newData) 
+        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher, RolesConstants.Admin, RolesConstants.God })]
+        public IActionResult UpdateCourse(string id, [FromBody] CourseRequestDto newData) 
 		{
 			try
 			{
-				var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-				var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
-
-				var updated = courseService.Update(new Guid(id), newData, username);
+                var updated = courseService.Update(new Guid(id), newData, username);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
@@ -106,12 +103,15 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpDelete("{id}")]
-		[JwtAuthorization]
-		public IActionResult DeleteCourse(string id, [FromHeader] string username)
+        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher, RolesConstants.Admin, RolesConstants.God })]
+        public IActionResult DeleteCourse(string id)
 		{
 			try
 			{
-				var deleted = courseService.Delete(new Guid(id), username);
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
+                var deleted = courseService.Delete(new Guid(id), username);
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)
