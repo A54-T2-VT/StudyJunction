@@ -9,6 +9,7 @@ using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StudyJunction.Core.Services
 {
@@ -37,24 +38,14 @@ namespace StudyJunction.Core.Services
                     String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCourse.Title));
             }
 
-            //its mapped this way because of the needed conversion of string Category
-            //to CategoryDb Category & Guid CategoryId
-			var categoryDb = categoryRepository.GetByNameAsync(newCourse.CategoryName).Result;
-            newCourse.CategoryName = categoryDb.Id.ToString();
             var creatorUser = userManager.FindByNameAsync(username).Result;
 
-			// Map AddCourseRequestDto to CourseDb
-			//var courseDb = new CourseDb
-			//{
-			//	Title = newCourse.Title,
-			//	Description = newCourse.Description,
-			//	CategoryId = categoryId,
-			//	Category = category,
-   //             CreatorId = creatorUser.UserName,
-   //             CreatedBy = creatorUser
-			//};
+			var categoryDb = categoryRepository.GetByNameAsync(newCourse.CategoryName).Result;
+			newCourse.CategoryName = categoryDb.Id.ToString();
 
-            var courseDb = mapper.Map<CourseDb>(newCourse, opt => opt.AfterMap((src, dest) => dest.CreatorId = creatorUser.Id));
+			var courseDb = mapper.Map<CourseDb>(newCourse);
+            courseDb.CreatorId = creatorUser.Id;
+            creatorUser.MyCreatedCourses.Add(courseDb);
 
 			return mapper.Map<CourseResponseDTO>(courseRepository.CreateAsync(courseDb).Result);
         }
@@ -79,21 +70,24 @@ namespace StudyJunction.Core.Services
 
         public CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData, string username)
         {
-			if (courseRepository.CourseTitleExists(newData.Title))
+			var user = userManager.FindByNameAsync(username).Result;
+			var courseToUpdate = courseRepository.GetByIdAsync(toUpdate).Result;
+			//check if user has permission to update the course
+			if (!userRepository.HasCreatedCourse(user, courseToUpdate.Title))
 			{
-				throw new NameDuplicationException(
-					String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newData.Title));
+				throw new UnauthorizedUserException(
+					String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
 			}
 
-			var user = userManager.FindByNameAsync(username).Result;
-            
-            //TODO: if the user is a teacher, check if the course is created by them (not optimal at the moment)
-			if (userManager.IsInRoleAsync(user, RolesConstants.Teacher).Result 
-                && !userRepository.HasCreatedCourse(user, newData.Title))
+			
+            if(courseToUpdate.Title != newData.Title) //check if the course title is updated
             {
-                throw new UnauthorizedUserException(
-                    String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
-            }
+				if (courseRepository.CourseTitleExists(newData.Title)) // if it is, check if it is unique
+				{
+					throw new NameDuplicationException(
+						String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newData.Title));
+				}
+			}
 
             var newCourse = mapper.Map<CourseDb>(newData);
             return mapper.Map<CourseResponseDTO>(courseRepository.UpdateAsync(toUpdate, newCourse).Result);
@@ -101,8 +95,17 @@ namespace StudyJunction.Core.Services
 		}
 		public CourseResponseDTO Delete(Guid toDelete, string username)
 		{
-            //
-            return mapper.Map<CourseResponseDTO>(courseRepository.DeleteAsync(toDelete));
+			var user = userManager.FindByNameAsync(username).Result;
+			
+			var courseToDelete = courseRepository.GetByIdAsync(toDelete).Result;
+			//check if user has permission to delete the course
+			if (!userRepository.HasCreatedCourse(user, courseToDelete.Title))
+			{
+				throw new UnauthorizedUserException(
+					String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
+			}
+
+			return mapper.Map<CourseResponseDTO>(courseRepository.DeleteAsync(toDelete));
 		}
 
 		public CourseResponseDTO UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string username)
