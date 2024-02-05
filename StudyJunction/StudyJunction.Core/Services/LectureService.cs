@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.ResponseDTOs;
@@ -31,8 +32,9 @@ namespace StudyJunction.Core.Services
             courseRepository = _courseRepository;
             userManager = _userManager;
 		}
-        public LectureResponseDTO Create(AddLectureRequestDto newLecture, string username)
+        public LectureResponseDTO CreateWithAssignment(AddLectureRequestDto newLecture, IFormFile assignment, string username)
         {
+            //TODO: Add logic for adding assignment
             var course = courseRepository.GetByTitleAsync(newLecture.CourseName).Result;
             
 			if (course.Lectures.Any(x => x.Title == newLecture.Title))
@@ -52,29 +54,35 @@ namespace StudyJunction.Core.Services
             return mapper.Map<LectureResponseDTO>(lectureRepository.CreateAsync(lec));
 		}
 
-        public LectureResponseDTO Delete(Guid id)
+		public LectureResponseDTO CreateWoutAssignement(AddLectureRequestDto newLecture, string username)
+		{
+			throw new NotImplementedException();
+		}
+		public LectureResponseDTO AddAssignment(IFormFile assignement, Guid lectureID, string username)
+		{
+			throw new NotImplementedException();
+		}
+		public LectureResponseDTO Get(Guid id)
+		{
+			throw new NotImplementedException();
+		}
+
+		public LectureResponseDTO Get(string title)
+		{
+			throw new NotImplementedException();
+		}
+
+		public ICollection<LectureResponseDTO> GetAll()
+		{
+			throw new NotImplementedException();
+		}
+		public LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData)
+		{
+			throw new NotImplementedException();
+		}
+		public LectureResponseDTO Delete(Guid id)
         {
             return mapper.Map<LectureResponseDTO>(lectureRepository.DeleteAsync(id));
 		}
-
-        public LectureResponseDTO Get(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public LectureResponseDTO Get(string title)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ICollection<LectureResponseDTO> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData)
-        {
-            throw new NotImplementedException();
-        }
-    }
+	}
 }

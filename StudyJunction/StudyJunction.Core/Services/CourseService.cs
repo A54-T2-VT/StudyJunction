@@ -40,7 +40,7 @@ namespace StudyJunction.Core.Services
 
 			var categoryDb = categoryRepository.GetByNameAsync(newCourse.CategoryName).Result;
 			newCourse.CategoryName = categoryDb.Id.ToString();
-
+            var courseDb = mapper.Map<CourseDb>(newCourse);
 
 
 			return mapper.Map<CourseResponseDTO>(courseRepository.CreateAsync(courseDb).Result);
