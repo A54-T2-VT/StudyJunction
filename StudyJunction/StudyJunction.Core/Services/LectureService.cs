@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
@@ -18,19 +20,22 @@ namespace StudyJunction.Core.Services
 		private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
 		private readonly UserManager<UserDb> userManager;
+        private readonly CloudinaryService cloudinaryService;
 
-		public LectureService(ILectureRepository _lectureRepository,
+        public LectureService(ILectureRepository _lectureRepository,
             IUserRepository _userRepository,
             IMapper _mapper,
             ICourseRepository _courseRepository,
-            UserManager<UserDb> _userManager)
+            UserManager<UserDb> _userManager,
+            CloudinaryService cloudinaryService)
         {
             lectureRepository = _lectureRepository;
 			userRepository = _userRepository;
             mapper = _mapper;
             courseRepository = _courseRepository;
             userManager = _userManager;
-		}
+            this.cloudinaryService = cloudinaryService;
+        }
         public LectureResponseDTO Create(AddLectureRequestDto newLecture, string username)
         {
             var course = courseRepository.GetByTitleAsync(newLecture.CourseName).Result;
@@ -48,9 +53,35 @@ namespace StudyJunction.Core.Services
 				throw new UnauthorizedUserException(
 					String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
 			}
+
+            var courseDb = courseRepository.GetByTitleAsync(newLecture.CourseName).Result;
+
+            newLecture.CourseName = courseDb.Id.ToString();
+
+
 			var lec = mapper.Map<LectureDb>(newLecture);
-            return mapper.Map<LectureResponseDTO>(lectureRepository.CreateAsync(lec));
+            return mapper.Map<LectureResponseDTO>(lectureRepository.CreateAsync(lec).Result);
 		}
+
+        public async Task<LectureResponseDTO> AddAssignmentAsync(string lectureId, IFormFile assignment, string userId)
+        {
+            if(!(await lectureRepository.IsUserOwner(userId, new Guid(lectureId))))
+            {
+                throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, userId));
+            }
+            
+            var lectureDb = await lectureRepository.GetAsync(new Guid(lectureId));
+
+
+            var assignmentCloudinaryData = cloudinaryService.UploadPdfToCloudinary(assignment);
+
+            lectureDb.AssignmentCloudinaryId = assignmentCloudinaryData[0];
+            lectureDb.AssignmentCloudinaryUri = assignmentCloudinaryData[1];
+
+            var result = lectureRepository.UpdateAsync(lectureDb.Id, lectureDb);
+
+            return mapper.Map<LectureResponseDTO>(await result);
+        }
 
         public LectureResponseDTO Delete(Guid id, string username)
         {

@@ -58,26 +58,26 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		public IActionResult CreateLecture( IFormCollection form)
+		public IActionResult CreateLectureWithVideoAndAssignment(IFormCollection form)
 		{
 			try
 			{
-                // Access JSON data
-                string jsonData = form["jsonData"];
+				// Access JSON data
+				string jsonData = form["jsonData"];
 
-                // Access file
-                var file = form.Files["file"];
+				// Access file
+				var file = form.Files["file"];
 
 				CloudinaryService test = new CloudinaryService();
 
 				test.UploadPdfToCloudinary(file);
 
-                ;
+				;
 
-    //            var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-    //            var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+				//            var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+				//            var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-    //            var lecture = lectureService.Create(newLecture, username);
+				//            var lecture = lectureService.Create(newLecture, username);
 				//return Ok(lecture);
 
 				throw new NotImplementedException();
@@ -92,6 +92,48 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
+		[HttpPost("")]
+		public IActionResult CreateLecture(AddLectureRequestDto newLecture)
+		{
+			try 
+			{
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
+
+				var result = lectureService.Create(newLecture, username);
+				return Ok(result);
+            }
+			catch(UnauthorizedUserException ex)
+			{
+				return Unauthorized();
+			}
+			catch(NameDuplicationException ex)
+			{
+				return BadRequest();
+			}
+		}
+
+		[HttpPut("{id}")]
+		public async Task<IActionResult> AddAssignmentToLecture(string id, IFormFile assignment)
+		{
+			try
+			{
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var userId = JwtHelper.GetNameIdentifierClaimFromJwt(jwtBearer);
+
+				var result = await lectureService.AddAssignmentAsync(id, assignment, userId);
+
+				return Ok(result);
+            }
+			catch(UnauthorizedUserException ex) 
+			{
+				return Unauthorized(ex.Message);
+			}
+			catch(CloudinaryFileUploadException ex) 
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 		[HttpPut("{id}")]
 		public IActionResult UpdateLecture(string id, [FromBody] LectureRequestDto newData)
 		{
