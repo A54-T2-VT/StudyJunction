@@ -75,5 +75,7 @@ namespace StudyJunction.Infrastructure.Repositories
 		{
 			return context.Courses.Any(x => x.Title.Equals(title));
 		}
-    }
+
+
+	}
 }

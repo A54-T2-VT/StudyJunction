@@ -25,9 +25,11 @@ namespace StudyJunction.Core.Helpers
             this.CreateMap<AddCourseRequestDto, CourseDb>()
                 .ForMember(d => d.CategoryId, p => p.MapFrom(s => new Guid(s.CategoryName)));
 
-			CreateMap<AddCourseRequestDto, CourseDb>()
-			.ForMember(dest => dest.CategoryId, opt => opt.MapFrom
-            ((src, dest, destMember) => destMember));
+            
+
+			//CreateMap<AddCourseRequestDto, CourseDb>()
+			//.ForMember(dest => dest.CategoryId, opt => opt.MapFrom
+   //         ((src, dest, destMember) => destMember));
 
 			this.CreateMap<CourseDb, CourseResponseDTO>()
                 .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.CreatedBy.UserName))

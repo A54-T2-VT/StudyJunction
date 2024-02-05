@@ -21,4 +21,9 @@
     <ProjectReference Include="..\StudyJunction.Core\StudyJunction.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Assignments\" />
+    <Folder Include="wwwroot\Submitted\" />
+  </ItemGroup>
+
 </Project>

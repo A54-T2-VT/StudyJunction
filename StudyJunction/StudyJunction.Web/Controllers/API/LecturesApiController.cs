@@ -7,10 +7,12 @@ using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
+using StudyJunction.Web.CustomAttributes;
+using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
 {
-    [Route("api/lecture")]
+    [Route("api/lectures")]
 	[ApiController]
 	public class LecturesApiController : ControllerBase
 	{
