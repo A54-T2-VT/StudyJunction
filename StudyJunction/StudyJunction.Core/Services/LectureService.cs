@@ -36,10 +36,10 @@ namespace StudyJunction.Core.Services
             userManager = _userManager;
             this.cloudinaryService = cloudinaryService;
         }
-        public LectureResponseDTO Create(AddLectureRequestDto newLecture, string username)
+        public async Task<LectureResponseDTO> Create(AddLectureRequestDto newLecture, string username)
         {
             //TODO: Add logic for adding assignment
-            var course = courseRepository.GetByTitleAsync(newLecture.CourseName).Result;
+            var course = await courseRepository.GetByTitleAsync(newLecture.CourseName);
             
 			if (course.Lectures.Any(x => x.Title == newLecture.Title))
 			{
@@ -47,7 +47,7 @@ namespace StudyJunction.Core.Services
 					String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newLecture.Title));
 			}
 
-			var user = userManager.FindByNameAsync(username).Result;
+			var user = await userManager.FindByNameAsync(username);
 
 			if (!userRepository.HasCreatedCourse(user, course.Title))
 			{
@@ -55,13 +55,13 @@ namespace StudyJunction.Core.Services
 					String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
 			}
 
-            var courseDb = courseRepository.GetByTitleAsync(newLecture.CourseName).Result;
+            var courseDb = await courseRepository.GetByTitleAsync(newLecture.CourseName);
 
             newLecture.CourseName = courseDb.Id.ToString();
 
 
 			var lec = mapper.Map<LectureDb>(newLecture);
-            return mapper.Map<LectureResponseDTO>(lectureRepository.CreateAsync(lec).Result);
+            return mapper.Map<LectureResponseDTO>(await lectureRepository.CreateAsync(lec));
 		}
 
         public async Task<LectureResponseDTO> AddAssignmentAsync(string lectureId, IFormFile assignment, string userId)
@@ -84,25 +84,25 @@ namespace StudyJunction.Core.Services
             return mapper.Map<LectureResponseDTO>(await result);
         }
 
-        public LectureResponseDTO Delete(Guid id, string username)
+        public async Task<LectureResponseDTO> Delete(Guid id, string username)
         {
-            return mapper.Map<LectureResponseDTO>(lectureRepository.DeleteAsync(id));
+            return mapper.Map<LectureResponseDTO>( await lectureRepository.DeleteAsync(id));
 		}
-		public LectureResponseDTO Get(Guid id)
+		public async Task<LectureResponseDTO> Get(Guid id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public LectureResponseDTO Get(string title)
+		public async Task<LectureResponseDTO> Get(string title)
 		{
 			throw new NotImplementedException();
 		}
 
-		public ICollection<LectureResponseDTO> GetAll()
+		public async Task<ICollection<LectureResponseDTO>> GetAll()
 		{
 			throw new NotImplementedException();
 		}
-		public LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData, string username)
+		public async Task<LectureResponseDTO> Update(Guid toUpdate, LectureRequestDto newData, string username)
 		{
 			throw new NotImplementedException();
 		}

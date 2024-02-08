@@ -5,16 +5,16 @@ namespace StudyJunction.Core.Services.Contracts
 {
     public interface IUserService
 	{
-		IEnumerable<UserResponseDTO> GetAll();
-		UserResponseDTO GetById(string id);
-		UserResponseDTO GetByUsername(string username);
-		UserResponseDTO GetByEmail(string email);
+		Task<IEnumerable<UserResponseDTO>> GetAll();
+		Task<UserResponseDTO> GetById(string id);
+		Task<UserResponseDTO> GetByUsername(string username);
+		Task<UserResponseDTO> GetByEmail(string email);
         Task<UserResponseDTO> Register(RegisterUserRequestDto newUser);
         Task<string> Login(LoginUserRequestDto loginUserDto);
-		UserResponseDTO Update(UpdateUserDataRequestDto updatedUser, string username);
-        UserResponseDTO Update(UpdateUserPasswordRequestDto passData, string username);
-		string IncreaseRole(string targetUserId);
-        string DecreaseRole(string targetUserId);
-        UserResponseDTO Delete(string id, string username);
+		Task<UserResponseDTO> Update(UpdateUserDataRequestDto updatedUser, string username);
+        Task<UserResponseDTO> Update(UpdateUserPasswordRequestDto passData, string username);
+		Task<string> IncreaseRole(string targetUserId);
+        Task<string> DecreaseRole(string targetUserId);
+        Task<UserResponseDTO> Delete(string id, string username);
 	}
 }

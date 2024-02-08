@@ -5,13 +5,13 @@ namespace StudyJunction.Core.Services.Contracts
 {
     public interface ICategoryService
 	{
-		IEnumerable<CategoryResponseDTO> GetAll();
-		CategoryResponseDTO GetById(Guid id);
-		CategoryResponseDTO GetByName(string name);
-		CategoryResponseDTO Create(AddCategoryRequestDto newCategory);
-		CategoryResponseDTO CreateSubCategory(AddCategoryRequestDto newCategory, Guid parentId);
-		CategoryResponseDTO Update(Guid id, CategoryRequestDto updatedCategory);
-		CategoryResponseDTO Delete(Guid id);
+		Task<IEnumerable<CategoryResponseDTO>> GetAll();
+		Task<CategoryResponseDTO> GetById(Guid id);
+		Task<CategoryResponseDTO> GetByName(string name);
+		Task<CategoryResponseDTO> Create(AddCategoryRequestDto newCategory);
+		Task<CategoryResponseDTO> CreateSubCategory(AddCategoryRequestDto newCategory, Guid parentId);
+		Task<CategoryResponseDTO> Update(Guid id, CategoryRequestDto updatedCategory);
+		Task<CategoryResponseDTO> Delete(Guid id);
 
 		
 	}

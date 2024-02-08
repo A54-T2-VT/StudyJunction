@@ -40,7 +40,7 @@ namespace StudyJunction.Core.Services
         }
 
 
-        public UserResponseDTO Delete(string id, string username)
+        public async Task<UserResponseDTO> Delete(string id, string username)
         {
             var userToDelete = userManager.FindByIdAsync(id).Result;
 
@@ -50,23 +50,23 @@ namespace StudyJunction.Core.Services
             }
 
 
-            var user = userRepository.DeleteAsync(id).Result;
+            var user = await userRepository.DeleteAsync(id);
 
             return mapper.Map<UserResponseDTO>(user);
         }
 
-        public IEnumerable<UserResponseDTO> GetAll()
+        public async Task<IEnumerable<UserResponseDTO>> GetAll()
         {
-            var result = userRepository.GetAllAsync().Result;
+            var result = await userRepository.GetAllAsync();
 
             return result.Select(
                 r => mapper.Map<UserResponseDTO>(r))
                 .ToList();
         }
 
-        public UserResponseDTO GetById(string id)
+        public async Task<UserResponseDTO> GetById(string id)
         {
-            var user = userManager.FindByIdAsync(id).Result;
+            var user = await userManager.FindByIdAsync(id);
             
             if(user is null)
             {
@@ -76,9 +76,9 @@ namespace StudyJunction.Core.Services
             return mapper.Map<UserResponseDTO>(user);
         }
 
-        public UserResponseDTO GetByUsername(string username)
+        public async Task<UserResponseDTO> GetByUsername(string username)
         {
-            var user = userManager.FindByNameAsync(username).Result;
+            var user = await userManager.FindByNameAsync(username);
 
             if (user is null)
             {
@@ -88,9 +88,9 @@ namespace StudyJunction.Core.Services
             return mapper.Map<UserResponseDTO>(user);
         }
 
-        public UserResponseDTO GetByEmail(string email)
+        public async  Task<UserResponseDTO> GetByEmail(string email)
         {
-            var user = userManager.FindByEmailAsync(email).Result;
+            var user = await userManager.FindByEmailAsync(email);
 
             if (user is null)
             {
@@ -136,17 +136,17 @@ namespace StudyJunction.Core.Services
             
         }
 
-        public UserResponseDTO Update(UpdateUserDataRequestDto updatedUser, string username)
+        public async Task<UserResponseDTO> Update(UpdateUserDataRequestDto updatedUser, string username)
         {
             
-            var toUpdate = userManager.FindByNameAsync(username).Result;
+            var toUpdate = await userManager.FindByNameAsync(username);
             
 
 
             toUpdate.FirstName = updatedUser.Firstname;
             toUpdate.LastName = updatedUser.Lastname;
 
-            var result = userManager.UpdateAsync(toUpdate).Result;
+            var result = await userManager.UpdateAsync(toUpdate);
 
             if (!result.Succeeded)
             {
@@ -156,11 +156,11 @@ namespace StudyJunction.Core.Services
             return mapper.Map<UserResponseDTO>(toUpdate);
         }
 
-        public UserResponseDTO Update(UpdateUserPasswordRequestDto passData, string username)
+        public async Task<UserResponseDTO> Update(UpdateUserPasswordRequestDto passData, string username)
         {
-            var toUpdate = userManager.FindByNameAsync(username).Result;
+            var toUpdate = userManager.FindByNameAsync(username);
 
-            var result = userManager.ChangePasswordAsync(toUpdate, passData.OldPassword, passData.NewPassword).Result;
+            var result = await userManager.ChangePasswordAsync(await toUpdate, passData.OldPassword, passData.NewPassword);
 
             if (!result.Succeeded)
             {
@@ -171,11 +171,11 @@ namespace StudyJunction.Core.Services
 
         }
 
-        public string IncreaseRole(string targetUserId)
+        public async Task<string> IncreaseRole(string targetUserId)
         {
-            var user = userManager.FindByIdAsync(targetUserId).Result;
+            var user = await userManager.FindByIdAsync(targetUserId);
 
-            var userRoles = userManager.GetRolesAsync(user).Result;
+            var userRoles = await userManager.GetRolesAsync(user);
 
             string highestRole = userRoles.Last();
 
@@ -184,18 +184,18 @@ namespace StudyJunction.Core.Services
                 return highestRole;
             }
 
-            var newHighestRole = AddRole(user, highestRole);
+            var newHighestRole = await AddRole(user, highestRole);
             
           
             return newHighestRole;
 
         }
 
-        public string DecreaseRole(string targetUserId)
+        public async Task<string> DecreaseRole(string targetUserId)
         {
-            var user = userManager.FindByIdAsync(targetUserId).Result;
+            var user = await userManager.FindByIdAsync(targetUserId);
 
-            var userRoles = userManager.GetRolesAsync(user).Result;
+            var userRoles = await userManager.GetRolesAsync(user);
 
             string highestRole = userRoles.Last();
 
@@ -204,7 +204,7 @@ namespace StudyJunction.Core.Services
                 return highestRole;
             }
 
-            var newHighestRole = RemoveRole(user, highestRole);
+            var newHighestRole = await RemoveRole(user, highestRole);
 
             return newHighestRole;
         }
@@ -267,13 +267,13 @@ namespace StudyJunction.Core.Services
             await roleManager.CreateAsync(new IdentityRole(RolesConstants.Student));
         }
 
-        private string AddRole(UserDb user, string currRole)
+        private async Task<string> AddRole(UserDb user, string currRole)
         {
             IdentityResult result;
 
             if(currRole == RolesConstants.Student)
             {
-                result = userManager.AddToRoleAsync(user, RolesConstants.Teacher).Result;
+                result = await userManager.AddToRoleAsync(user, RolesConstants.Teacher);
 
                 if (!result.Succeeded)
                 {
@@ -282,9 +282,9 @@ namespace StudyJunction.Core.Services
 
                 return RolesConstants.Teacher.ToString();
             }
-            //(currRole == RolesConstants.Teacher)
             
-            result = userManager.AddToRoleAsync(user, RolesConstants.Admin).Result;
+            
+            result = await userManager.AddToRoleAsync(user, RolesConstants.Admin);
 
             if (!result.Succeeded)
             {
@@ -294,13 +294,13 @@ namespace StudyJunction.Core.Services
             return RolesConstants.Admin.ToString();
         }
 
-        private string RemoveRole(UserDb user, string currRole)
+        private async Task<string> RemoveRole(UserDb user, string currRole)
         {
             IdentityResult result;
 
             if (currRole == RolesConstants.Admin)
             {
-                result = userManager.RemoveFromRoleAsync(user, currRole).Result;
+                result = await userManager.RemoveFromRoleAsync(user, currRole);
 
                 if (!result.Succeeded)
                 {
@@ -309,9 +309,9 @@ namespace StudyJunction.Core.Services
 
                 return RolesConstants.Teacher.ToString();
             }
-            //(currRole == RolesConstants.Teacher)
+            
 
-            result = userManager.RemoveFromRoleAsync(user, currRole).Result;
+            result = await userManager.RemoveFromRoleAsync(user, currRole);
 
             if (!result.Succeeded)
             {

@@ -6,12 +6,12 @@ namespace StudyJunction.Core.Services.Contracts
 {
     public interface ILectureService
 	{
-		LectureResponseDTO Get(Guid id);
-		LectureResponseDTO Get(string title);
-		ICollection<LectureResponseDTO> GetAll();
-		LectureResponseDTO Create(AddLectureRequestDto newLecture, string username);
+		Task<LectureResponseDTO> Get(Guid id);
+        Task<LectureResponseDTO> Get(string title);
+		Task<ICollection<LectureResponseDTO>> GetAll();
+		Task<LectureResponseDTO> Create(AddLectureRequestDto newLecture, string username);
 		Task<LectureResponseDTO> AddAssignmentAsync(string lectureId, IFormFile assignment, string userId);
-		LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData, string username);
-		LectureResponseDTO Delete(Guid id, string username);
+        Task<LectureResponseDTO> Update(Guid toUpdate, LectureRequestDto newData, string username);
+		Task<LectureResponseDTO> Delete(Guid id, string username);
 	}
 }

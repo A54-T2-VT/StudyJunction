@@ -21,11 +21,11 @@ namespace StudyJunction.Web.Controllers
 			mapper = _mapper;
 			cloudinaryService = _cloudinaryService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
 		{
 			CourseViewModel courses = new CourseViewModel()
 			{
-				Courses = courseService.GetAll(),
+				Courses = await courseService.GetAll(),
 				Service = cloudinaryService
 			};
 			return View(courses);

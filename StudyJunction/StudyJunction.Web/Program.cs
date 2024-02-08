@@ -46,7 +46,7 @@ namespace StudyJunction.Web
             builder.Services.AddScoped<INoteService, NoteService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
-            builder.Services.AddSingleton<CloudinaryService>();
+            builder.Services.AddScoped<CloudinaryService>();
 
             //AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));

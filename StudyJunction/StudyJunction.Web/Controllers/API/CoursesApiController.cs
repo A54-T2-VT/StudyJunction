@@ -25,11 +25,11 @@ namespace StudyJunction.Web.Controllers.API
         }
 
 		[HttpGet("{id}")]
-		public IActionResult GetById(string id)
+		public async Task<IActionResult> GetById(string id)
 		{
 			try
 			{
-				var course = courseService.GetCourse(new Guid(id));
+				var course = await courseService.GetCourse(new Guid(id));
 				return Ok(course);
 			}
 			catch(EntityNotFoundException ex)
@@ -39,11 +39,11 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpGet("{title}")]
-		public IActionResult GetByTitle(string title)
+		public async Task<IActionResult> GetByTitle(string title)
 		{
 			try
 			{
-				var course = courseService.GetCourse(title);
+				var course = await courseService.GetCourse(title);
 				return Ok(course);
 			}
 			catch(EntityNotFoundException e)
@@ -53,22 +53,22 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
         [HttpGet("")]
-		public IActionResult GetCourses()
+		public async Task<IActionResult> GetCourses()
 		{
-			var courses = courseService.GetAll();
+			var courses = await courseService.GetAll();
 			return Ok(courses);
 		}
 
 		[HttpPost("")]
         [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher, RolesConstants.Admin, RolesConstants.God })]
-        public IActionResult CreateCourse([FromBody] AddCourseRequestDto newCourse)
+        public async Task<IActionResult> CreateCourse([FromBody] AddCourseRequestDto newCourse)
 		{
 			try
 			{
 				var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 				var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-				var course = courseService.Create(newCourse, username);
+				var course = await courseService.Create(newCourse, username);
 				return Ok(course);
 			}
 			catch (UnauthorizedUserException e)
@@ -105,14 +105,14 @@ namespace StudyJunction.Web.Controllers.API
 
         [HttpPut("{id}")]
         [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher, RolesConstants.Admin, RolesConstants.God })]
-        public IActionResult UpdateCourse(string id, [FromBody] CourseRequestDto newData) 
+        public async Task<IActionResult> UpdateCourse(string id, [FromBody] CourseRequestDto newData) 
 		{
 			try
 			{
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-                var updated = courseService.Update(new Guid(id), newData, username);
+                var updated = await courseService.Update(new Guid(id), newData, username);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
@@ -127,14 +127,14 @@ namespace StudyJunction.Web.Controllers.API
 
 		[HttpDelete("{id}")]
         [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher, RolesConstants.Admin, RolesConstants.God })]
-        public IActionResult DeleteCourse(string id)
+        public async Task<IActionResult> DeleteCourse(string id)
 		{
 			try
 			{
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-                var deleted = courseService.Delete(new Guid(id), username);
+                var deleted = await courseService.Delete(new Guid(id), username);
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)
