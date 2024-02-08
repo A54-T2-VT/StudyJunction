@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.Helpers;
 using StudyJunction.Core.RequestDTOs.Course;
+using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
@@ -80,7 +81,29 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		[HttpPut("{id}")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AddThumbnailToCourse(string id, IFormFile image)
+        {
+            try
+            {
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var userId = JwtHelper.GetNameIdentifierClaimFromJwt(jwtBearer);
+
+                var result = await courseService.AddThumbnailAsync(id, image, userId);
+
+                return Ok(result);
+            }
+            catch (UnauthorizedUserException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (CloudinaryFileUploadException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
         [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher, RolesConstants.Admin, RolesConstants.God })]
         public IActionResult UpdateCourse(string id, [FromBody] CourseRequestDto newData) 
 		{
