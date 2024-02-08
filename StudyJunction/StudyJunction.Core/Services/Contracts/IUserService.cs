@@ -13,6 +13,8 @@ namespace StudyJunction.Core.Services.Contracts
         Task<string> Login(LoginUserRequestDto loginUserDto);
 		UserResponseDTO Update(UpdateUserDataRequestDto updatedUser, string username);
         UserResponseDTO Update(UpdateUserPasswordRequestDto passData, string username);
+		string IncreaseRole(string targetUserId);
+        string DecreaseRole(string targetUserId);
         UserResponseDTO Delete(string id, string username);
 	}
 }

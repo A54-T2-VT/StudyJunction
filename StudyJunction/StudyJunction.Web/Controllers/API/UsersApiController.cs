@@ -11,6 +11,7 @@ using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using StudyJunction.Web.CustomAttributes;
+using System.Data;
 using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
@@ -122,7 +123,55 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 
-		[HttpPut("")]
+		[HttpPut("increaseRole/{targetUserId}")]
+		[JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God})]
+		public IActionResult IncreaseRole(string targetUserId)
+		{
+			try
+			{
+				var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+				var userTokenId = JwtHelper.GetNameIdentifierClaimFromJwt(jwtBearer);
+
+				if(userTokenId == targetUserId)
+				{
+					throw new Exception("User can not increase his own role.");
+				}
+
+				string newRole = userService.IncreaseRole(targetUserId);
+
+				return Ok(newRole);
+			}
+			catch(Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+        }
+
+        [HttpPut("decreaseRole/{targetUserId}")]
+        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God})]
+        public IActionResult DecreaseRole(string targetUserId)
+        {
+            try
+            {
+                var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var userTokenId = JwtHelper.GetNameIdentifierClaimFromJwt(jwtBearer);
+
+                if (userTokenId == targetUserId)
+                {
+                    throw new Exception("User can not increase his own role.");
+                }
+
+                string newRole = userService.DecreaseRole(targetUserId);
+
+                return Ok(newRole);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("")]
         [JwtAuthorization]
         public IActionResult Update([FromBody] UpdateUserDataRequestDto newData)
 		{

@@ -49,12 +49,6 @@ namespace StudyJunction.Core.Services
                 throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
             }
 
-            //var result = userManager.DeleteAsync(userToDelete).Result;
-
-            //if (!result.Succeeded)
-            //{
-            //    throw new NotImplementedException();
-            //}
 
             var user = userRepository.DeleteAsync(id).Result;
 
@@ -128,13 +122,14 @@ namespace StudyJunction.Core.Services
 
             var result = await userManager.CreateAsync(userDb, newUser.Password);
 
-            var user = await userManager.FindByEmailAsync(newUser.Email);
-            await userManager.AddToRolesAsync(user, new string[] { RolesConstants.Student });
-
             if (!result.Succeeded)
             {
-                throw new NotImplementedException();
+                throw new NameDuplicationException(ExceptionMessages.INVALID_CREDENTIALS_MESSAGE);
             }
+
+            var user = await userManager.FindByEmailAsync(newUser.Email);
+            _ = await userManager.AddToRolesAsync(user, new string[] { RolesConstants.Student });
+
             var responseUser = userRepository.GetByEmailAsync(newUser.Email);
 
             return mapper.Map<UserResponseDTO>(responseUser.Result);
@@ -174,6 +169,44 @@ namespace StudyJunction.Core.Services
 
             return mapper.Map<UserResponseDTO>(toUpdate);
 
+        }
+
+        public string IncreaseRole(string targetUserId)
+        {
+            var user = userManager.FindByIdAsync(targetUserId).Result;
+
+            var userRoles = userManager.GetRolesAsync(user).Result;
+
+            string highestRole = userRoles.Last();
+
+            if (userRoles.Contains(RolesConstants.God) || userRoles.Contains(RolesConstants.Admin)) 
+            {
+                return highestRole;
+            }
+
+            var newHighestRole = AddRole(user, highestRole);
+            
+          
+            return newHighestRole;
+
+        }
+
+        public string DecreaseRole(string targetUserId)
+        {
+            var user = userManager.FindByIdAsync(targetUserId).Result;
+
+            var userRoles = userManager.GetRolesAsync(user).Result;
+
+            string highestRole = userRoles.Last();
+
+            if(highestRole == RolesConstants.Student || highestRole == RolesConstants.God)
+            {
+                return highestRole;
+            }
+
+            var newHighestRole = RemoveRole(user, highestRole);
+
+            return newHighestRole;
         }
 
         private async Task<string> CreateToken(UserDb user)
@@ -232,6 +265,60 @@ namespace StudyJunction.Core.Services
             await roleManager.CreateAsync(new IdentityRole(RolesConstants.Admin));
             await roleManager.CreateAsync(new IdentityRole(RolesConstants.Teacher));
             await roleManager.CreateAsync(new IdentityRole(RolesConstants.Student));
+        }
+
+        private string AddRole(UserDb user, string currRole)
+        {
+            IdentityResult result;
+
+            if(currRole == RolesConstants.Student)
+            {
+                result = userManager.AddToRoleAsync(user, RolesConstants.Teacher).Result;
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Error when increasing role!!!");
+                }
+
+                return RolesConstants.Teacher.ToString();
+            }
+            //(currRole == RolesConstants.Teacher)
+            
+            result = userManager.AddToRoleAsync(user, RolesConstants.Admin).Result;
+
+            if (!result.Succeeded)
+            {
+                throw new Exception("Error when increasing role!!!");
+            }
+            
+            return RolesConstants.Admin.ToString();
+        }
+
+        private string RemoveRole(UserDb user, string currRole)
+        {
+            IdentityResult result;
+
+            if (currRole == RolesConstants.Admin)
+            {
+                result = userManager.RemoveFromRoleAsync(user, currRole).Result;
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Error when decreasing role!!!");
+                }
+
+                return RolesConstants.Teacher.ToString();
+            }
+            //(currRole == RolesConstants.Teacher)
+
+            result = userManager.RemoveFromRoleAsync(user, currRole).Result;
+
+            if (!result.Succeeded)
+            {
+                throw new Exception("Error when decreasing role!!!");
+            }
+
+            return RolesConstants.Student.ToString();
         }
     }
 }
