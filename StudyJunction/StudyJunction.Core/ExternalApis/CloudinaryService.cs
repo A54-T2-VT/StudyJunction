@@ -1,4 +1,5 @@
-﻿using CloudinaryDotNet;
+﻿using AutoMapper;
+using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -59,16 +60,50 @@ namespace StudyJunction.Core.ExternalApis
             }
         }
 
-        public string[] UploadProfilePicToCloudinary()
+        public string[] UploadImageToCloudinary(IFormFile image, string publicId = null)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                var uploadParams = new RawUploadParams
+                {
+                    File = new FileDescription(image.FileName, image.OpenReadStream()),
+                    PublicId = publicId,
+                };
 
+                var uploadResult = cloudinary.Upload(uploadParams);
+
+                var result = new string[] { uploadResult.PublicId, uploadResult.SecureUrl.ToString() };
+
+
+
+                Console.WriteLine($"Thumbnail uploaded to Cloudinary. Public ID: {uploadResult.PublicId}");
+                Console.WriteLine($"Thumbnail URL: {uploadResult.SecureUri}");
+
+                //var result = cloudinary.GetResourceByAssetId("04d2877623961049b41b4925869b760c");
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during Thumbnail upload: {ex.Message}");
+
+                throw new CloudinaryFileUploadException(ex.Message);
+                // Handle the error as needed
+            }
+        }
         public string[] UploadVideoToCloudinary()
         {
             throw new NotImplementedException ();
         }
 
+        public string GetResource(string thumbnailURL)
+        {
+            var getResult = cloudinary.Api.UrlImgUp
+                .Transform(new Transformation().Width(300).Height(300).Crop("fill").Gravity("auto"))
+                .BuildUrl(thumbnailURL);
+            return getResult;
+        }
         private CloudinaryKeys ReadApiKeysFromFile()
         {
             try
@@ -92,5 +127,7 @@ namespace StudyJunction.Core.ExternalApis
                 return null;
             }
         }
+
+
     }
 }
