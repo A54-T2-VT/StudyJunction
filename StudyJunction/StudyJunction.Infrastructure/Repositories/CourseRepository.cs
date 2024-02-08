@@ -75,7 +75,15 @@ namespace StudyJunction.Infrastructure.Repositories
 		{
 			return context.Courses.Any(x => x.Title.Equals(title));
 		}
+        public async Task<bool> IsUserOwner(string userId, Guid courseID)
+        {
+			var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId) ??
+				throw new EntityNotFoundException(String.Format(ExceptionMessages.USER_WITH_ID_NOT_FOUND_MESSAGE, userId));
 
+			return context.Courses.Include(c => c.CreatedBy)
+				.Where(c => c.CreatorId == userId)
+				.Any(c => c.Id == courseID);
+        }
 
-	}
+    }
 }
