@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.RequestDTOs.Category;
 using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.ResponseDTOs;
@@ -7,6 +9,7 @@ using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
+using StudyJunction.Infrastructure.Repositories;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -20,14 +23,17 @@ namespace StudyJunction.Core.Services
         private readonly IMapper mapper;
         private readonly ICategoryRepository categoryRepository;
         private readonly UserManager<UserDb> userManager;
+        private readonly CloudinaryService cloudinaryService;
         public CourseService(ICourseRepository _courseRepository, IUserRepository _userRepository,
-            IMapper _mapper, ICategoryRepository _categoryRepository, UserManager<UserDb> _userManager)
+            IMapper _mapper, ICategoryRepository _categoryRepository, UserManager<UserDb> _userManager,
+            CloudinaryService _cloudinaryService)
         {
 			courseRepository = _courseRepository;
             userRepository = _userRepository;
             mapper = _mapper;
             categoryRepository = _categoryRepository;
             userManager = _userManager;
+            cloudinaryService = _cloudinaryService;
 		}
 		
         public CourseResponseDTO Create(AddCourseRequestDto newCourse, string username)
@@ -49,7 +55,24 @@ namespace StudyJunction.Core.Services
 
             return mapper.Map<CourseResponseDTO>(courseRepository.CreateAsync(courseDb).Result);
         }
+        public async Task<CourseResponseDTO> AddThumbnailAsync(string courseId, IFormFile image, string userId)
+        {
+            if (!(await courseRepository.IsUserOwner(userId, new Guid(courseId))))
+            {
+                throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, userId));
+            }
 
+            var courseDb = await courseRepository.GetByIdAsync(new Guid(courseId));
+
+
+            var assignmentCloudinaryData = cloudinaryService.UploadImageToCloudinary(image);
+
+            courseDb.ThumbnailURL = assignmentCloudinaryData[1];
+
+            var result = courseRepository.UpdateAsync(courseDb.Id, courseDb);
+
+            return mapper.Map<CourseResponseDTO>(await result);
+        }
         public ICollection<CourseResponseDTO> GetAll()
         {
             return courseRepository.GetAllAsync().Result

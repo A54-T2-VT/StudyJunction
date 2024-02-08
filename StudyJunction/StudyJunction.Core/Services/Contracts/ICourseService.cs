@@ -1,4 +1,5 @@
-﻿using StudyJunction.Core.RequestDTOs.Category;
+﻿using Microsoft.AspNetCore.Http;
+using StudyJunction.Core.RequestDTOs.Category;
 using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.ResponseDTOs;
 
@@ -13,6 +14,8 @@ namespace StudyJunction.Core.Services.Contracts
 		CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData, string username);
 		CourseResponseDTO Delete(Guid toDelete, string username);
 		CourseResponseDTO UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string username);
+		Task<CourseResponseDTO> AddThumbnailAsync(string courseId, IFormFile image, string userId);
 
-	}
+
+    }
 }
