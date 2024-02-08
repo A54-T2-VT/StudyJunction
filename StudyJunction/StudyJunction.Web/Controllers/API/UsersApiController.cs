@@ -92,7 +92,7 @@ namespace StudyJunction.Web.Controllers.API
             }
             catch (NameDuplicationException ex)
             {
-                return BadRequest(ex.Message);
+                return Conflict(ex.Message);
             }
             catch (Exception ex)
             {
@@ -115,7 +115,7 @@ namespace StudyJunction.Web.Controllers.API
 			}
 			catch (NameDuplicationException ex)
 			{
-				return BadRequest(ex.Message);
+				return Conflict(ex.Message);
 			}
 			catch(Exception ex)
 			{

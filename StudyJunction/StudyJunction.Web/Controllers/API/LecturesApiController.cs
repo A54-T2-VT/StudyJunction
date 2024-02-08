@@ -70,7 +70,7 @@ namespace StudyJunction.Web.Controllers.API
 
 				CloudinaryService test = new CloudinaryService();
 
-				test.UploadPdfToCloudinary(file);
+				//test.UploadPdfToCloudinary(file);
 
 				;
 
@@ -88,7 +88,7 @@ namespace StudyJunction.Web.Controllers.API
 			}
 			catch (NameDuplicationException ex)
 			{
-				return BadRequest(ex.Message);
+				return Conflict(ex.Message);
 			}
 		}
 
@@ -109,7 +109,7 @@ namespace StudyJunction.Web.Controllers.API
 			}
 			catch(NameDuplicationException ex)
 			{
-				return BadRequest(ex.Message);
+				return Conflict(ex.Message);
 			}
 		}
 
