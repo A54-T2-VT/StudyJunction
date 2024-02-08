@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Mvc;
+using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Core.ViewModels;
 
 namespace StudyJunction.Web.Controllers
 {
@@ -9,15 +12,22 @@ namespace StudyJunction.Web.Controllers
 		private readonly ICourseService courseService;
 		private readonly IUserService userService;
 		private readonly IMapper mapper;
-        public CoursesController(ICourseService _courseService, IUserService _userService, IMapper _mapper)
+        private readonly CloudinaryService cloudinaryService;
+        public CoursesController(ICourseService _courseService, IUserService _userService, IMapper _mapper,
+            CloudinaryService _cloudinaryService)
         {
             courseService = _courseService;
 			userService = _userService;
 			mapper = _mapper;
+			cloudinaryService = _cloudinaryService;
         }
         public IActionResult Index()
 		{
-			var courses = courseService.GetAll();
+			CourseViewModel courses = new CourseViewModel()
+			{
+				Courses = courseService.GetAll(),
+				Service = cloudinaryService
+			};
 			return View(courses);
 		}
 	}
