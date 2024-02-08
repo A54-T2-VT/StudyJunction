@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyJunction.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using StudyJunction.Infrastructure.Data;
 namespace StudyJunction.Web.Data.Migrations
 {
     [DbContext(typeof(SJDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240205210024_Added_ThumbnailURL_To_CourseDb")]
+    partial class Added_ThumbnailURL_To_CourseDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,9 +316,11 @@ namespace StudyJunction.Web.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AssignmentCloudinaryId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AssignmentCloudinaryUri")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CourseId")
@@ -339,9 +343,11 @@ namespace StudyJunction.Web.Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("VideoLinkCloudinaryId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VideoLinkCloudinaryUri")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -447,9 +453,11 @@ namespace StudyJunction.Web.Data.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ProfileImageCloudinaryId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfileImageCloudinaryUri")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("Email")

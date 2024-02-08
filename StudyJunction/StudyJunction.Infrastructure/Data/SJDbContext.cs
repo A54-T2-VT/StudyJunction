@@ -76,6 +76,9 @@ namespace StudyJunction.Infrastructure.Data
                 .WithMany(cat => cat.Courses)
                 .HasForeignKey(c => c.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+                e.Property(e => e.ThumbnailURL)
+                .IsRequired(false);
             });
 
             builder.Entity<CourseDb>()

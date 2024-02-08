@@ -38,6 +38,7 @@ namespace StudyJunction.Core.Services
         }
         public LectureResponseDTO Create(AddLectureRequestDto newLecture, string username)
         {
+            //TODO: Add logic for adding assignment
             var course = courseRepository.GetByTitleAsync(newLecture.CourseName).Result;
             
 			if (course.Lectures.Any(x => x.Title == newLecture.Title))
@@ -83,29 +84,31 @@ namespace StudyJunction.Core.Services
             return mapper.Map<LectureResponseDTO>(await result);
         }
 
-        public LectureResponseDTO Delete(Guid id, string username)
+        public LectureResponseDTO Delete(Guid id)
         {
             return mapper.Map<LectureResponseDTO>(lectureRepository.DeleteAsync(id));
 		}
+		public LectureResponseDTO Get(Guid id)
+		{
+			throw new NotImplementedException();
+		}
 
-        public LectureResponseDTO Get(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+		public LectureResponseDTO Get(string title)
+		{
+			throw new NotImplementedException();
+		}
 
-        public LectureResponseDTO Get(string title)
+		public ICollection<LectureResponseDTO> GetAll()
+		{
+			throw new NotImplementedException();
+		}
+		public LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData)
+		{
+			throw new NotImplementedException();
+		}
+		public LectureResponseDTO Delete(Guid id)
         {
-            throw new NotImplementedException();
-        }
-
-        public ICollection<LectureResponseDTO> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public LectureResponseDTO Update(Guid toUpdate, LectureRequestDto newData, string username)
-        {
-            throw new NotImplementedException();
-        }
-    }
+            return mapper.Map<LectureResponseDTO>(lectureRepository.DeleteAsync(id));
+		}
+	}
 }
