@@ -7,7 +7,8 @@ namespace StudyJunction.Infrastructure.Data.Models
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string? ThumbnailURL { get; set; }
+        public string? ThumbnailCloudinaryId { get; set; }
+        public string? ThumbnailCloudinaryUri { get; set; }
         public string CreatorId { get; set; }
         public UserDb CreatedBy { get; set; }
         public Guid CategoryId { get; set; }

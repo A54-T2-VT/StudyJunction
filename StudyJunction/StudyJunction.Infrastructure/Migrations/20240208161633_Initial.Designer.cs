@@ -9,11 +9,11 @@ using StudyJunction.Infrastructure.Data;
 
 #nullable disable
 
-namespace StudyJunction.Web.Data.Migrations
+namespace StudyJunction.Infrastructure.Migrations
 {
     [DbContext(typeof(SJDbContext))]
-    [Migration("20240205210024_Added_ThumbnailURL_To_CourseDb")]
-    partial class Added_ThumbnailURL_To_CourseDb
+    [Migration("20240208161633_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -289,7 +289,10 @@ namespace StudyJunction.Web.Data.Migrations
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ThumbnailURL")
+                    b.Property<string>("ThumbnailCloudinaryId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ThumbnailCloudinaryUri")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -316,11 +319,9 @@ namespace StudyJunction.Web.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AssignmentCloudinaryId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AssignmentCloudinaryUri")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("CourseId")
@@ -343,11 +344,9 @@ namespace StudyJunction.Web.Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("VideoLinkCloudinaryId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VideoLinkCloudinaryUri")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -388,6 +387,30 @@ namespace StudyJunction.Web.Data.Migrations
                     b.HasIndex("LectureId");
 
                     b.ToTable("Notes");
+                });
+
+            modelBuilder.Entity("StudyJunction.Infrastructure.Data.Models.TeacherCandidancy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Approved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CandidateId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Credentials")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("TeachersCandidacies");
                 });
 
             modelBuilder.Entity("StudyJunction.Infrastructure.Data.Models.UsersCoursesDb", b =>
@@ -453,11 +476,9 @@ namespace StudyJunction.Web.Data.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ProfileImageCloudinaryId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfileImageCloudinaryUri")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("Email")
@@ -581,6 +602,17 @@ namespace StudyJunction.Web.Data.Migrations
                     b.Navigation("Lecture");
                 });
 
+            modelBuilder.Entity("StudyJunction.Infrastructure.Data.Models.TeacherCandidancy", b =>
+                {
+                    b.HasOne("StudyJunction.Infrastructure.Data.Models.UserDb", "User")
+                        .WithMany("Candidancies")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("StudyJunction.Infrastructure.Data.Models.UsersCoursesDb", b =>
                 {
                     b.HasOne("StudyJunction.Infrastructure.Data.Models.CourseDb", "Course")
@@ -640,6 +672,8 @@ namespace StudyJunction.Web.Data.Migrations
 
             modelBuilder.Entity("StudyJunction.Infrastructure.Data.Models.UserDb", b =>
                 {
+                    b.Navigation("Candidancies");
+
                     b.Navigation("MyCreatedCourses");
 
                     b.Navigation("MyEnrolledCourses");

@@ -67,7 +67,7 @@ namespace StudyJunction.Core.Services
 
             var assignmentCloudinaryData = cloudinaryService.UploadImageToCloudinary(image);
 
-            courseDb.ThumbnailURL = assignmentCloudinaryData[1];
+            courseDb.ThumbnailCloudinaryUri = assignmentCloudinaryData[1];
 
             var result = courseRepository.UpdateAsync(courseDb.Id, courseDb);
 

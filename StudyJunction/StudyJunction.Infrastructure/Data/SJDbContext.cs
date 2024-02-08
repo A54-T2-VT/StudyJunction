@@ -21,6 +21,7 @@ namespace StudyJunction.Infrastructure.Data
         public DbSet<CategoryDb> Categories { get; set; }
         public DbSet<UsersCoursesDb> UsersCourses { get; set; }
         public DbSet<UsersLecturesDb> UsersLectures { get; set; }
+        public DbSet<TeacherCandidancy> TeachersCandidacies { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -77,8 +78,6 @@ namespace StudyJunction.Infrastructure.Data
                 .HasForeignKey(c => c.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-                e.Property(e => e.ThumbnailURL)
-                .IsRequired(false);
             });
 
             builder.Entity<CourseDb>()
@@ -151,6 +150,18 @@ namespace StudyJunction.Infrastructure.Data
                 .IsUnique();
 
             builder.Entity<CategoryDb>().HasQueryFilter(e => e.IsDeleted == false);
+
+            //TeachersCandidancies entity
+            builder.Entity<TeacherCandidancy>(e =>
+            {
+                e.HasKey(tc => tc.Id);
+
+                e.HasOne(tc => tc.User)
+                .WithMany(u => u.Candidancies)
+                .HasForeignKey(tc => tc.CandidateId)
+                .OnDelete(DeleteBehavior.Restrict);
+            });
+            
 
             //UsersCourses entity
             builder.Entity<UsersCoursesDb>(e =>
