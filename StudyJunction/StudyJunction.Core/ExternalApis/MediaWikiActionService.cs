@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
+using System.Text.RegularExpressions;
 
 namespace StudyJunction.Core.ExternalApis
 {
@@ -36,11 +37,25 @@ namespace StudyJunction.Core.ExternalApis
                 Console.WriteLine(response.ResponseUri);
 
                 var result = JsonConvert.DeserializeObject<SearchResult>(response.Content);
+
+                var snippet = result.Query.Search.Select(s => CleanSnippetFromHTMLTags(s.Snippet)).ToList();
+
+                Console.WriteLine(snippet[0]);
             }
             else
             {
                 Console.WriteLine($"Error: {response.StatusCode} - {response.StatusDescription}");
             }
+        }
+
+        private static string CleanSnippetFromHTMLTags(string snippet)
+        {
+
+            string pattern = "<.*?>";
+            string result = Regex.Replace(snippet, pattern, string.Empty);
+
+            return result;
+
         }
     }
 
