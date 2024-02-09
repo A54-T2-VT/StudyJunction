@@ -28,7 +28,7 @@ namespace StudyJunction.Core.Services
 
         public async Task<CategoryResponseDTO> Create(AddCategoryRequestDto newCategory)
 		{
-			if (categoryRepository.CategoryNameExists(newCategory.Name))
+			if (await categoryRepository.CategoryNameExists(newCategory.Name))
 			{
 				throw new NameDuplicationException(
 					String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCategory.Name));
@@ -41,7 +41,7 @@ namespace StudyJunction.Core.Services
 
 		public async Task<CategoryResponseDTO> CreateSubCategory(AddCategoryRequestDto newCategory, Guid parentId)
         {
-			if (categoryRepository.CategoryNameExists(newCategory.Name))
+			if (await categoryRepository.CategoryNameExists(newCategory.Name))
 			{
 				throw new NameDuplicationException(
 					String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCategory.Name));
@@ -80,7 +80,7 @@ namespace StudyJunction.Core.Services
         {
             var updated = mapper.Map<CategoryDb>(updatedCategory);
 
-            if(categoryRepository.CategoryNameExists(updatedCategory.Name))
+            if(await categoryRepository.CategoryNameExists(updatedCategory.Name))
             {
                 throw new NameDuplicationException(
                     String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, updatedCategory.Name));
