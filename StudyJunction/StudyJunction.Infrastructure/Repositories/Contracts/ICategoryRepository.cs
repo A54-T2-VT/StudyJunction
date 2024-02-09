@@ -11,6 +11,6 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 		Task<CategoryDb> AddSubCategory(CategoryDb parent, CategoryDb subCategory);
 		Task<CategoryDb> UpdateAsync(Guid id, CategoryDb updatedCategory);
 		Task<CategoryDb> DeleteAsync(Guid id);
-		bool CategoryNameExists(string name);
+		Task<bool> CategoryNameExists(string name);
 	}
 }

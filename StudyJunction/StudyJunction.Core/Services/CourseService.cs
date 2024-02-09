@@ -132,9 +132,22 @@ namespace StudyJunction.Core.Services
 			return mapper.Map<CourseResponseDTO>(await courseRepository.DeleteAsync(toDelete));
 		}
 
-		public async Task<CourseResponseDTO> UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string username)
+		public async Task<CourseResponseDTO> UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string userId)
 		{
-			throw new NotImplementedException();
+            if(await courseRepository.IsUserOwner(userId, toUpdate))
+            {
+                throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, userId ));
+            }
+
+            if(!(await categoryRepository.CategoryNameExists(newCategory.Name)))
+            {
+                throw new EntityNotFoundException(string.Format(ExceptionMessages.CATEGORY_WITH_NAME_NOT_FOUND_MESSAGE, newCategory.Name));
+            }
+
+            var updatedCourseDb = await courseRepository.ChangeCourseCategory(newCategory.Name, toUpdate);
+
+            return mapper.Map<CourseResponseDTO>(updatedCourseDb);
+
 		}
 	}
 }
