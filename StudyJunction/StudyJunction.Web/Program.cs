@@ -46,7 +46,9 @@ namespace StudyJunction.Web
             builder.Services.AddScoped<INoteService, NoteService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
+            //External Api services
             builder.Services.AddScoped<CloudinaryService>();
+            builder.Services.AddScoped<MediaWikiActionService>();
 
             //AutoMapper
             builder.Services.AddAutoMapper(typeof(Program));
