@@ -1,10 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using StudyJunction.Infrastructure.Data.Models
+@inject SignInManager<UserDb> SignInManager
+@inject UserManager<UserDb> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Mentor Bootstrap Template - Index</title>
+    <title>StudyJunction - Index</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -42,7 +47,7 @@
     <header id="header" class="fixed-top">
         <div class="container d-flex align-items-center">
 
-            <h1 class="logo me-auto"><a href="index.html">Mentor</a></h1>
+            <h1 class="logo me-auto"><a href="index.html">StudyJunction</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -79,9 +84,20 @@
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav><!-- .navbar -->
 
-            <a href="" class="get-started-btn">Register</a>
-            <a href="" class="get-started-btn">Login</a>
-
+            @if (SignInManager.IsSignedIn(User))
+            {                
+                <a class="get-started-btn" asp-controller="Users" asp-action="" title="Manage">Hello @User.Identity?.Name!</a>
+                               
+                <form class="form-inline" asp-controller="Identity" asp-action="" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                </form>                
+            }
+            else
+            {                
+                <a class="get-started-btn" asp-controller="Users" asp-action="">Register</a>
+                               
+                <a class="get-started-btn" asp-controller="Users" asp-action="">Login</a>                
+            }
         </div>
     </header><!-- End Header -->
     <div class="container">
@@ -98,7 +114,7 @@
                 <div class="row">
 
                     <div class="col-lg-3 col-md-6 footer-contact">
-                        <h3>Mentor</h3>
+                        <h3>StudyJunction</h3>
                         <p>
                             A108 Adam Street <br>
                             New York, NY 535022<br>
@@ -146,7 +162,7 @@
 
             <div class="me-md-auto text-center text-md-start">
                 <div class="copyright">
-                    &copy; Copyright <strong><span>Mentor</span></strong>. All Rights Reserved
+                    &copy; Copyright <strong><span>StudyJunction</span></strong>. All Rights Reserved
                 </div>
                 <div class="credits">
                     <!-- All the links in the footer should remain intact. -->
