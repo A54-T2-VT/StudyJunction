@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.User;
+using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
 
@@ -14,26 +16,52 @@ namespace StudyJunction.Web.Controllers
     {
         private readonly IUserService userService;
         private readonly IMapper mapper;
+        private readonly UserManager<UserDb> userManager;
+        private readonly SignInManager<UserDb> signInManager;
 
         public UsersController(IUserService userService,
-            IMapper mapper)
+            IMapper mapper,
+            UserManager<UserDb> userManager,
+            SignInManager<UserDb> signInManager)
         {
             this.userService = userService;
             this.mapper = mapper;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login()
         {
-            return View();
+            var model = new LoginViewModel();
+
+            return View(model);
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Login(string delete)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            throw new NotFiniteNumberException();
+            //Fix exception handling
+            try
+            {
+                var user = await userManager.FindByEmailAsync(model.Email);
+
+                var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
+
+                if (!result.Succeeded)
+                {
+                    throw new InvalidCredentialsException(string.Format(ExceptionMessages.INVALID_CREDENTIALS_MESSAGE));
+                }
+
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch(InvalidCredentialsException ex)
+            {
+                throw new NotImplementedException(ex.Message);
+            }
         }
 
         [HttpGet]
@@ -49,6 +77,7 @@ namespace StudyJunction.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            //Fix exception handling
             try
             {
                 var registerDto = mapper.Map<RegisterUserRequestDto>(model);
@@ -59,7 +88,7 @@ namespace StudyJunction.Web.Controllers
             }
             catch(NameDuplicationException ex) 
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException(ex.Message);
             }
         }
     }

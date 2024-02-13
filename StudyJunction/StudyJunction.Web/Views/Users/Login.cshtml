@@ -1,4 +1,7 @@
-﻿<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+﻿@using StudyJunction.Core.ViewModels.User
+@model LoginViewModel
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 <link href="~/assets/css/login.css" rel="stylesheet" />
 
@@ -8,11 +11,19 @@
         @* <input type="checkbox" id="check"> *@
         <div class="login form">
             <header>Login</header>
-            <form action="#">
-                <input type="text" placeholder="Enter your email">
-                <input type="password" placeholder="Enter your password">
+            <form asp-controller="Users" asp-action="Login" method="post">
+                <div>
+                    <label asp-for="Email"></label>
+                    <input type="text" asp-for="Email" placeholder="Enter your email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Password"></Label>
+                    <input type="password" asp-for="Password" placeholder="Create a password">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
                 <a href="#">Forgot password?</a>
-                <input type="button" class="button" value="Login">
+                <input type="submit" class="button" value="Login">
             </form>
             <div class="signup">
                 <span class="signup">

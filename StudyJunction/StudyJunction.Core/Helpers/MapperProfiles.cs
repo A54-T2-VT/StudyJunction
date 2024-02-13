@@ -37,7 +37,7 @@ namespace StudyJunction.Core.Helpers
 
             //ViewModel -> DTO
             this.CreateMap<RegisterViewModel, RegisterUserRequestDto>();
-
+            //this.CreateMap<LoginViewModel, LoginUserRequestDto>();
         }
 
 		private static string ExtractUserName(string email)
