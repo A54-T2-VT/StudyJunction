@@ -4,6 +4,7 @@ using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.ResponseDTOs;
+using StudyJunction.Core.ViewModels.User;
 using StudyJunction.Infrastructure.Data.Models;
 
 namespace StudyJunction.Core.Helpers
@@ -33,7 +34,9 @@ namespace StudyJunction.Core.Helpers
                 .ForMember(d => d.CourseId, opt => opt.MapFrom(s => new Guid(s.CourseName)));
             this.CreateMap<CategoryRequestDto, CategoryDb>();
             this.CreateMap<CourseRequestDto, CourseDb>();
-           
+
+            //ViewModel -> DTO
+            this.CreateMap<RegisterViewModel, RegisterUserRequestDto>();
 
         }
 
