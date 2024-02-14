@@ -23,7 +23,7 @@
                                 break;
                             }
                             var currCourse = Model.Courses.ElementAtOrDefault(j);
-                            <img src="@Model.Service.GetResource(currCourse.ThumbnailURL)" width="300" height="300" class="img-thumbnail" class="rounded"/>
+                            <img src="@Model.Service.GetResource(currCourse.ThumbnailCloudinaryUri)" width="300" height="300" class="img-thumbnail" class="rounded"/>
                             
 
                         }

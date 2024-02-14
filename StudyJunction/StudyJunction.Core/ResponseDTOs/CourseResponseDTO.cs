@@ -8,7 +8,7 @@ namespace StudyJunction.Core.ResponseDTOs
         public string CreatorName { get; set; }
         public string CategoryName { get; set; }
         public DateTime? StartDate { get; set; }
-        public string ThumbnailURL { get; set; }
+        public string ThumbnailCloudinaryUri { get; set; }
 
         public ICollection<CourseStudentResponseDto> EnrolledStudents { get; set; }
         public ICollection<CourseLectureResponseDto> Lectures { get; set; }
