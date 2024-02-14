@@ -23,7 +23,7 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpGet("find")]
-		public IActionResult FindCategory(string searchTerm)
+		public async Task<IActionResult> FindCategory(string searchTerm)
 		{
 			try
 			{
@@ -31,12 +31,12 @@ namespace StudyJunction.Web.Controllers.API
 
 				if(Guid.TryParse(searchTerm, out Guid id)) 
 				{
-                    category = categoryService.GetById(id);
+                    category = await categoryService.GetById(id);
 
 				}
                 else
                 {
-					category = categoryService.GetByName(searchTerm);
+					category = await categoryService.GetByName(searchTerm);
                 }
 
 
@@ -50,18 +50,18 @@ namespace StudyJunction.Web.Controllers.API
 
 
 		[HttpGet("")]
-		public IActionResult GetAll()
+		public async Task<IActionResult> GetAll()
 		{
-			return Ok(categoryService.GetAll());
+			return Ok(await categoryService.GetAll());
 		}
 
 		[HttpPost("")]
         [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God })]
-        public IActionResult CreateCategory([FromBody] AddCategoryRequestDto dto)
+        public async Task<IActionResult> CreateCategory([FromBody] AddCategoryRequestDto dto)
 		{
 			try
 			{
-				var newCategory = categoryService.Create(dto);
+				var newCategory = await categoryService.Create(dto);
 				return Ok(newCategory);
 			}
 			catch (UnauthorizedUserException ex)
@@ -75,13 +75,14 @@ namespace StudyJunction.Web.Controllers.API
 		}
 		[HttpPost("{id}")]
         [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God })]
-        public IActionResult CreateSubCategory(string id, [FromBody] AddCategoryRequestDto dto)
+        public async Task<IActionResult> CreateSubCategory(string id, [FromBody] AddCategoryRequestDto dto)
 		{
 			try
 			{
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
-                var newSubCategory = categoryService.CreateSubCategory(dto, new Guid(id));
+
+                var newSubCategory = await categoryService.CreateSubCategory(dto, new Guid(id));
 				return Ok(newSubCategory);
 			}
 			catch (UnauthorizedUserException ex)
@@ -96,11 +97,11 @@ namespace StudyJunction.Web.Controllers.API
 
 		[HttpPut("{id}")]
         [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God })]
-        public IActionResult UpdateCategory(string id, [FromBody] CategoryRequestDto newData)
+        public async Task<IActionResult> UpdateCategory(string id, [FromBody] CategoryRequestDto newData)
 		{
 			try
 			{
-				var updated = categoryService.Update(new Guid(id), newData);
+				var updated = await categoryService.Update(new Guid(id), newData);
 				return Ok(updated);
 			}
 			catch(UnauthorizedUserException ex)
@@ -118,11 +119,11 @@ namespace StudyJunction.Web.Controllers.API
 		}
 		[HttpDelete("{id}")]
 		[JwtAuthorization(ClearedRoles = new string[] {RolesConstants.Admin, RolesConstants.God })]
-		public IActionResult DeleteCategory(string id)
+		public async Task<IActionResult> DeleteCategory(string id)
 		{
 			try
 			{
-				var deleted = categoryService.Delete(new Guid(id));
+				var deleted = await categoryService.Delete(new Guid(id));
 				return Ok(deleted);
 			}
 			catch(UnauthorizedUserException ex)

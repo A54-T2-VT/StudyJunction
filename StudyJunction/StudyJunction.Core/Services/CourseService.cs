@@ -36,16 +36,16 @@ namespace StudyJunction.Core.Services
             cloudinaryService = _cloudinaryService;
 		}
 		
-        public CourseResponseDTO Create(AddCourseRequestDto newCourse, string username)
+        public async Task<CourseResponseDTO> Create(AddCourseRequestDto newCourse, string username)
         {
             if(courseRepository.CourseTitleExists(newCourse.Title))
             {
                 throw new NameDuplicationException(
                     String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCourse.Title));
             }
-            var creatorUser = userManager.FindByNameAsync(username).Result;
+            var creatorUser = await userManager.FindByNameAsync(username);
 
-            var categoryDb = categoryRepository.GetByNameAsync(newCourse.CategoryName).Result;
+            var categoryDb = await categoryRepository.GetByNameAsync(newCourse.CategoryName);
 			newCourse.CategoryName = categoryDb.Id.ToString();
 
             var courseDb = mapper.Map<CourseDb>(newCourse);
@@ -53,7 +53,7 @@ namespace StudyJunction.Core.Services
             creatorUser.MyCreatedCourses.Add(courseDb);
 
 
-            return mapper.Map<CourseResponseDTO>(courseRepository.CreateAsync(courseDb).Result);
+            return mapper.Map<CourseResponseDTO>(await courseRepository.CreateAsync(courseDb));
         }
         public async Task<CourseResponseDTO> AddThumbnailAsync(string courseId, IFormFile image, string userId)
         {
@@ -73,28 +73,30 @@ namespace StudyJunction.Core.Services
 
             return mapper.Map<CourseResponseDTO>(await result);
         }
-        public ICollection<CourseResponseDTO> GetAll()
+        public async Task<ICollection<CourseResponseDTO>> GetAll()
         {
-            return courseRepository.GetAllAsync().Result
+            var courses = await courseRepository.GetAllAsync();
+
+            return courses
                 .Select(x => mapper.Map<CourseResponseDTO>(x))
                 .ToList();
         }
 
-        public CourseResponseDTO GetCourse(Guid courseId)
+        public async Task<CourseResponseDTO> GetCourse(Guid courseId)
         {
             return mapper.Map<CourseResponseDTO>
-                (courseRepository.GetByIdAsync(courseId).Result);
+                (await courseRepository.GetByIdAsync(courseId));
         }
 
-        public CourseResponseDTO GetCourse(string title)
+        public async Task<CourseResponseDTO> GetCourse(string title)
         {
-            return mapper.Map<CourseResponseDTO>(courseRepository.GetByTitleAsync(title).Result);
+            return mapper.Map<CourseResponseDTO>(await courseRepository.GetByTitleAsync(title));
         }
 
-        public CourseResponseDTO Update(Guid toUpdate, CourseRequestDto newData, string username)
+        public async Task<CourseResponseDTO> Update(Guid toUpdate, CourseRequestDto newData, string username)
         {
-			var user = userManager.FindByNameAsync(username).Result;
-			var courseToUpdate = courseRepository.GetByIdAsync(toUpdate).Result;
+			var user = await userManager.FindByNameAsync(username);
+			var courseToUpdate = await courseRepository.GetByIdAsync(toUpdate);
 			//check if user has permission to update the course
 			if (!userRepository.HasCreatedCourse(user, courseToUpdate.Title))
 			{
@@ -113,14 +115,13 @@ namespace StudyJunction.Core.Services
 			}
 
             var newCourse = mapper.Map<CourseDb>(newData);
-            return mapper.Map<CourseResponseDTO>(courseRepository.UpdateAsync(toUpdate, newCourse).Result);
-				
+            return mapper.Map<CourseResponseDTO>( await courseRepository.UpdateAsync(toUpdate, newCourse));				
 		}
-		public CourseResponseDTO Delete(Guid toDelete, string username)
+		public async Task<CourseResponseDTO> Delete(Guid toDelete, string username)
 		{
-			var user = userManager.FindByNameAsync(username).Result;
+			var user = await userManager.FindByNameAsync(username);
 			
-			var courseToDelete = courseRepository.GetByIdAsync(toDelete).Result;
+			var courseToDelete = await courseRepository.GetByIdAsync(toDelete);
 			//check if user has permission to delete the course
 			if (!userRepository.HasCreatedCourse(user, courseToDelete.Title))
 			{
@@ -128,12 +129,25 @@ namespace StudyJunction.Core.Services
 					String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
 			}
 
-			return mapper.Map<CourseResponseDTO>(courseRepository.DeleteAsync(toDelete));
+			return mapper.Map<CourseResponseDTO>(await courseRepository.DeleteAsync(toDelete));
 		}
 
-		public CourseResponseDTO UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string username)
+		public async Task<CourseResponseDTO> UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string userId)
 		{
-			throw new NotImplementedException();
+            if(await courseRepository.IsUserOwner(userId, toUpdate))
+            {
+                throw new UnauthorizedUserException(string.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, userId ));
+            }
+
+            if(!(await categoryRepository.CategoryNameExists(newCategory.Name)))
+            {
+                throw new EntityNotFoundException(string.Format(ExceptionMessages.CATEGORY_WITH_NAME_NOT_FOUND_MESSAGE, newCategory.Name));
+            }
+
+            var updatedCourseDb = await courseRepository.ChangeCourseCategory(newCategory.Name, toUpdate);
+
+            return mapper.Map<CourseResponseDTO>(updatedCourseDb);
+
 		}
 	}
 }

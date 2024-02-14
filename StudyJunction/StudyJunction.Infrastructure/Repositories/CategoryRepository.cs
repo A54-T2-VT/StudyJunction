@@ -81,9 +81,9 @@ namespace StudyJunction.Infrastructure.Repositories
             return subCategory;
 		}
 
-		public bool CategoryNameExists(string name)
+		public async Task<bool> CategoryNameExists(string name)
 		{
-            return context.Categories.Any(x => x.Name == name);
+            return await context.Categories.AnyAsync(x => x.Name == name);
 		}
 	}
 }

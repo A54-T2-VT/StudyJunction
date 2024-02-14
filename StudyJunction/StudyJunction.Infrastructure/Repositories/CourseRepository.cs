@@ -71,7 +71,26 @@ namespace StudyJunction.Infrastructure.Repositories
 			await context.SaveChangesAsync();
 			return toUpdate;
 		}
-		public bool CourseTitleExists(string title)
+
+        public async Task<CourseDb> ChangeCourseCategory(string categoryName, Guid courseId)
+		{
+			var courseToUpdate = await context.Courses				
+				.FirstOrDefaultAsync(c => c.Id  == courseId)
+				?? throw new EntityNotFoundException(string.Format(ExceptionMessages.COURSE_WITH_ID_NOT_FOUND_MESSAGE, courseId));
+
+			var category = await context.Categories
+				.FirstOrDefaultAsync(c => c.Name == categoryName)
+				?? throw new EntityNotFoundException(string.Format(ExceptionMessages.CATEGORY_WITH_NAME_NOT_FOUND_MESSAGE, categoryName));
+
+			courseToUpdate.Category = category;
+			courseToUpdate.CategoryId = category.Id;
+
+			await context.SaveChangesAsync();
+
+			return courseToUpdate;
+		}
+
+        public bool CourseTitleExists(string title)
 		{
 			return context.Courses.Any(x => x.Title.Equals(title));
 		}

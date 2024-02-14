@@ -26,70 +26,72 @@ namespace StudyJunction.Core.Services
 			userManager = _userManager;
 		}
 
-        public CategoryResponseDTO Create(AddCategoryRequestDto newCategory)
+        public async Task<CategoryResponseDTO> Create(AddCategoryRequestDto newCategory)
 		{
-			if (categoryRepository.CategoryNameExists(newCategory.Name))
+			if (await categoryRepository.CategoryNameExists(newCategory.Name))
 			{
 				throw new NameDuplicationException(
 					String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCategory.Name));
 			}
 
-			var created = categoryRepository.CreateAsync(mapper.Map<CategoryDb>(newCategory)).Result;
+			var created = await categoryRepository.CreateAsync(mapper.Map<CategoryDb>(newCategory));
 
             return mapper.Map<CategoryResponseDTO>(created);
 		}
 
-		public CategoryResponseDTO CreateSubCategory(AddCategoryRequestDto newCategory, Guid parentId)
+		public async Task<CategoryResponseDTO> CreateSubCategory(AddCategoryRequestDto newCategory, Guid parentId)
         {
-			if (categoryRepository.CategoryNameExists(newCategory.Name))
+			if (await categoryRepository.CategoryNameExists(newCategory.Name))
 			{
 				throw new NameDuplicationException(
 					String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCategory.Name));
 			}
 
-			var parent = categoryRepository.GetByIdAsync(parentId).Result;
+			var parent = await categoryRepository.GetByIdAsync(parentId);
             var sub = mapper.Map<CategoryDb>(newCategory);
 
-            return mapper.Map<CategoryResponseDTO>(categoryRepository.AddSubCategory(parent, sub).Result);
+            return mapper.Map<CategoryResponseDTO>(await categoryRepository.AddSubCategory(parent, sub));
 		}
 
-        public IEnumerable<CategoryResponseDTO> GetAll()
+        public async Task<IEnumerable<CategoryResponseDTO>> GetAll()
         {
-            return categoryRepository.GetAllAsync().Result
+            var categories = await categoryRepository.GetAllAsync();
+
+            return categories
                 .Select(cat => mapper.Map<CategoryResponseDTO>(cat))
                 .ToList();
         }
 
-        public CategoryResponseDTO GetById(Guid id)
+        public async Task<CategoryResponseDTO> GetById(Guid id)
         {
-            var category = categoryRepository.GetByIdAsync(id).Result;
+            var category = await categoryRepository.GetByIdAsync(id);
 
             return mapper.Map<CategoryResponseDTO>(category);
         }
 
-        public CategoryResponseDTO GetByName(string name)
+        public async Task<CategoryResponseDTO> GetByName(string name)
         {
-			var category = categoryRepository.GetByNameAsync(name).Result;
+			var category = await categoryRepository.GetByNameAsync(name);
 
 			return mapper.Map<CategoryResponseDTO>(category);
 		}
 
-		public CategoryResponseDTO Update(Guid id, CategoryRequestDto updatedCategory)
+		public async Task<CategoryResponseDTO> Update(Guid id, CategoryRequestDto updatedCategory)
         {
             var updated = mapper.Map<CategoryDb>(updatedCategory);
 
-            if(categoryRepository.CategoryNameExists(updatedCategory.Name))
+            if(await categoryRepository.CategoryNameExists(updatedCategory.Name))
             {
                 throw new NameDuplicationException(
                     String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, updatedCategory.Name));
             }
 
-            return mapper.Map<CategoryResponseDTO>(categoryRepository.UpdateAsync(id, updated).Result);
+            return mapper.Map<CategoryResponseDTO>(await categoryRepository.UpdateAsync(id, updated));
 		}
 
-		public CategoryResponseDTO Delete(Guid id)
+		public async Task<CategoryResponseDTO> Delete(Guid id)
 		{
-			return mapper.Map<CategoryResponseDTO>(categoryRepository.DeleteAsync(id).Result);
+			return mapper.Map<CategoryResponseDTO>(await categoryRepository.DeleteAsync(id));
 		}
 	}
 }

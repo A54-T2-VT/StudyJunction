@@ -1,0 +1,54 @@
+﻿@using StudyJunction.Core.ViewModels.User
+@model RegisterViewModel
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<link href="~/assets/css/login.css" rel="stylesheet" />
+
+<div class=" d-flex align-self-center justify-content-center align-items-center m-auto my-5">
+    <div class=" mt-5">
+
+        <div class="registration form">
+            <header>Signup</header>
+            <form asp-controller="Users" asp-action="Register" method="post">
+                <div>
+                    <label asp-for="Email"></label>
+                    <input type="text" asp-for="Email" placeholder="Enter your email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Password"></Label>
+                    <input type="password" asp-for="Password" placeholder="Create a password">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="ConfirmPassword"></label>
+                    <input type="password" asp-for=ConfirmPassword placeholder="Confirm your password">
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="FirstName"></label>
+                    <input type="text" asp-for="FirstName" placeholder="Enter your first name">
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="LastName"></label>
+                    <input type="text" asp-for="LastName" placeholder="Enter your last name">
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <input type="submit" class="button" value="Signup">
+            </form>
+            <div class="signup">
+                <span class="signup">
+                    Already have an account?
+                    <label for="check">Login</label>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

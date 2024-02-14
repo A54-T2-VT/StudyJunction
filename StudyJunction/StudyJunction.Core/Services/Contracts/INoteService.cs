@@ -5,10 +5,10 @@ namespace StudyJunction.Core.Services.Contracts
 {
     public interface INoteService
 	{
-        IEnumerable<NoteResponseDTO> GetAll();
-        NoteResponseDTO GetById(Guid id);
-        NoteResponseDTO Create(AddNoteRequestDto newNote, string username);
-        NoteResponseDTO Update(Guid id, NoteRequestDto updatedNote, string username);
-        NoteResponseDTO Delete(Guid id, string username);
+        Task<IEnumerable<NoteResponseDTO>> GetAll();
+        Task<NoteResponseDTO> GetById(Guid id);
+        Task<NoteResponseDTO> Create(AddNoteRequestDto newNote, string username);
+        Task<NoteResponseDTO> Update(Guid id, NoteRequestDto updatedNote, string username);
+        Task<NoteResponseDTO> Delete(Guid id, string username);
     }
 }

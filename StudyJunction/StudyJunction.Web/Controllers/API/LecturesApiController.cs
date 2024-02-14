@@ -23,11 +23,11 @@ namespace StudyJunction.Web.Controllers.API
         }
 
         [HttpGet("{id}")]
-		public IActionResult GetById(string id)
+		public async Task<IActionResult> GetById(string id)
 		{
 			try
 			{
-				var lecture = lectureService.Get(new Guid(id));
+				var lecture = await lectureService.Get(new Guid(id));
 				return Ok(lecture);
 			}
 			catch (EntityNotFoundException ex)
@@ -37,11 +37,11 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpGet("{title}")]
-		public IActionResult GetByTitle(string title)
+		public async Task<IActionResult> GetByTitle(string title)
 		{
 			try
 			{
-				var lecture = lectureService.Get(title);
+				var lecture = await lectureService.Get(title);
 				return Ok(lecture);
 			}
 			catch (EntityNotFoundException e)
@@ -51,12 +51,13 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpGet("")]
-		public IActionResult GetCourses()
+		public async Task<IActionResult> GetCourses()
 		{
-			var courses = lectureService.GetAll();
+			var courses = await lectureService.GetAll();
 			return Ok(courses);
 		}
 
+		//Not implemented
 		[HttpPost("")]
 		public IActionResult CreateLectureWithVideoAndAssignment(IFormCollection form)
 		{
@@ -93,14 +94,14 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpPost("")]
-		public IActionResult CreateLecture(AddLectureRequestDto newLecture)
+		public async Task<IActionResult> CreateLecture(AddLectureRequestDto newLecture)
 		{
 			try 
 			{
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-				var result = lectureService.Create(newLecture, username);
+				var result = await lectureService.Create(newLecture, username);
 				return Ok(result);
             }
 			catch(UnauthorizedUserException ex)
@@ -135,14 +136,14 @@ namespace StudyJunction.Web.Controllers.API
 			}
 		}
 		[HttpPut("{id}")]
-		public IActionResult UpdateLecture(string id, [FromBody] LectureRequestDto newData)
+		public async Task<IActionResult> UpdateLecture(string id, [FromBody] LectureRequestDto newData)
 		{
 			try
 			{
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-                var updated = lectureService.Update(new Guid(id), newData, username);
+                var updated = await lectureService.Update(new Guid(id), newData, username);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
@@ -156,14 +157,14 @@ namespace StudyJunction.Web.Controllers.API
 		}
 
 		[HttpDelete("{id}")]
-		public IActionResult DeleteLecture(string id)
+		public async Task<IActionResult> DeleteLecture(string id)
 		{
 			try
 			{
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-                var deleted = lectureService.Delete(new Guid(id), username);
+                var deleted = await lectureService.Delete(new Guid(id), username);
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)

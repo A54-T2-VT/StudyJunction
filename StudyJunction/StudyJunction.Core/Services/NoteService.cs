@@ -14,27 +14,27 @@ namespace StudyJunction.Core.Services
 			noteRepository = _noteRepository;
 			userRepository = _userRepository;
 		}
-        public NoteResponseDTO Create(AddNoteRequestDto newNote, string username)
+        public async Task<NoteResponseDTO> Create(AddNoteRequestDto newNote, string username)
         {
             throw new NotImplementedException();
         }
 
-        public NoteResponseDTO Delete(Guid id, string username)
+        public async Task<NoteResponseDTO> Delete(Guid id, string username)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<NoteResponseDTO> GetAll()
+        public async Task<IEnumerable<NoteResponseDTO>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public NoteResponseDTO GetById(Guid id)
+        public async Task<NoteResponseDTO> GetById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public NoteResponseDTO Update(Guid id, NoteRequestDto updatedNote, string username)
+        public async Task<NoteResponseDTO> Update(Guid id, NoteRequestDto updatedNote, string username)
         {
             throw new NotImplementedException();
         }

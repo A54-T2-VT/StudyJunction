@@ -29,7 +29,7 @@ namespace StudyJunction.Web.Controllers.API
 
         [HttpGet("find")]
         [JwtAuthorization]
-        public IActionResult FindUser(string searchTerm)
+        public async Task<IActionResult> FindUser(string searchTerm)
 		{
 			try
 			{
@@ -38,25 +38,24 @@ namespace StudyJunction.Web.Controllers.API
 				// Check if the searchTerm is a valid email
 				if (searchTerm.Contains("@"))
 				{
-					user =  userService.GetByEmail(searchTerm);
+					user =  await userService.GetByEmail(searchTerm);
 				}
 				// Check if the searchTerm is a valid ID
 				else if (Guid.TryParse(searchTerm, out var userId))
 				{
-					user =  userService.GetById(userId.ToString());
+					user =  await userService.GetById(userId.ToString());
 				}
 				// Assume it's a username
 				else
 				{
-					user =  userService.GetByUsername(searchTerm);
+					user =  await userService.GetByUsername(searchTerm);
 				}
 
 				if (user == null)
 				{
 					return NotFound("User not found");
 				}
-
-				// You may want to customize the response based on your requirements
+				
 				return Ok(user);
 			}
 			catch (EntityNotFoundException ex)
@@ -71,19 +70,19 @@ namespace StudyJunction.Web.Controllers.API
 
 		[HttpGet]
         [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher})]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
 		{
-			var users = userService.GetAll();
+			var users = await userService.GetAll();
 			return Ok(users);
 		}
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public IActionResult Login([FromBody] LoginUserRequestDto loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginUserRequestDto loginDto)
         {
             try
             {
-                var JWT = userService.Login(loginDto).Result;
+                var JWT = await userService.Login(loginDto);
                 return Ok(JWT);
             }
             catch (UnauthorizedUserException e)
@@ -102,11 +101,11 @@ namespace StudyJunction.Web.Controllers.API
 
         [HttpPost("register")]
 		[AllowAnonymous]
-		public IActionResult Register([FromBody] RegisterUserRequestDto newUser)
+		public async Task<IActionResult> Register([FromBody] RegisterUserRequestDto newUser)
 		{
 			try
 			{
-				var user = userService.Register(newUser).Result;
+				var user = await userService.Register(newUser);
 				return Ok(user);
 			}
 			catch (UnauthorizedUserException e)
@@ -125,7 +124,7 @@ namespace StudyJunction.Web.Controllers.API
 
 		[HttpPut("increaseRole/{targetUserId}")]
 		[JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God})]
-		public IActionResult IncreaseRole(string targetUserId)
+		public async Task<IActionResult> IncreaseRole(string targetUserId)
 		{
 			try
 			{
@@ -137,7 +136,7 @@ namespace StudyJunction.Web.Controllers.API
 					throw new Exception("User can not increase his own role.");
 				}
 
-				string newRole = userService.IncreaseRole(targetUserId);
+				string newRole = await userService.IncreaseRole(targetUserId);
 
 				return Ok(newRole);
 			}
@@ -149,7 +148,7 @@ namespace StudyJunction.Web.Controllers.API
 
         [HttpPut("decreaseRole/{targetUserId}")]
         [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God})]
-        public IActionResult DecreaseRole(string targetUserId)
+        public async Task<IActionResult> DecreaseRole(string targetUserId)
         {
             try
             {
@@ -161,7 +160,7 @@ namespace StudyJunction.Web.Controllers.API
                     throw new Exception("User can not increase his own role.");
                 }
 
-                string newRole = userService.DecreaseRole(targetUserId);
+                string newRole = await userService.DecreaseRole(targetUserId);
 
                 return Ok(newRole);
             }
@@ -173,14 +172,14 @@ namespace StudyJunction.Web.Controllers.API
 
         [HttpPut("")]
         [JwtAuthorization]
-        public IActionResult Update([FromBody] UpdateUserDataRequestDto newData)
+        public async Task<IActionResult> Update([FromBody] UpdateUserDataRequestDto newData)
 		{
 			try
 			{
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 				var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-				var updated = userService.Update(newData, username);
+				var updated = await userService.Update(newData, username);
 				return Ok(updated);
 			}
 			catch (UnauthorizedUserException e)
@@ -199,14 +198,14 @@ namespace StudyJunction.Web.Controllers.API
 
         [HttpPut("password")]
         [JwtAuthorization]
-        public IActionResult Update([FromBody] UpdateUserPasswordRequestDto passData)
+        public async Task<IActionResult> Update([FromBody] UpdateUserPasswordRequestDto passData)
         {
             try
             {
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-                var updated = userService.Update(passData, username);
+                var updated = await userService.Update(passData, username);
                 return Ok(updated);
             }
             catch (UnauthorizedUserException e)
@@ -226,14 +225,14 @@ namespace StudyJunction.Web.Controllers.API
 
         [HttpDelete("{id}")]
         [JwtAuthorization]
-        public IActionResult DeleteUser(string id)
+        public async Task<IActionResult> DeleteUser(string id)
 		{
 			try
 			{
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var username = JwtHelper.GetNameClaimFromJwt(jwtBearer);
 
-                var deleted = userService.Delete(id, username);
+                var deleted = await userService.Delete(id, username);
 				return Ok(deleted);
 			}
 			catch (UnauthorizedUserException e)
