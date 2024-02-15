@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Conventions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using StudyJunction.Core.ExternalApis;
@@ -65,9 +66,9 @@ namespace StudyJunction.Core.Services
             var courseDb = await courseRepository.GetByIdAsync(new Guid(courseId));
 
 
-            var assignmentCloudinaryData = cloudinaryService.UploadImageToCloudinary(image);
+            var thumbnailCloudinaryData = cloudinaryService.UploadImageToCloudinary(image);
 
-            courseDb.ThumbnailCloudinaryUri = assignmentCloudinaryData[1];
+            courseDb.ThumbnailCloudinaryUri = thumbnailCloudinaryData[1];
 
             var result = courseRepository.UpdateAsync(courseDb.Id, courseDb);
 
