@@ -2,6 +2,8 @@
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.ExternalApis;
+using StudyJunction.Core.RequestDTOs.Course;
+using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.Courses;
 
@@ -21,6 +23,39 @@ namespace StudyJunction.Web.Controllers
 			mapper = _mapper;
 			cloudinaryService = _cloudinaryService;
         }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+			var viewModel = new CreateCourseViewModel();
+            return View(viewModel);
+        }
+        [HttpPost]
+		public async Task<IActionResult> Create(CreateCourseViewModel viewModel)
+		{
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            string username = HttpContext.Session.GetString("user");
+
+            var course = mapper.Map<AddCourseRequestDto>(viewModel);
+
+            _ = await courseService.Create(course, username);
+
+            var routeValues = new RouteValueDictionary
+			{
+				{ "controller", "Courses" },
+				{ "action", "Details" },
+				{ "title", viewModel.Title }
+			};
+
+            var redirectResult = new RedirectToActionResult("Details", "Courses", routeValues);
+
+			return redirectResult;
+        }
+
         public async Task<IActionResult> Index()
 		{
 			CourseViewModel courses = new CourseViewModel()
