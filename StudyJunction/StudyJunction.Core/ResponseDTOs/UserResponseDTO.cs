@@ -9,6 +9,7 @@ namespace StudyJunction.Core.ResponseDTOs
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string ProfileImageCloudinaryUri { get; set; }
 
         //might need to add more props in future
     }

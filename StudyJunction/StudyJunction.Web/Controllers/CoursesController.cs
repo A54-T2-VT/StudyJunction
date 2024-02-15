@@ -3,11 +3,11 @@ using CloudinaryDotNet;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.Services.Contracts;
-using StudyJunction.Core.ViewModels;
+using StudyJunction.Core.ViewModels.Courses;
 
 namespace StudyJunction.Web.Controllers
 {
-	public class CoursesController : Controller
+    public class CoursesController : Controller
 	{
 		private readonly ICourseService courseService;
 		private readonly IUserService userService;
@@ -26,9 +26,22 @@ namespace StudyJunction.Web.Controllers
 			CourseViewModel courses = new CourseViewModel()
 			{
 				Courses = await courseService.GetAll(),
-				Service = cloudinaryService
+				Service = cloudinaryService,
+				Users = await userService.GetAll()
 			};
 			return View(courses);
+		}
+
+		[HttpGet("Courses/Details/{title}")]
+		public async Task<IActionResult> Details([FromRoute] string title)
+		{
+			DetailsViewModel detailsViewModel = new DetailsViewModel()
+			{
+				Course = await courseService.GetCourse(title),
+				Service = cloudinaryService
+			};
+			
+			return View(detailsViewModel);
 		}
 	}
 }
