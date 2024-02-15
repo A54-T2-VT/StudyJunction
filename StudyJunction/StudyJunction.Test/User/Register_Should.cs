@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudyJunction.Test.LectureService
+namespace StudyJunction.Test.User
 {
-    internal class Create_Should
+    internal class Register_Should
     {
     }
 }
