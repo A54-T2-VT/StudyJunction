@@ -35,7 +35,7 @@ namespace StudyJunction.Infrastructure.Repositories
 
         public async Task<IEnumerable<CourseDb>> GetAllAsync()
         {
-			var courses = await context.Courses.ToListAsync();
+			var courses = await context.Courses.Include(x => x.CreatedBy).Include(x => x.Category).ToListAsync();
 
 			return courses;
 		}
