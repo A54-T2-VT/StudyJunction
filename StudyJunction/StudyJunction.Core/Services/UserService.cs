@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
+using StudyJunction.Infrastructure.Repositories;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -23,13 +26,15 @@ namespace StudyJunction.Core.Services
         private readonly UserManager<UserDb> userManager;
         private readonly SignInManager<UserDb> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly CloudinaryService cloudinaryService;
 
         public UserService(IUserRepository _userRepository
             , IConfiguration configuration
             , IMapper mapper
             , UserManager<UserDb> _userManager,
             SignInManager<UserDb> _signInManager,
-            RoleManager<IdentityRole> _roleManager)
+            RoleManager<IdentityRole> _roleManager,
+            CloudinaryService _service)
 		{
 			userRepository = _userRepository;
             this.configuration = configuration;
@@ -37,6 +42,7 @@ namespace StudyJunction.Core.Services
             userManager = _userManager;
             signInManager = _signInManager;
             roleManager = _roleManager;
+            cloudinaryService = _service;
         }
 
 
@@ -134,6 +140,21 @@ namespace StudyJunction.Core.Services
 
             return mapper.Map<UserResponseDTO>(responseUser.Result);
             
+        }
+
+        public async Task<UserResponseDTO> UpdateProfilePicture(string userID, IFormFile image)
+        {
+            var userDb = await userRepository.GetByIdAsync(userID);
+
+
+            var pictureCloudinaryData = cloudinaryService.UploadImageToCloudinary(image);
+
+            userDb.ProfileImageCloudinaryId = pictureCloudinaryData[0];
+            userDb.ProfileImageCloudinaryUri = pictureCloudinaryData[1];
+
+            var result = userRepository.UpdateAsync(userDb.Id, userDb);
+
+            return mapper.Map<UserResponseDTO>(await result);
         }
 
         public async Task<UserResponseDTO> Update(UpdateUserDataRequestDto updatedUser, string username)
