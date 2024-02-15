@@ -136,9 +136,9 @@ namespace StudyJunction.Core.Services
             var user = await userManager.FindByEmailAsync(newUser.Email);
             _ = await userManager.AddToRolesAsync(user, new string[] { RolesConstants.Student });
 
-            var responseUser = userRepository.GetByEmailAsync(newUser.Email);
+            var responseUser = await userRepository.GetByEmailAsync(newUser.Email);
 
-            return mapper.Map<UserResponseDTO>(responseUser.Result);
+            return mapper.Map<UserResponseDTO>(responseUser);
             
         }
 
