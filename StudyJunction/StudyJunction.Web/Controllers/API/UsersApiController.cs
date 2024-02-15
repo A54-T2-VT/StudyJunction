@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,20 +17,20 @@ using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
 {
-    [Route("api/users")]
+	[Route("api/users")]
 	[ApiController]
 	public class UsersApiController : ControllerBase
 	{
 		private IUserService userService;
 
-        public UsersApiController(IUserService _userService)
-        {
+		public UsersApiController(IUserService _userService)
+		{
 			userService = _userService;
-        }
+		}
 
-        [HttpGet("find")]
-        [JwtAuthorization]
-        public async Task<IActionResult> FindUser(string searchTerm)
+		[HttpGet("find")]
+		[JwtAuthorization]
+		public async Task<IActionResult> FindUser(string searchTerm)
 		{
 			try
 			{
@@ -38,68 +39,68 @@ namespace StudyJunction.Web.Controllers.API
 				// Check if the searchTerm is a valid email
 				if (searchTerm.Contains("@"))
 				{
-					user =  await userService.GetByEmail(searchTerm);
+					user = await userService.GetByEmail(searchTerm);
 				}
 				// Check if the searchTerm is a valid ID
 				else if (Guid.TryParse(searchTerm, out var userId))
 				{
-					user =  await userService.GetById(userId.ToString());
+					user = await userService.GetById(userId.ToString());
 				}
 				// Assume it's a username
 				else
 				{
-					user =  await userService.GetByUsername(searchTerm);
+					user = await userService.GetByUsername(searchTerm);
 				}
 
 				if (user == null)
 				{
 					return NotFound("User not found");
 				}
-				
+
 				return Ok(user);
 			}
 			catch (EntityNotFoundException ex)
 			{
 				return NotFound(ex.Message);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				return BadRequest(ex.Message);
 			}
-        }
+		}
 
 		[HttpGet]
-        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher})]
-        public async Task<IActionResult> GetUsers()
+		[JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Teacher })]
+		public async Task<IActionResult> GetUsers()
 		{
 			var users = await userService.GetAll();
 			return Ok(users);
 		}
 
-        [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginUserRequestDto loginDto)
-        {
-            try
-            {
-                var JWT = await userService.Login(loginDto);
-                return Ok(JWT);
-            }
-            catch (UnauthorizedUserException e)
-            {
-                return Unauthorized(e.Message);
-            }
-            catch (NameDuplicationException ex)
-            {
-                return Conflict(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+		[HttpPost("login")]
+		[AllowAnonymous]
+		public async Task<IActionResult> Login([FromBody] LoginUserRequestDto loginDto)
+		{
+			try
+			{
+				var JWT = await userService.Login(loginDto);
+				return Ok(JWT);
+			}
+			catch (UnauthorizedUserException e)
+			{
+				return Unauthorized(e.Message);
+			}
+			catch (NameDuplicationException ex)
+			{
+				return Conflict(ex.Message);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 
-        [HttpPost("register")]
+		[HttpPost("register")]
 		[AllowAnonymous]
 		public async Task<IActionResult> Register([FromBody] RegisterUserRequestDto newUser)
 		{
@@ -116,14 +117,14 @@ namespace StudyJunction.Web.Controllers.API
 			{
 				return Conflict(ex.Message);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				return BadRequest(ex.Message);
 			}
 		}
 
 		[HttpPut("increaseRole/{targetUserId}")]
-		[JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God})]
+		[JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God })]
 		public async Task<IActionResult> IncreaseRole(string targetUserId)
 		{
 			try
@@ -131,7 +132,7 @@ namespace StudyJunction.Web.Controllers.API
 				var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 				var userTokenId = JwtHelper.GetNameIdentifierClaimFromJwt(jwtBearer);
 
-				if(userTokenId == targetUserId)
+				if (userTokenId == targetUserId)
 				{
 					throw new Exception("User can not increase his own role.");
 				}
@@ -140,31 +141,54 @@ namespace StudyJunction.Web.Controllers.API
 
 				return Ok(newRole);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				return BadRequest(ex.Message);
 			}
-        }
+		}
 
-        [HttpPut("decreaseRole/{targetUserId}")]
-        [JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God})]
-        public async Task<IActionResult> DecreaseRole(string targetUserId)
-        {
+		[HttpPut("decreaseRole/{targetUserId}")]
+		[JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God })]
+		public async Task<IActionResult> DecreaseRole(string targetUserId)
+		{
+			try
+			{
+				var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+				var userTokenId = JwtHelper.GetNameIdentifierClaimFromJwt(jwtBearer);
+
+				if (userTokenId == targetUserId)
+				{
+					throw new Exception("User can not increase his own role.");
+				}
+
+				string newRole = await userService.DecreaseRole(targetUserId);
+
+				return Ok(newRole);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPut("")]
+		[JwtAuthorization]
+		public async Task<IActionResult> UpdateProfilePicture(IFormFile image)
+		{
             try
             {
                 var jwtBearer = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-                var userTokenId = JwtHelper.GetNameIdentifierClaimFromJwt(jwtBearer);
+                var userId = JwtHelper.GetNameIdentifierClaimFromJwt(jwtBearer);
 
-                if (userTokenId == targetUserId)
-                {
-                    throw new Exception("User can not increase his own role.");
-                }
+                var result = await userService.UpdateProfilePicture(userId, image);
 
-                string newRole = await userService.DecreaseRole(targetUserId);
-
-                return Ok(newRole);
+                return Ok(result);
             }
-            catch (Exception ex)
+            catch (UnauthorizedUserException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (CloudinaryFileUploadException ex)
             {
                 return BadRequest(ex.Message);
             }
