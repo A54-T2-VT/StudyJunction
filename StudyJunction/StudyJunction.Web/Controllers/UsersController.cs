@@ -50,6 +50,10 @@ namespace StudyJunction.Web.Controllers
 
                 var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
+                //setting up session variables
+                HttpContext.Session.SetString("user", user.UserName);
+                HttpContext.Session.SetString("id", user.Id.ToString());
+
                 if (!result.Succeeded)
                 {
                     throw new InvalidCredentialsException(string.Format(ExceptionMessages.INVALID_CREDENTIALS_MESSAGE));
@@ -62,6 +66,17 @@ namespace StudyJunction.Web.Controllers
             {
                 throw new NotImplementedException(ex.Message);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.Remove("user");
+            HttpContext.Session.Remove("id");
+            await signInManager.SignOutAsync();
+
+            // Redirect to a specific page after sign-out if needed
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

@@ -47,9 +47,10 @@ namespace StudyJunction.Core.Services
             var creatorUser = await userManager.FindByNameAsync(username);
 
             var categoryDb = await categoryRepository.GetByNameAsync(newCourse.CategoryName);
-			newCourse.CategoryName = categoryDb.Id.ToString();
+			newCourse.CategoryName = categoryDb.Name;
 
             var courseDb = mapper.Map<CourseDb>(newCourse);
+            courseDb.CategoryId = categoryDb.Id;
             courseDb.CreatorId = creatorUser.Id;
             creatorUser.MyCreatedCourses.Add(courseDb);
 

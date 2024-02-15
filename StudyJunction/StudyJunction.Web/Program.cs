@@ -55,6 +55,14 @@ namespace StudyJunction.Web
             AutoMapper.IConfigurationProvider cfg = new MapperConfiguration(cfg => { cfg.AddProfile<MapperProfiles>(); });
             builder.Services.AddSingleton(cfg);
 
+            //Sessions
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             //Swagger
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
@@ -114,6 +122,7 @@ namespace StudyJunction.Web
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
             });
 
+            app.UseSession(); //for sessions
             app.UseAuthentication();
             app.UseAuthorization();
 

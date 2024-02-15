@@ -86,9 +86,9 @@
             @if (SignInManager.IsSignedIn(User))
             {                
                 <a class="get-started-btn" asp-controller="Users" asp-action="" title="Manage">Hello @User.Identity?.Name!</a>
-                               
-                <form class="form-inline" asp-controller="Identity" asp-action="" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+
+                <form class="form-inline" >
+                    <button type="submit" class="nav-link btn btn-link text-dark" asp-controller="Users" asp-action="Logout">Logout</button>
                 </form>                
             }
             else

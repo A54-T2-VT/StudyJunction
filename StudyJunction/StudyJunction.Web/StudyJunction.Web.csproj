@@ -79,6 +79,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StudyJunction.Core\StudyJunction.Core.csproj" />
+    <ProjectReference Include="..\StudyJunction.Infrastructure\StudyJunction.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
