@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Data.Models;
@@ -12,18 +11,14 @@ namespace StudyJunction.Core.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IUserRepository usersRepository;
         private readonly ICategoryRepository categoryRepository;
 		private readonly IMapper mapper;
-		private readonly UserManager<UserDb> userManager;
 
-		public CategoryService(IUserRepository _usersRepository, ICategoryRepository _categoryRepository,
-            IMapper _mapper, UserManager<UserDb> _userManager)
+		public CategoryService( ICategoryRepository _categoryRepository,
+            IMapper _mapper)
         {
-            usersRepository = _usersRepository;
             categoryRepository = _categoryRepository;
             mapper = _mapper;
-			userManager = _userManager;
 		}
 
         public async Task<CategoryResponseDTO> Create(AddCategoryRequestDto newCategory)
@@ -34,7 +29,9 @@ namespace StudyJunction.Core.Services
 					String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, newCategory.Name));
 			}
 
-			var created = await categoryRepository.CreateAsync(mapper.Map<CategoryDb>(newCategory));
+            var map = mapper.Map<CategoryDb>(newCategory);
+
+			var created = await categoryRepository.CreateAsync(map);
 
             return mapper.Map<CategoryResponseDTO>(created);
 		}

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudyJunction.Test.CourseService
+namespace StudyJunction.Test.Lecture
 {
     internal class Create_Should
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudyJunction.Test.CategoryService
+namespace StudyJunction.Test.Note
 {
     internal class Create_Should
     {
