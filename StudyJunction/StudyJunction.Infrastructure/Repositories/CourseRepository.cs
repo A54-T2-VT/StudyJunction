@@ -51,7 +51,7 @@ namespace StudyJunction.Infrastructure.Repositories
 
         public async Task<CourseDb> GetByTitleAsync(string title)
         {
-			var c = await context.Courses.FirstOrDefaultAsync(c => c.Title.Equals(title))
+			var c = await context.Courses.Include(c => c.CreatedBy).Include(c => c.Category).FirstOrDefaultAsync(c => c.Title.Equals(title))
 				?? throw new EntityNotFoundException
 				(String.Format(ExceptionMessages.COURSE_WITH_TITLE_NOT_FOUND_MESSAGE, title));
 
