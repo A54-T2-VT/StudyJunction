@@ -81,4 +81,11 @@
     <ProjectReference Include="..\StudyJunction.Core\StudyJunction.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\" />
+    <Folder Include="Areas\God\" />
+    <Folder Include="Areas\Teacher\" />
+    <Folder Include="Areas\Student\" />
+  </ItemGroup>
+
 </Project>
