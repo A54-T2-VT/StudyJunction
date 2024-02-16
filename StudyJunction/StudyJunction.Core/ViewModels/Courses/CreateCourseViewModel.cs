@@ -20,7 +20,7 @@ namespace StudyJunction.Core.ViewModels.Courses
         [MaxLength(3000, ErrorMessage = "The {0} must be no more than {1} characters long.")]
         public string Description { get; set; }
 
-        [Ignore]
+        
         public IFormFile Thumbnail { get; set; }
         [Required]
         public string CategoryName { get; set; }
