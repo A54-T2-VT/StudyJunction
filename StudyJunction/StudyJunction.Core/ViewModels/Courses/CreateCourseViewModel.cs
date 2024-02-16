@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper.Configuration.Annotations;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +19,9 @@ namespace StudyJunction.Core.ViewModels.Courses
         [MinLength(100, ErrorMessage = "The {0} must be at least {1} characters long.")]
         [MaxLength(3000, ErrorMessage = "The {0} must be no more than {1} characters long.")]
         public string Description { get; set; }
-        //public IFormFile Thumbnail { get; set; }
+
+        [Ignore]
+        public IFormFile Thumbnail { get; set; }
         [Required]
         public string CategoryName { get; set; }
         public DateTime StartDate { get; set; }
