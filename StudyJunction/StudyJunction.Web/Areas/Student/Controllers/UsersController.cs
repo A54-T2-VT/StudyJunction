@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.User;
@@ -10,8 +9,9 @@ using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
 
-namespace StudyJunction.Web.Controllers
+namespace StudyJunction.Web.Areas.Student.Controllers
 {
+    [Area("Student")]
     public class UsersController : Controller
     {
         private readonly IUserService userService;
@@ -59,29 +59,10 @@ namespace StudyJunction.Web.Controllers
                     throw new InvalidCredentialsException(string.Format(ExceptionMessages.INVALID_CREDENTIALS_MESSAGE));
                 }
 
-                var roles = await userManager.GetRolesAsync(user);
-
-                if(roles.Contains("God"))
-                {
-
-                }
-                else if (roles.Contains("Admin"))
-                {
-
-                }
-                else if (roles.Contains("Teacher"))
-                {
-
-                }
-                else if (roles.Contains("Student"))
-                {
-                    return RedirectToAction("Index", "Home", new { area = "Student" });
-                }
-
 
                 return RedirectToAction("Index", "Home");
             }
-            catch(InvalidCredentialsException ex)
+            catch (InvalidCredentialsException ex)
             {
                 throw new NotImplementedException(ex.Message);
             }
@@ -95,7 +76,7 @@ namespace StudyJunction.Web.Controllers
             await signInManager.SignOutAsync();
 
             // Redirect to a specific page after sign-out if needed
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new {area =""});
         }
 
         [HttpGet]
@@ -118,9 +99,9 @@ namespace StudyJunction.Web.Controllers
 
                 _ = await userService.Register(registerDto);
 
-                return RedirectToAction("Login","Users");
+                return RedirectToAction("Login", "Users");
             }
-            catch(NameDuplicationException ex) 
+            catch (NameDuplicationException ex)
             {
                 throw new NotImplementedException(ex.Message);
             }

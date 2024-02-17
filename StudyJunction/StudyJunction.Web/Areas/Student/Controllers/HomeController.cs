@@ -2,8 +2,9 @@
 using StudyJunction.Core.ViewModels;
 using System.Diagnostics;
 
-namespace StudyJunction.Web.Controllers
+namespace StudyJunction.Web.Areas.Student.Controllers
 {
+    [Area("Student")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,12 +16,6 @@ namespace StudyJunction.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (User!.Identity!.IsAuthenticated)
-            {
-                return View();
-            }
-
-
             return View();
         }
 

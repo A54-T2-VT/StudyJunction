@@ -54,7 +54,7 @@
                 <ul>
                     <li><a class="active" href="http://localhost:5205/Home/Index">Home</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li><a asp-controller="Users" asp-action="Create" asp-area="Student">Courses</a></li>
+                    <li><a asp-controller="Courses" asp-action="Create" asp-area="Student">Courses</a></li>
                     @* <li><a href="trainers.html">Trainers</a></li>
                     <li><a href="events.html">Events</a></li>
                     <li><a href="pricing.html">Pricing</a></li>
@@ -88,7 +88,7 @@
                 <a class="get-started-btn" asp-controller="Users" asp-action="" title="Manage">Hello @User.Identity?.Name!</a>
 
                 <form class="form-inline" >
-                    <button type="submit" class="nav-link btn btn-link text-dark" asp-controller="Users" asp-action="Logout">Logout</button>
+                    <button class="nav-link btn btn-link text-dark" asp-controller="Users" asp-action="Logout" asp-area="Student" type="submit">Logout2</button>
                 </form>                
             }
             else
