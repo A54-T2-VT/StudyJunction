@@ -11,9 +11,18 @@
     --shadow: 0px 2px 8px 0px var(--secondary-light);
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
 .profile-dropdown {
     position: relative;
     width: fit-content;
+    margin-left: 50px;
 }
 
 .profile-dropdown-btn {
@@ -26,8 +35,6 @@
     width: 150px;
     border-radius: 50px;
     color: var(--black);
-    /* background-color: white;
-  box-shadow: var(--shadow); */
 
     cursor: pointer;
     border: 1px solid var(--secondary);
@@ -44,7 +51,6 @@
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
-
     background-size: cover;
 }
 
@@ -72,6 +78,7 @@
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: max-height 0.5s;
+    list-style-type: none;
 }
 
     .profile-dropdown-list2 hr {
