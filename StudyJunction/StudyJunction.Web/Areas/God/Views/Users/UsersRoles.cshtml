@@ -234,8 +234,20 @@ body {
                         <div>@user.RoleName</div>
                     </td>
                     <td>
-                        <a asp-area="God" asp-controller="Users" asp-action="Promote">Promote</a>
-                        <a asp-area="God" asp-controller="Users" asp-action="Demote">Demote</a>
+						@using (Html.BeginForm("Promote", "Users", FormMethod.Post, new { area = "God"} ))
+						{
+							<!-- Other form elements -->
+							@Html.Hidden("email", user.Email)
+
+							<input type="submit" value="Promote" />
+						}
+						@using (Html.BeginForm("Demote", "Users", FormMethod.Post, new { area = "God" }))
+						{
+							<!-- Other form elements -->
+							@Html.Hidden("email", user.Email)
+
+							<input type="submit" value="Demote" />
+						}
                     </td>
                 </tr>
             }

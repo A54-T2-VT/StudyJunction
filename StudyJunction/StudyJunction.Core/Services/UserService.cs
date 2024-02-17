@@ -244,9 +244,9 @@ namespace StudyJunction.Core.Services
 
             var userRoles = await userManager.GetRolesAsync(user);
 
-            string highestRole = userRoles.Last();
+            string highestRole = await GetHighestRoleAsync(user);
 
-            if (userRoles.Contains(RolesConstants.God) || userRoles.Contains(RolesConstants.Admin)) 
+			if (userRoles.Contains(RolesConstants.God) || userRoles.Contains(RolesConstants.Admin)) 
             {
                 return highestRole;
             }
@@ -264,7 +264,7 @@ namespace StudyJunction.Core.Services
 
             var userRoles = await userManager.GetRolesAsync(user);
 
-            string highestRole = userRoles.Last();
+            string highestRole = await GetHighestRoleAsync(user);
 
             if(highestRole == RolesConstants.Student || highestRole == RolesConstants.God)
             {

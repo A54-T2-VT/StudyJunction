@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 
 namespace StudyJunction.Web.Areas.God.Controllers
@@ -24,13 +25,53 @@ namespace StudyJunction.Web.Areas.God.Controllers
         [HttpGet]
         public async Task<IActionResult> UsersRoles()
         {
-            var usersWithHighestRoles = await userService.GetUsersAndTheirHighestRole();
+            try
+            {
+                var usersWithHighestRoles = await userService.GetUsersAndTheirHighestRole();
 
-            var currUserEmail = HttpContext.Session.GetString("email");
+                var currUserEmail = HttpContext.Session.GetString("email");
 
-            usersWithHighestRoles.RemoveAt(usersWithHighestRoles.FindIndex(ur => ur.Email == currUserEmail));
-
-            return View(usersWithHighestRoles);
+                usersWithHighestRoles.RemoveAll(ur => ur.RoleName == RolesConstants.God || ur.Email == currUserEmail);
+                return View(usersWithHighestRoles);
+            }
+            catch (Exception ex)
+            {
+				return RedirectToAction("Error", "Home", new { area = RolesConstants.God });
+			}
         }
-    }
+
+        [HttpPost]
+        public async Task<IActionResult> Promote(string email)
+        {
+            try
+            {
+                var targetUser = await userManager.FindByEmailAsync(email);
+
+                _ = await userService.IncreaseRole(targetUser.Id);
+
+                return RedirectToAction("UsersRoles", "Users", new { area = RolesConstants.God });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home", new { area = RolesConstants.God });
+            }
+        }
+
+		[HttpPost]
+		public async Task<IActionResult> Demote(string email)
+		{
+			try
+			{
+				var targetUser = await userManager.FindByEmailAsync(email);
+
+				_ = await userService.DecreaseRole(targetUser.Id);
+
+				return RedirectToAction("UsersRoles", "Users", new { area = RolesConstants.God });
+			}
+			catch (Exception ex)
+			{
+				return RedirectToAction("Error", "Home", new { area = RolesConstants.God });
+			}
+		}
+	}
 }
