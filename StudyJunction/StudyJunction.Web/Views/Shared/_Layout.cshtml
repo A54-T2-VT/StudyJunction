@@ -102,14 +102,14 @@
 
                 <div class="profile-dropdown">
                     <div onclick="toggle()" class="profile-dropdown-btn">
-                        <div class="profile-img" style="background: url(@loggedUser.ProfileImageCloudinaryUri)">
+                        <div class="profile-img" style="background-image: url(@loggedUser.ProfileImageCloudinaryUri)">
                             <i class="bi bi-circle-fill"></i>
                         </div>
 
-                        <span>
+                        @* <span>
                             @loggedUser.UserName
                             <i class="fa-solid fa-angle-down"></i>
-                        </span>
+                        </span> *@
                     </div>
 
                     <ul class="profile-dropdown-list2">
