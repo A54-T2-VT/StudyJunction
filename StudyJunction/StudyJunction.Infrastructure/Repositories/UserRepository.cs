@@ -4,6 +4,7 @@ using StudyJunction.Infrastructure.Data;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
+using System.Data;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StudyJunction.Infrastructure.Repositories
@@ -40,6 +41,42 @@ namespace StudyJunction.Infrastructure.Repositories
 
 			return users;
 		}
+
+		public async Task<Dictionary<string, List<string>>> GetAllWithTheirRolesAsync()
+		{
+            var allUsersAndRoles = await context.Users
+                .Join(
+                    context.UserRoles,
+                    user => user.Id,
+                    userRole => userRole.UserId,
+                    (user, userRole) => new { User = user, RoleId = userRole.RoleId }
+                )
+                .Join(
+                    context.Roles,
+                    ur => ur.RoleId,
+                    role => role.Id,
+                    (ur, role) => new { ur.User, RoleName = role.Name }
+                )
+                .ToListAsync();
+
+			var userWithRoles = new Dictionary<string, List<string>>();//<user.email, collection<user.role>>
+
+			foreach ( var userAndRole in allUsersAndRoles ) 
+			{
+				var userEmail = userAndRole.User.Email;
+				var userRole = userAndRole.RoleName;
+
+				if(!userWithRoles.ContainsKey(userEmail)) 
+				{
+					userWithRoles.Add(userEmail, new List<string>());
+				}
+
+				userWithRoles[userEmail].Add(userRole);
+
+			}
+
+			return userWithRoles;
+        }
 
 		public async Task<UserDb> GetByIdAsync(string id)
 		{

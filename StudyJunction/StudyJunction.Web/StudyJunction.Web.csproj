@@ -85,8 +85,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Views\" />
-    <Folder Include="Areas\God\Controllers\" />
-    <Folder Include="Areas\God\Views\" />
     <Folder Include="Areas\Identity\Views\" />
     <Folder Include="Views\Courses\" />
   </ItemGroup>

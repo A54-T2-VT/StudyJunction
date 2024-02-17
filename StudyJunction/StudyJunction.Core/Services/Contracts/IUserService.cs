@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.ResponseDTOs;
+using StudyJunction.Core.ViewModels.User;
 
 namespace StudyJunction.Core.Services.Contracts
 {
     public interface IUserService
 	{
 		Task<IEnumerable<UserResponseDTO>> GetAll();
-		Task<UserResponseDTO> GetById(string id);
+        Task<List<UserAndHighestRoleViewModel>> GetUsersAndTheirHighestRole();
+        Task<UserResponseDTO> GetById(string id);
 		Task<UserResponseDTO> GetByUsername(string username);
 		Task<UserResponseDTO> GetByEmail(string email);
         Task<UserResponseDTO> Register(RegisterUserRequestDto newUser);
