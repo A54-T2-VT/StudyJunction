@@ -104,6 +104,30 @@ namespace StudyJunction.Core.Services
 
         }
 
+        public async Task<AddCategoryViewModel> GetAllParentChildCategoriesForSelectingCategory()
+        {
+            var categoreisDb = await categoryRepository.GetAllAsync();
+
+            var parentCategories = new Dictionary<string, List<string>>();//parent, child
+
+            foreach (var categoryDb in categoreisDb)
+            {
+                if (categoryDb.ParentCategory is null)
+                {
+                    parentCategories.Add(categoryDb.Name, new List<string>());
+                    continue;
+                }
+
+                parentCategories[categoryDb.ParentCategory.Name].Add(categoryDb.Name);
+            }
+
+            var model = new AddCategoryViewModel();
+            model.ParentChildCategories = parentCategories;
+
+            return model;
+
+        }
+
         public async Task<CategoryResponseDTO> GetById(Guid id)
         {
             var category = await categoryRepository.GetByIdAsync(id);

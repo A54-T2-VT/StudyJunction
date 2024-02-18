@@ -8,7 +8,9 @@ namespace StudyJunction.Core.Services.Contracts
 	{
 		Task<IEnumerable<CategoryResponseDTO>> GetAll();
 		Task<AddCategoryViewModel> GetAllParentCategoriesForAddingCategory();
-		Task CreateCategoryFromViewModel(AddCategoryViewModel model);
+		Task<AddCategoryViewModel> GetAllParentChildCategoriesForSelectingCategory();
+
+        Task CreateCategoryFromViewModel(AddCategoryViewModel model);
         Task<CategoryResponseDTO> GetById(Guid id);
 		Task<CategoryResponseDTO> GetByName(string name);
 		Task<CategoryResponseDTO> Create(AddCategoryRequestDto newCategory);

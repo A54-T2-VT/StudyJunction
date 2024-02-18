@@ -25,5 +25,7 @@ namespace StudyJunction.Core.ViewModels.Courses
         [Required]
         public string CategoryName { get; set; }
         public DateTime StartDate { get; set; }
+
+        public Dictionary<string, List<string>> ParentChildCategories { get; set; }
     }
 }

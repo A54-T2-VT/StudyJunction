@@ -25,7 +25,7 @@ namespace StudyJunction.Web.Areas.God.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-			var model =  await categoryService.GetAllParentCategoriesForAddingCategory();
+			var model =  await categoryService.GetAllParentChildCategoriesForSelectingCategory();
 
             return View(model);
         }

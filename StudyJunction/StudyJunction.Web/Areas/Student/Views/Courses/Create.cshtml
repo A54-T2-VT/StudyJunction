@@ -26,9 +26,19 @@
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
-        <div class="form-group" style="margin-top: 25px">
-            <label asp-for="CategoryName">Category</label>
-            <input type="text" asp-for="CategoryName" class="form-control" maxlength="100" id="categoryInput" />
+        <div class="mb-3 form-group">
+            <label asp-for="CategoryName" class="form-label">Category</label>
+            <select asp-for="CategoryName" class="form-control">                    
+                @foreach (var kvp in Model.ParentChildCategories)
+                {
+                    <optgroup label="@kvp.Key">
+                        @foreach(var childCategories in kvp.Value)
+                        {
+                            <option value="@childCategories">@childCategories</option>
+                        }
+                    </optgroup>
+                }
+            </select>
         </div>
 
         <div>

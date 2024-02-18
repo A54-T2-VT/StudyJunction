@@ -35,7 +35,7 @@ namespace StudyJunction.Infrastructure.Repositories
 
         public async Task<IEnumerable<CategoryDb>> GetAllAsync()
         {
-            var categories = await context.Categories.ToListAsync();
+            var categories = await context.Categories.Include(c => c.ParentCategory).ToListAsync();
 
             return categories;
         }
