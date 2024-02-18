@@ -21,7 +21,13 @@ namespace StudyJunction.Core.Helpers
             this.CreateMap<CategoryDb, CategoryResponseDTO>();
             this.CreateMap<CourseDb, CourseResponseDTO>()
                 .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.CreatedBy.UserName))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(dest => dest.EnrolledStudents, opt => opt.MapFrom(src => src.EnrolledUsers));
+
+            this.CreateMap<UsersCoursesDb, CourseStudentResponseDto>()
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.Course.Title))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
+
             this.CreateMap<LectureDb, LectureResponseDTO>();
 
             //User registretion and login
