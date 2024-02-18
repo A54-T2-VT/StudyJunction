@@ -31,6 +31,9 @@
     <!-- Template Main CSS File -->
     <link href="~/assets/css/style.css" rel="stylesheet"/>
 
+    <!-- Drop down profile menu CSS -->
+    <link href="~/assets/css/dropdownprofile.css" rel="stylesheet" />
+
     <!-- =======================================================
     * Template Name: Mentor
     * Updated: Jan 29 2024 with Bootstrap v5.3.2
@@ -43,7 +46,7 @@
 <body>
 
     <!-- ======= Header ======= -->
-    <header id="header" class="fixed-top">
+    <header id="header" class="fixed-top" style="position: relative;">
         <div class="container d-flex align-items-center">
             <img src="~/assets/img/aerondight___green-themed_logo_with_asphalt_roads_crossing_eac_012d7662-32da-4083-92bc-e4686cb979d8.png" width="100px" height="100px" class="img-fluid" alt="Logo" />
             <h1 class="logo me-auto"><a>StudyJunction</a></h1>
@@ -54,7 +57,7 @@
                 <ul>
                     <li><a class="active" href="http://localhost:5205/Home/Index">Home</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li><a asp-controller="Courses" asp-action="Create" asp-area="Student">Courses</a></li>
+                    <li><a asp-controller="Courses" asp-action="Index" asp-area="Student">Courses</a></li>
                     @* <li><a href="trainers.html">Trainers</a></li>
                     <li><a href="events.html">Events</a></li>
                     <li><a href="pricing.html">Pricing</a></li>
@@ -84,12 +87,67 @@
             </nav><!-- .navbar -->
 
             @if (SignInManager.IsSignedIn(User))
-            {                
-                <a class="get-started-btn" asp-controller="Users" asp-action="" title="Manage">Hello @User.Identity?.Name!</a>
+            {
+                var loggedUser = UserManager.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
 
-                <form class="form-inline" >
-                    <button class="nav-link btn btn-link text-dark" asp-controller="Users" asp-action="Logout" asp-area="Student" type="submit">Logout2</button>
-                </form>                
+
+                <div class="profile-dropdown">
+                    <div onclick="toggle()" class="profile-dropdown-btn">
+                        <div class="profile-img" style="background-image: url(@loggedUser.ProfileImageCloudinaryUri)">
+                            <i class="bi bi-circle-fill"></i>
+                        </div>
+
+                        <span>
+                            @loggedUser.UserName
+                            <i class="fa-solid fa-angle-down"></i>
+                        </span>
+                    </div>
+
+                    <ul class="profile-dropdown-list2">
+                        <li class="profile-dropdown-list-item2">
+                            <a href="#">
+                                <i class="bi bi-person"></i>
+                                Profile
+                            </a>
+                        </li>
+
+                        <li class="profile-dropdown-list-item2">
+                            <a asp-controller="Courses" asp-action="MyCourses" asp-area="Student">
+                                <i class="bi bi-card-list"></i>
+                                My Courses
+                            </a>
+                        </li>
+
+                        <li class="profile-dropdown-list-item2">
+                            <a href="#">
+                                <i class="bi bi-gear-wide"></i>
+                                Settings
+                            </a>
+                        </li>
+
+                        <hr />
+
+                        <li class="profile-dropdown-list-item2">
+                            <a asp-controller="Users" asp-action="Logout">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Log out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <script>
+                    let profileDropdownList = document.querySelector(".profile-dropdown-list2");
+                    let btn = document.querySelector(".profile-dropdown-btn");
+
+                    let classList = profileDropdownList.classList;
+
+                    const toggle = () => classList.toggle("active");
+
+                    window.addEventListener("click", function (e) {
+                        if (!btn.contains(e.target)) classList.remove("active");
+                    });
+                </script>
             }
             else
             {                
