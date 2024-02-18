@@ -104,5 +104,22 @@ namespace StudyJunction.Infrastructure.Repositories
 				.Any(c => c.Id == courseID);
         }
 
+        public async Task<CourseDb> AddUserToCourse(CourseDb course, string username)
+        {
+			var user = await context.Users.FirstOrDefaultAsync(u => u.UserName == username)
+				?? throw new EntityNotFoundException
+				(String.Format(ExceptionMessages.USER_WITH_USERNAME_NOT_FOUND_MESSAGE, username));
+
+			//add course to user.MyEnrolledCourses
+			//add user to course.EnrolledUsers
+			UsersCoursesDb usersCoursesDb = new UsersCoursesDb()
+			{
+				CourseId = course.Id,
+				UserId = user.Id
+			};
+			user.MyEnrolledCourses.Add(usersCoursesDb);
+			await context.SaveChangesAsync();
+			return course;
+        }
     }
 }

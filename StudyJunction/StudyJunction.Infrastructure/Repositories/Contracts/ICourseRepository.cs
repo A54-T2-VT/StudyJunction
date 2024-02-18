@@ -14,5 +14,7 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 		Task<bool> IsUserOwner(string userId, Guid courseID);
 		Task<CourseDb> ChangeCourseCategory(string categoryName, Guid courseId);
 
+		Task<CourseDb> AddUserToCourse(CourseDb course, string username);
+
     }
 }
