@@ -1,0 +1,71 @@
+﻿@using StudyJunction.Core.ViewModels.Courses
+@using StudyJunction.Core.ResponseDTOs
+@using CloudinaryDotNet
+@using CloudinaryDotNet.Actions
+
+@model MyCoursesViewModel
+
+@{
+    ViewData["Title"] = "List enrolled courses";
+}
+
+
+
+<link href="~/css/MyCoursesPageStyle.css" rel="stylesheet">
+
+
+
+<div class="header bg-dark text-light">
+    <div class="header-inner">
+        <h1 class="mb-0">My Learning</h1>
+    </div>
+
+    <nav>
+        <div class="container">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <button class="section-select" type="button">My Learning</button>
+                </li>
+                <li class="nav-item">
+                    <button class="section-select" type="button">My Created Courses</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+@{
+    var userCourses = Model.CurrentUser.MyEnrolledCourses;
+}
+
+<div class="container mt-4">
+    @for (int r = 0; r < userCourses.Count; r += 4)
+    {
+        //open row
+        <div class="row">
+            @for (int c = r; c < r + 3; c++)
+            {
+                @if (c >= userCourses.Count)
+                {
+                    break;
+                }
+
+                var currCourse = userCourses.ElementAt(c);
+
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <img src="@Model.Service.GetResource(currCourse.ThumbnailCloudinaryUri)" class="img-fluid" alt="Course thumbnail">
+                            <h5 class="card-title">@currCourse.Title</h5>
+                            <p class="card-text">@currCourse.Description</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    }
+</div>
+
+
