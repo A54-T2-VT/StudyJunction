@@ -166,5 +166,14 @@ namespace StudyJunction.Core.Services
             return mapper.Map<CourseResponseDTO>(updatedCourseDb);
 
 		}
-	}
+
+        public async Task<CourseResponseDTO> EnrollUserForCourse(string username, string courseTitle)
+        {
+            var course = await courseRepository.GetByTitleAsync(courseTitle);
+
+            var result = await courseRepository.AddUserToCourse(course, username);
+
+            return mapper.Map<CourseResponseDTO>(result);
+        }
+    }
 }

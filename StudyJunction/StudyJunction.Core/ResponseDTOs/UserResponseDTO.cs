@@ -1,5 +1,7 @@
 ﻿
 
+using StudyJunction.Infrastructure.Data.Models;
+
 namespace StudyJunction.Core.ResponseDTOs
 {
 	public class UserResponseDTO
@@ -10,6 +12,8 @@ namespace StudyJunction.Core.ResponseDTOs
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ProfileImageCloudinaryUri { get; set; }
+
+        public ICollection<CourseResponseDTO> MyEnrolledCourses { get; set; }
 
         //might need to add more props in future
     }

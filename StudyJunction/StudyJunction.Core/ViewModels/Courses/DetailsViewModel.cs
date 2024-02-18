@@ -12,5 +12,7 @@ namespace StudyJunction.Core.ViewModels.Courses
     {
         public CourseResponseDTO Course { get; set; }
         public CloudinaryService Service { get; set; }
+
+        public bool SuccessfulEnrollment { get; set; } = false;
     }
 }

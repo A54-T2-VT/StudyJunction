@@ -1,0 +1,52 @@
+﻿.header {
+    margin: 0;
+    padding: 0;
+    height: 125px;
+    position: relative;
+}
+
+.header-inner {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+nav {
+    padding: 0;
+    text-align: center;
+    margin-bottom: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.section-select {
+    border: 1px solid transparent;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Add border shadow */
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    border-bottom: none;
+    font-weight: 500;
+    height: 50px;
+    width: auto;
+    min-width: 150px;
+    max-width: 300px;
+    padding: 10px 20px;
+}
+
+    .section-select:hover {
+        background-color: rgb(152, 184, 177); /* Change background color on hover */
+    }
+
+    .section-select.active,
+    .section-select:focus {
+        background-color: rgb(152, 184, 177); /* Change background color when selected */
+        border-color: #000102; /* Change border color when selected */
+        color: #fff; /* Change text color when selected */
+    }
