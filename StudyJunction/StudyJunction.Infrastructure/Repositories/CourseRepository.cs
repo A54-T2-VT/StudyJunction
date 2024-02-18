@@ -132,7 +132,9 @@ namespace StudyJunction.Infrastructure.Repositories
 			UsersCoursesDb usersCoursesDb = new UsersCoursesDb()
 			{
 				CourseId = course.Id,
-				UserId = user.Id
+				UserId = user.Id,
+				User = user,
+				Course = course
 			};
 			user.MyEnrolledCourses.Add(usersCoursesDb);
 			await context.SaveChangesAsync();

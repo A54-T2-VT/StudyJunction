@@ -96,7 +96,6 @@ namespace StudyJunction.Web.Controllers
 			HttpContext.Session.Remove("id");
             await signInManager.SignOutAsync();
 
-            // Redirect to a specific page after sign-out if needed
             return RedirectToAction("Index", "Home");
         }
 

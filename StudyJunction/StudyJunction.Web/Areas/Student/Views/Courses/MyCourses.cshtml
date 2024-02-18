@@ -36,7 +36,7 @@
     var userCourses = Model.CurrentUser.MyEnrolledCourses;
 }
 
-<div id="courseContainer" class="container mt-4" style="overflow: hidden; display: none;">
+<div id="courseContainer" class="container mt-4">
     @for(int r = 0; r < userCourses.Count; r += 4)
     {
         //open row
