@@ -4,7 +4,7 @@
 <main id="main">
 
     <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs" data-aos="fade-in">
+    <div class="breadcrumbs" data-aos="fade-in" style="margin-top: 0;">
         <div class="container">
             <h2>Course Details</h2>
             <p>Est dolorum ut non facere possimus quibusdam eligendi voluptatem. Quia id aut similique quia voluptas sit quaerat debitis. Rerum omnis ipsam aperiam consequatur laboriosam nemo harum praesentium. </p>
@@ -42,6 +42,25 @@
                     <div class="course-info d-flex justify-content-between align-items-center">
                         <h5>Schedule</h5>
                         <p>5.00 pm - 7.00 pm</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        @using (Html.BeginForm("EnrollForCourse", "Courses", FormMethod.Post))
+                        {
+                            @Html.Hidden("courseTitle", Model.Course.Title)
+                            @Html.Hidden("successfulEnrollment", Model.SuccessfulEnrollment);
+                            
+                            @if (Model.SuccessfulEnrollment)
+                            {
+                                <button class="btn btn-primary disabled">Enrolled</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary">Enroll Now</button>
+                            }
+                        }
+                        
                     </div>
 
                 </div>
