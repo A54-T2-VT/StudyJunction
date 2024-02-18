@@ -35,7 +35,14 @@ namespace StudyJunction.Infrastructure.Repositories
 
         public async Task<IEnumerable<CourseDb>> GetAllAsync()
         {
-			var courses = await context.Courses.Include(x => x.CreatedBy).Include(x => x.Category).ToListAsync();
+			var courses = await context.Courses.Include(x => x.CreatedBy).Include(x => x.Category).Where(c => c.IsApproved).ToListAsync();
+
+			return courses;
+		}
+
+		public async Task<IEnumerable<CourseDb>> GetAllNotApprovedCourses()
+		{
+			var courses = await context.Courses.Include(c => c.CreatedBy).Where(c => c.IsApproved == false).ToListAsync();
 
 			return courses;
 		}
@@ -57,6 +64,16 @@ namespace StudyJunction.Infrastructure.Repositories
 
 			return c;
 		}
+
+		public async Task ApproveCourseAsync(Guid courseId)
+		{
+			var courseToApprove = await context.Courses.FirstOrDefaultAsync(c => c.Id == courseId) ?? throw new EntityNotFoundException
+                (String.Format(ExceptionMessages.COURSE_WITH_ID_NOT_FOUND_MESSAGE, courseId));
+
+			courseToApprove.IsApproved = true;
+
+			await context.SaveChangesAsync();
+        }
 
         public async Task<CourseDb> UpdateAsync(Guid id, CourseDb updatedCourse)
         {

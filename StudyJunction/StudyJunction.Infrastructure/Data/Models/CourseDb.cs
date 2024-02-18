@@ -14,6 +14,7 @@ namespace StudyJunction.Infrastructure.Data.Models
         public Guid CategoryId { get; set; }
         public CategoryDb Category { get; set; }
         public DateTime? StartDate { get; set; }
+        public bool IsApproved { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
         public ICollection<UsersCoursesDb> EnrolledUsers { get; set; } = new List<UsersCoursesDb>();

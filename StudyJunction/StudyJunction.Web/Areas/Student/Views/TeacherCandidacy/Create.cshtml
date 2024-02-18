@@ -1,0 +1,26 @@
+﻿@using StudyJunction.Core.ViewModels.TeacherCandidacy
+@model AddTeacherCandidacyViewModel
+
+<section class="page-section" style="margin-left: 160px; margin-right: 160px; margin-top:30px;">
+
+    <h2 style="margin-left:50px; margin-bottom:30px;">Create a New Post</h2>
+
+    <form asp-area="Student" asp-controller="TeacherCandidacy" asp-action="Create" method="post" style="max-width: 600px; margin-left: 70px" id="postForm">
+
+        <div class="form-group" style="margin-top: 25px">
+            <label asp-for="Credentials">Credentials</label>
+            <textarea asp-for="Credentials" class="form-control" style="width: 160%; height: 300px" id="contentInput"></textarea>
+            <span asp-validation-for="Credentials" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" style="margin-top: 25px">
+            <button type="submit" value="CandidacyCreation" class="btn btn-primary">Send Candidacy</button>
+        </div>
+        
+    </form>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

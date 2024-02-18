@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.ViewModels;
+using StudyJunction.Infrastructure.Constants;
 using System.Diagnostics;
 
 namespace StudyJunction.Web.Controllers
@@ -15,13 +16,28 @@ namespace StudyJunction.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (User!.Identity!.IsAuthenticated)
+            if (!(User!.Identity!.IsAuthenticated))
             {
                 return View();
             }
 
+            if (User.IsInRole(RolesConstants.God))
+            {
+                return RedirectToAction("Index", "Home", new {area = RolesConstants.God});
+            }
+            if (User.IsInRole(RolesConstants.Admin))
+            {
+                return RedirectToAction("Index", "Home", new { area = RolesConstants.Admin });
+            }
+            if (User.IsInRole(RolesConstants.Teacher))
+            {
+                return RedirectToAction("Index", "Home", new { area = RolesConstants.Teacher });
+            }
+            else//role must be student
+            {
+                return RedirectToAction("Index", "Home", new { area = RolesConstants.Student });
+            }
 
-            return View();
         }
 
         public IActionResult Privacy()

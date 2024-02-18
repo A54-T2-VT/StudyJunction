@@ -5,6 +5,7 @@ using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.ViewModels.Courses;
+using StudyJunction.Core.ViewModels.TeacherCandidacy;
 using StudyJunction.Core.ViewModels.User;
 using StudyJunction.Infrastructure.Data.Models;
 
@@ -41,8 +42,13 @@ namespace StudyJunction.Core.Helpers
             //ViewModel -> DTO
             this.CreateMap<RegisterViewModel, RegisterUserRequestDto>();
             //this.CreateMap<LoginViewModel, LoginUserRequestDto>();
-
             this.CreateMap<CreateCourseViewModel, AddCourseRequestDto>();
+
+            //Db -> ViewModel
+            this.CreateMap<TeacherCandidacyDb, TeacherCandidacyViewModel>()
+                .ForMember(d => d.CandidateEmail, opt => opt.MapFrom(s => s.User.Email));
+            this.CreateMap<CourseDb, CourseApprovalViewModel>();
+                
         }
 
 		private static string ExtractUserName(string email)

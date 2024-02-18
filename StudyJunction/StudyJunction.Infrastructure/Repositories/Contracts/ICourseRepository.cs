@@ -5,11 +5,14 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 	public interface ICourseRepository
 	{
 		Task<IEnumerable<CourseDb>> GetAllAsync();
-		Task<CourseDb> GetByIdAsync(Guid id);
+		Task<IEnumerable<CourseDb>> GetAllNotApprovedCourses();
+
+        Task<CourseDb> GetByIdAsync(Guid id);
 		Task<CourseDb> GetByTitleAsync(string title);
 		Task<CourseDb> CreateAsync(CourseDb newCourse);
 		Task<CourseDb> UpdateAsync(Guid id, CourseDb updatedCourse);
-		Task<CourseDb> DeleteAsync(Guid id);
+		Task ApproveCourseAsync(Guid courseId);
+        Task<CourseDb> DeleteAsync(Guid id);
 		bool CourseTitleExists(string title);
 		Task<bool> IsUserOwner(string userId, Guid courseID);
 		Task<CourseDb> ChangeCourseCategory(string categoryName, Guid courseId);

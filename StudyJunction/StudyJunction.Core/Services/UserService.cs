@@ -8,6 +8,7 @@ using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Core.ViewModels.User;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
@@ -68,6 +69,51 @@ namespace StudyJunction.Core.Services
             return result.Select(
                 r => mapper.Map<UserResponseDTO>(r))
                 .ToList();
+        }
+
+        public async Task<List<UserAndHighestRoleViewModel>> GetUsersAndTheirHighestRole()
+        {
+            var userAndRoles = await userRepository.GetAllWithTheirRolesAsync();
+
+            var usersAndHighestRoles = new List<UserAndHighestRoleViewModel>();
+
+            var userAndHighestRole = new UserAndHighestRoleViewModel();
+
+            foreach(var kvp in userAndRoles)
+            {
+                var highestRole = string.Empty;
+
+                if (kvp.Value.Contains(RolesConstants.God))
+                {
+                    highestRole = RolesConstants.God;
+                }
+                else if (kvp.Value.Contains(RolesConstants.Admin))
+                {
+                    highestRole = RolesConstants.Admin;
+                }
+                else if (kvp.Value.Contains(RolesConstants.Teacher))
+                {
+                    highestRole = RolesConstants.Teacher;
+                }
+                else if (kvp.Value.Contains(RolesConstants.Student))
+                {
+                    highestRole = RolesConstants.Student;
+                }
+
+                if(highestRole == string.Empty)
+                {
+                    throw new NotImplementedException("Highest role is empty, which should not be possible!");
+                }
+
+
+                userAndHighestRole.Email = kvp.Key;
+                userAndHighestRole.RoleName = highestRole;
+
+                usersAndHighestRoles.Add(userAndHighestRole);
+                userAndHighestRole = new UserAndHighestRoleViewModel();
+            }
+
+            return usersAndHighestRoles;
         }
 
         public async Task<UserResponseDTO> GetById(string id)
@@ -134,7 +180,7 @@ namespace StudyJunction.Core.Services
             }
 
             var user = await userManager.FindByEmailAsync(newUser.Email);
-            _ = await userManager.AddToRolesAsync(user, new string[] { RolesConstants.Student });
+            _ = await userManager.AddToRolesAsync(user, new string[] { RolesConstants.Student});
 
             var responseUser = await userRepository.GetByEmailAsync(newUser.Email);
 
@@ -198,9 +244,9 @@ namespace StudyJunction.Core.Services
 
             var userRoles = await userManager.GetRolesAsync(user);
 
-            string highestRole = userRoles.Last();
+            string highestRole = await GetHighestRoleAsync(user);
 
-            if (userRoles.Contains(RolesConstants.God) || userRoles.Contains(RolesConstants.Admin)) 
+			if (userRoles.Contains(RolesConstants.God) || userRoles.Contains(RolesConstants.Admin)) 
             {
                 return highestRole;
             }
@@ -218,7 +264,7 @@ namespace StudyJunction.Core.Services
 
             var userRoles = await userManager.GetRolesAsync(user);
 
-            string highestRole = userRoles.Last();
+            string highestRole = await GetHighestRoleAsync(user);
 
             if(highestRole == RolesConstants.Student || highestRole == RolesConstants.God)
             {
@@ -307,7 +353,7 @@ namespace StudyJunction.Core.Services
             
             result = await userManager.AddToRoleAsync(user, RolesConstants.Admin);
 
-            if (!result.Succeeded)
+            if(!result.Succeeded)
             {
                 throw new Exception("Error when increasing role!!!");
             }

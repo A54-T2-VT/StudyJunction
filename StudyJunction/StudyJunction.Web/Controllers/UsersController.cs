@@ -52,6 +52,7 @@ namespace StudyJunction.Web.Controllers
 
                 //setting up session variables
                 HttpContext.Session.SetString("user", user.UserName);
+                HttpContext.Session.SetString("email", user.Email);
                 HttpContext.Session.SetString("id", user.Id.ToString());
 
                 if (!result.Succeeded)
@@ -63,7 +64,7 @@ namespace StudyJunction.Web.Controllers
 
                 if(roles.Contains("God"))
                 {
-
+                    return RedirectToAction("Index", "Home", new { area = RolesConstants.God });
                 }
                 else if (roles.Contains("Admin"))
                 {
@@ -91,7 +92,8 @@ namespace StudyJunction.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Remove("user");
-            HttpContext.Session.Remove("id");
+			HttpContext.Session.Remove("email");
+			HttpContext.Session.Remove("id");
             await signInManager.SignOutAsync();
 
             // Redirect to a specific page after sign-out if needed

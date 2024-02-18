@@ -1,7 +1,7 @@
 ﻿
 namespace StudyJunction.Infrastructure.Data.Models
 {
-    public class TeacherCandidancy
+    public class TeacherCandidacyDb
     {
         public Guid Id { get; set; }
         public string CandidateId { get; set; }
