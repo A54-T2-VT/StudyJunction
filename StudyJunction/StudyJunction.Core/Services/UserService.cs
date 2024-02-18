@@ -353,7 +353,7 @@ namespace StudyJunction.Core.Services
             
             result = await userManager.AddToRoleAsync(user, RolesConstants.Admin);
 
-            if (!result.Succeeded)
+            if(!result.Succeeded)
             {
                 throw new Exception("Error when increasing role!!!");
             }

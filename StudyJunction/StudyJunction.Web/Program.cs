@@ -37,6 +37,7 @@ namespace StudyJunction.Web
             builder.Services.AddScoped<ILectureRepository, LectureRepository>();
             builder.Services.AddScoped<INoteRepository, NoteRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ITeacherCandidacyRepository, TeacherCandidacyRepository>();
 
             //Services
             builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -44,6 +45,7 @@ namespace StudyJunction.Web
             builder.Services.AddScoped<ILectureService, LectureService>();
             builder.Services.AddScoped<INoteService, NoteService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ITeacherCandidacyService, TeacherCandidacyService>();
 
             //External Api services
             builder.Services.AddScoped<CloudinaryService>();
@@ -97,6 +99,7 @@ namespace StudyJunction.Web
                 .AddEntityFrameworkStores<SJDbContext>();
 
             builder.Services.AddControllersWithViews();
+
 
 
 

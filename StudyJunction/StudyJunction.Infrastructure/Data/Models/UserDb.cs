@@ -14,7 +14,7 @@ namespace StudyJunction.Infrastructure.Data.Models
         public ICollection<UsersLecturesDb> MyLectures { get; set; } = new List<UsersLecturesDb>();
         public ICollection<UsersCoursesDb> MyEnrolledCourses { get; set; } = new List<UsersCoursesDb>();
         public ICollection<CourseDb> MyCreatedCourses { get; set; } = new List<CourseDb>();
-        public ICollection<TeacherCandidancy> Candidancies { get; set; } = new List<TeacherCandidancy>();
+        public ICollection<TeacherCandidacyDb> Candidancies { get; set; } = new List<TeacherCandidacyDb>();
         public bool IsDeleted { get; set; }
         public DateTime? DeletedOn { get; set; }
     }
