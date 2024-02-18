@@ -4,6 +4,7 @@ using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.RequestDTOs.User;
 using StudyJunction.Core.ResponseDTOs;
+using StudyJunction.Core.ViewModels.Categories;
 using StudyJunction.Core.ViewModels.Courses;
 using StudyJunction.Core.ViewModels.TeacherCandidacy;
 using StudyJunction.Core.ViewModels.User;
@@ -48,6 +49,7 @@ namespace StudyJunction.Core.Helpers
             this.CreateMap<TeacherCandidacyDb, TeacherCandidacyViewModel>()
                 .ForMember(d => d.CandidateEmail, opt => opt.MapFrom(s => s.User.Email));
             this.CreateMap<CourseDb, CourseApprovalViewModel>();
+            //this.CreateMap<CategoryDb, AddCategoryViewModel>();
                 
         }
 

@@ -40,6 +40,13 @@ namespace StudyJunction.Infrastructure.Repositories
             return categories;
         }
 
+        public async Task<IEnumerable<CategoryDb>> GetAllParentCategories()
+        {
+            var parentCategories = await context.Categories.Where(c => c.ParentCategoryId == null).ToListAsync();
+
+            return parentCategories;
+        }
+
         public async Task<CategoryDb> GetByIdAsync(Guid id)
         {
             var c = await context.Categories.FirstOrDefaultAsync(c => c.Id.Equals(id))

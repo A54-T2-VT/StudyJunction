@@ -1,0 +1,40 @@
+﻿@using StudyJunction.Core.ViewModels.Categories
+@model AddCategoryViewModel
+
+<section class="page-section" style="margin-left: 160px; margin-right: 160px; margin-top:30px;">
+
+    <h2 style="margin-left:50px; margin-bottom:30px;">Create a New Post</h2>
+
+    <form asp-area="God" asp-controller="Categories" asp-action="Add" method="post" style="max-width: 600px; margin-left: 70px" id="postForm">
+        <div class="mb-3 form-group">
+            <label asp-for="ParentCategory" class="form-label">Parent Category</label>
+            <select asp-for="ParentCategory" class="form-control">
+                <option value="None">None</option>
+                @foreach (var kvp in Model.ParentChildCategories)
+                {
+                    <option value="@kvp.Key">@kvp.Key</option>
+                    @* @foreach(var childCategories in kvp.Value)
+                    {
+                        <option value="@childCategories">@childCategories</option>
+                    } *@
+                }
+            </select>
+        </div>
+
+        <div class="form-group" style="margin-top: 25px">
+            <label asp-for="Name">Category name</label>
+            <textarea asp-for="Name" class="form-control" style="width: 160%; height: 300px" id="contentInput"></textarea>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" style="margin-top: 25px">
+            <button type="submit" value="CategoryCreation" class="btn btn-primary">Add Category</button>
+        </div>
+
+    </form>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

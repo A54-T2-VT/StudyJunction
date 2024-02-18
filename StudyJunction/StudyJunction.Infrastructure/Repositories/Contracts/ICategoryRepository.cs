@@ -5,7 +5,8 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 	public interface ICategoryRepository
 	{
 		Task<IEnumerable<CategoryDb>> GetAllAsync();
-		Task<CategoryDb> GetByIdAsync(Guid id);
+		Task<IEnumerable<CategoryDb>> GetAllParentCategories();
+        Task<CategoryDb> GetByIdAsync(Guid id);
 		Task<CategoryDb> GetByNameAsync(string name);
 		Task<CategoryDb> CreateAsync(CategoryDb newCategory);
 		Task<CategoryDb> AddSubCategory(CategoryDb parent, CategoryDb subCategory);
