@@ -137,6 +137,7 @@ namespace StudyJunction.Infrastructure.Repositories
 				Course = course
 			};
 			user.MyEnrolledCourses.Add(usersCoursesDb);
+			course.EnrolledUsers.Add(usersCoursesDb);
 			await context.SaveChangesAsync();
 			return course;
         }

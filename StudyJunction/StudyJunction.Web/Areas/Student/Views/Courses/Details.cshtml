@@ -49,9 +49,11 @@
                         @using (Html.BeginForm("EnrollForCourse", "Courses", FormMethod.Post))
                         {
                             @Html.Hidden("courseTitle", Model.Course.Title)
-                            @Html.Hidden("successfulEnrollment", Model.SuccessfulEnrollment);
-                            
-                            @if (Model.SuccessfulEnrollment)
+                            @if(Model.Course.EnrolledStudents == null)
+                            {
+                                <button type="submit" class="btn btn-primary">Enroll Now</button>
+                            }
+                            else if(Model.Course.EnrolledStudents.Any(u => u.UserName == Model.Username))
                             {
                                 <button class="btn btn-primary disabled">Enrolled</button>
                             }

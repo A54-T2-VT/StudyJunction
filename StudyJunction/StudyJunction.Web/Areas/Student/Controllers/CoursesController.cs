@@ -84,7 +84,8 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             DetailsViewModel detailsViewModel = new DetailsViewModel()
             {
                 Course = await courseService.GetCourse(title),
-                Service = cloudinaryService
+                Service = cloudinaryService,
+                Username = User.Identity.Name
             };
 
             return View(detailsViewModel);
@@ -104,21 +105,19 @@ namespace StudyJunction.Web.Areas.Student.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EnrollForCourse(string courseTitle, bool successfulEnrollment)
+        public async Task<IActionResult> EnrollForCourse(string courseTitle)
         {
             var viewModel = new DetailsViewModel()
             {
                 Course = await courseService.GetCourse(courseTitle),
                 Service = cloudinaryService,
-                SuccessfulEnrollment = successfulEnrollment
+                Username = User.Identity.Name
             };
 
             try
             {
-                var username = User.Identity.Name;
-                var result = await courseService.EnrollUserForCourse(username, courseTitle);
-                viewModel.SuccessfulEnrollment = true;
-
+                var result = await courseService.EnrollUserForCourse(viewModel.Username, courseTitle);
+                viewModel.Course = result;
                 return View("Details", viewModel);
             }
             catch (EntityNotFoundException e)
