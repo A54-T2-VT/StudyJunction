@@ -7,6 +7,7 @@ using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.Courses;
+using StudyJunction.Infrastructure.Exceptions;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
@@ -80,6 +81,43 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             };
 
             return View(detailsViewModel);
+        }
+
+        [HttpGet()]
+        public async Task<IActionResult> MyCourses()
+        {
+            var user = await userService.GetByUsername(User.Identity.Name);
+            var viewmodel = new MyCoursesViewModel()
+            {
+                CurrentUser = user,
+                Service = cloudinaryService
+            };
+
+            return View(viewmodel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EnrollForCourse(string courseTitle, bool successfulEnrollment)
+        {
+            var viewModel = new DetailsViewModel()
+            {
+                Course = await courseService.GetCourse(courseTitle),
+                Service = cloudinaryService,
+                SuccessfulEnrollment = successfulEnrollment
+            };
+
+            try
+            {
+                var username = User.Identity.Name;
+                var result = await courseService.EnrollUserForCourse(username, courseTitle);
+                viewModel.SuccessfulEnrollment = true;
+
+                return View("Details", viewModel);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return View("Details", viewModel);
+            }
         }
     }
 }
