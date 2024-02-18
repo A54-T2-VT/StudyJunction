@@ -14,8 +14,8 @@
 
         <div class="form-group">
             <label asp-for="Title">Title</label>
-            <input type="text" asp-for="Title" class="form-control" maxlength="100" id="titleInput" oninput="updateCounter('titleInput', 'titleCounter', 20, 100)" />
-            <div style="margin-top:10px;" id="titleCounter" class="text-muted">Characters: 0/100</div>
+            <input type="text" asp-for="Title" class="form-control" maxlength="100" id="titleInput" oninput="updateCounter('titleInput', 'titleCounter', 20, 50)" />
+            <div style="margin-top:10px;" id="titleCounter" class="text-muted">Characters: 0/50</div>
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
