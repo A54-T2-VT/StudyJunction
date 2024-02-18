@@ -179,6 +179,11 @@ namespace StudyJunction.Core.Services
                 throw new NameDuplicationException(ExceptionMessages.INVALID_CREDENTIALS_MESSAGE);
             }
 
+            var defaultProfilePicture = cloudinaryService.GetResource
+                ("https://res.cloudinary.com/dxhiilbyu/image/upload/v1708282376/h9nfbuxkblhesqwlepnb.webp");
+
+            userDb.ProfileImageCloudinaryUri = defaultProfilePicture;
+
             var user = await userManager.FindByEmailAsync(newUser.Email);
             _ = await userManager.AddToRolesAsync(user, new string[] { RolesConstants.Student});
 
