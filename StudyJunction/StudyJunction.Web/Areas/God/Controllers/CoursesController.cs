@@ -23,11 +23,11 @@ namespace StudyJunction.Web.Areas.God.Controllers
         }
 
         [HttpPost]
-        public IActionResult Approve(string courseId) 
+        public async Task<IActionResult> Approve(string courseId) 
         {
             try
             {
-                courseService.ApproveCourseAsync(new Guid(courseId));
+                await courseService.ApproveCourseAsync(new Guid(courseId));
 
                 return RedirectToAction("GetAllForApproval", "Courses", new {area = RolesConstants.God});
             }
