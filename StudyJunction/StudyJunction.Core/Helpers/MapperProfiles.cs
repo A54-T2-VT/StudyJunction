@@ -47,7 +47,7 @@ namespace StudyJunction.Core.Helpers
             //Db -> ViewModel
             this.CreateMap<TeacherCandidacyDb, TeacherCandidacyViewModel>()
                 .ForMember(d => d.CandidateEmail, opt => opt.MapFrom(s => s.User.Email));
-            
+            this.CreateMap<CourseDb, CourseApprovalViewModel>();
                 
         }
 

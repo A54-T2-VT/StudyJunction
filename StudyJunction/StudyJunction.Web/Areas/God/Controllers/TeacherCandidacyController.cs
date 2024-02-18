@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
@@ -7,6 +8,7 @@ using StudyJunction.Infrastructure.Data.Models;
 namespace StudyJunction.Web.Areas.God.Controllers
 {
     [Area("God")]
+    [Authorize(Roles = RolesConstants.God)]
     public class TeacherCandidacyController : Controller
     {
         private readonly ITeacherCandidacyService teacheerCandidacyService;

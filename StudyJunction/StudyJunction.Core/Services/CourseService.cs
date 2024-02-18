@@ -7,6 +7,7 @@ using StudyJunction.Core.RequestDTOs.Category;
 using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Core.ViewModels.Courses;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
@@ -84,6 +85,15 @@ namespace StudyJunction.Core.Services
                 .ToList();
         }
 
+        public async Task<ICollection<CourseApprovalViewModel>> GetAllNotApproved()
+        {
+            var courses = await courseRepository.GetAllNotApprovedCourses();
+
+            return courses
+                .Select(x => mapper.Map<CourseApprovalViewModel>(x))
+                .ToList();
+        }
+
         public async Task<CourseResponseDTO> GetCourse(Guid courseId)
         {
             return mapper.Map<CourseResponseDTO>
@@ -93,6 +103,11 @@ namespace StudyJunction.Core.Services
         public async Task<CourseResponseDTO> GetCourse(string title)
         {
             return mapper.Map<CourseResponseDTO>(await courseRepository.GetByTitleAsync(title));
+        }
+
+        public async Task ApproveCourseAsync(Guid courseId)
+        {
+            await courseRepository.ApproveCourseAsync(courseId);
         }
 
         public async Task<CourseResponseDTO> Update(Guid toUpdate, CourseRequestDto newData, string username)

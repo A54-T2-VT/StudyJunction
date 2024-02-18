@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudyJunction.Infrastructure.Data;
 
@@ -11,9 +12,10 @@ using StudyJunction.Infrastructure.Data;
 namespace StudyJunction.Infrastructure.Migrations
 {
     [DbContext(typeof(SJDbContext))]
-    partial class SJDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240218094059_AddedIsApprovedToCourse")]
+    partial class AddedIsApprovedToCourse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
