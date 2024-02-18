@@ -21,8 +21,9 @@
 
 .profile-dropdown {
     position: relative;
-    width: fit-content;
     margin-left: 50px;
+    width:auto;
+
 }
 
 .profile-dropdown-btn {
@@ -47,7 +48,7 @@
     }
 
 .profile-img {
-    position: relative;
+    position: absolute;
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
@@ -63,8 +64,11 @@
     }
 
 .profile-dropdown-btn span {
+    position: absolute;
+    left: 33%;
     margin: 0 0.5rem;
     margin-right: 0;
+    word-wrap: break-word;
 }
 
 .profile-dropdown-list2 {
