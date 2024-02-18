@@ -18,27 +18,34 @@ namespace StudyJunction.Web.Areas.Student.Controllers
         private readonly ICourseService courseService;
         private readonly IUserService userService;
         private readonly IMapper mapper;
+        private readonly ICategoryService categoryService;
         private readonly CloudinaryService cloudinaryService;
-        public CoursesController(ICourseService _courseService, IUserService _userService, IMapper _mapper,
+        public CoursesController(ICourseService _courseService, IUserService _userService, IMapper _mapper, ICategoryService _categoryService,
             CloudinaryService _cloudinaryService)
         {
             courseService = _courseService;
             userService = _userService;
             mapper = _mapper;
+            categoryService = _categoryService;
             cloudinaryService = _cloudinaryService;
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var viewModel = new CreateCourseViewModel();
+
+            var parentChildCategoreis = await this.categoryService.GetAllParentChildCategoriesForSelectingCategory();
+
+            viewModel.ParentChildCategories = parentChildCategoreis.ParentChildCategories;
+
             return View("Create", viewModel);
         }
         [HttpPost]
         public async Task<IActionResult> Create(CreateCourseViewModel viewModel)
         {
             if (!ModelState.IsValid)
-            {
+            { 
                 return View(viewModel);
             }
 

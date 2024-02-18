@@ -50,9 +50,13 @@ namespace StudyJunction.Core.Services
             var categoryDb = await categoryRepository.GetByNameAsync(newCourse.CategoryName);
 			newCourse.CategoryName = categoryDb.Name;
 
+            var thumbnailData = cloudinaryService.UploadImageToCloudinary(newCourse.Thumbnail);
+
             var courseDb = mapper.Map<CourseDb>(newCourse);
             courseDb.CategoryId = categoryDb.Id;
             courseDb.CreatorId = creatorUser.Id;
+            courseDb.ThumbnailCloudinaryId = thumbnailData[0];
+            courseDb.ThumbnailCloudinaryUri = thumbnailData[1];
             creatorUser.MyCreatedCourses.Add(courseDb);
 
 

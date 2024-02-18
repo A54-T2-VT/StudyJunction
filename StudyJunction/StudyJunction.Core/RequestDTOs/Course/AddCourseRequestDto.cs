@@ -1,4 +1,5 @@
-﻿using StudyJunction.Infrastructure.Constants;
+﻿using Microsoft.AspNetCore.Http;
+using StudyJunction.Infrastructure.Constants;
 using System.ComponentModel.DataAnnotations;
 using static StudyJunction.Infrastructure.Constants.ModelsConstants;
 
@@ -14,6 +15,6 @@ namespace StudyJunction.Core.RequestDTOs.Course
         public string Description { get; set; }
         [Required]
         public string CategoryName { get; set; }
-        //public string CreatorName { get; set; }
+        public IFormFile Thumbnail { get; set; }
     }
 }
