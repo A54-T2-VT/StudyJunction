@@ -16,6 +16,8 @@ namespace StudyJunction.Core.Services.Contracts
 		Task<CourseResponseDTO> UpdateCategory(Guid toUpdate, CategoryRequestDto newCategory, string username);
 		Task<CourseResponseDTO> AddThumbnailAsync(string courseId, IFormFile image, string userId);
 
+		Task<CourseResponseDTO> EnrollUserForCourse(string courseTitle, string username);
+
 
     }
 }
