@@ -11,6 +11,6 @@ namespace StudyJunction.Core.ResponseDTOs
         public string ThumbnailCloudinaryUri { get; set; }
 
         public ICollection<CourseStudentResponseDto> EnrolledStudents { get; set; }
-        public ICollection<CourseLectureResponseDto> Lectures { get; set; }
+        public ICollection<LectureResponseDTO> Lectures { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace StudyJunction.Core.ResponseDTOs
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string VideoLinkCloudinaryUri { get; set; }
         //public ICollection<LectureNoteResponseDto> StudentNotes { get; set; }
     }
 }
