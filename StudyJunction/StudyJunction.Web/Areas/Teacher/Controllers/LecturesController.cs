@@ -1,13 +1,49 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using StudyJunction.Core.ExternalApis;
+using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Core.ViewModels.Lectures;
+using StudyJunction.Infrastructure.Constants;
+using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Web.Areas.Teacher.Controllers
 {
-    [Area("Teacher")]
+    [Area(RolesConstants.Teacher)]
+    [Authorize(Roles = RolesConstants.Teacher)]
     public class LecturesController : Controller
     {
-        public IActionResult Index()
+        private readonly ICourseService courseService;
+        private readonly ILectureService lectureService;
+        private readonly CloudinaryService cloudService;
+
+        public LecturesController(ICourseService courseService,
+            ILectureService lectureService,
+            CloudinaryService cloudService)
         {
-            return View();
+            this.courseService = courseService;
+            this.lectureService = lectureService;
+            this.cloudService = cloudService;
+        }
+
+        [HttpGet]
+        public IActionResult Add(string courseTitle)
+        {
+            //var course = await courseService.GetCourse(courseTitle);
+
+            var model = new AddLectureViewModel();
+
+            model.CourseTitle = courseTitle;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [RequestSizeLimit(long.MaxValue)]
+        public async Task<IActionResult> Add(AddLectureViewModel model) 
+        {
+            _ = cloudService.UploadVideoToCloudinary(model.Video);
+
+            throw new NotImplementedException();
         }
     }
 }

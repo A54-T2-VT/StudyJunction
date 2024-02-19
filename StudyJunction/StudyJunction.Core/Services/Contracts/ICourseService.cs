@@ -12,6 +12,7 @@ namespace StudyJunction.Core.Services.Contracts
 		Task<CourseResponseDTO> GetCourse(string title);
 		Task<ICollection<CourseResponseDTO>> GetAll();
 		Task<ICollection<CourseApprovalViewModel>> GetAllNotApproved();
+		Task<IEnumerable<CreatedCoursesViewModel>> GetCoursesCreatedByUserAsync(string userId);
 		Task ApproveCourseAsync(Guid courseId);
         Task<CourseResponseDTO> Create(AddCourseRequestDto newCourse, string username);
 		Task<CourseResponseDTO> Update(Guid toUpdate, CourseRequestDto newData, string username);

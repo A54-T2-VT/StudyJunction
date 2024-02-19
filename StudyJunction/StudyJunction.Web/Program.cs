@@ -1,6 +1,7 @@
 using AutoMapper;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -100,8 +101,14 @@ namespace StudyJunction.Web
 
             builder.Services.AddControllersWithViews();
 
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.ValueCountLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = long.MaxValue;
+                options.MemoryBufferThreshold = int.MaxValue;
+            });
 
-
+           
 
             var app = builder.Build();
 

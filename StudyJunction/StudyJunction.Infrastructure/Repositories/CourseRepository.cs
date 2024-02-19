@@ -47,6 +47,13 @@ namespace StudyJunction.Infrastructure.Repositories
 			return courses;
 		}
 
+		public async Task<IEnumerable<CourseDb>> GetCoursesCreatedByUserAsync(string userId)
+		{
+			var courses = await context.Courses.Include(c => c.Lectures).Where(c => c.CreatorId == userId).ToListAsync();
+
+			return courses;
+		}
+
         public async Task<CourseDb> GetByIdAsync(Guid id)
         {
 			var c = await context.Courses.FirstOrDefaultAsync(c => c.Id.Equals(id))

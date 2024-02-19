@@ -7,12 +7,13 @@ using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.Courses;
+using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Exceptions;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
-    [Area("Student")]
-    //[Authorize]
+    [Area(RolesConstants.Student)]
+    [Authorize(Roles = RolesConstants.Student)]
     public class CoursesController : Controller
     {
         private readonly ICourseService courseService;

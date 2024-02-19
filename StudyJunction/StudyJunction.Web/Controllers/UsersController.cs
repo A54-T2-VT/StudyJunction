@@ -68,15 +68,15 @@ namespace StudyJunction.Web.Controllers
                 }
                 else if (roles.Contains("Admin"))
                 {
-
-                }
+					return RedirectToAction("Index", "Home", new { area = RolesConstants.Admin });
+				}
                 else if (roles.Contains("Teacher"))
                 {
-
-                }
+					return RedirectToAction("Index", "Home", new { area = RolesConstants.Teacher });
+				}
                 else if (roles.Contains("Student"))
                 {
-                    return RedirectToAction("Index", "Home", new { area = "Student" });
+                    return RedirectToAction("Index", "Home", new { area = RolesConstants.Student });
                 }
 
 

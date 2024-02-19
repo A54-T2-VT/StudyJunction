@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.ViewModels;
+using StudyJunction.Infrastructure.Constants;
 using System.Diagnostics;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
     [Area("Student")]
+    [Authorize(Roles = RolesConstants.Student)]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

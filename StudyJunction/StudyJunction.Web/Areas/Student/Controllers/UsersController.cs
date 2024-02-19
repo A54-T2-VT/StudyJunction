@@ -12,6 +12,7 @@ using StudyJunction.Infrastructure.Exceptions;
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
     [Area("Student")]
+    [Authorize(Roles = RolesConstants.Student)]
     public class UsersController : Controller
     {
         private readonly IUserService userService;

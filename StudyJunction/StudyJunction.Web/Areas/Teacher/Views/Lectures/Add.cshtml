@@ -1,53 +1,45 @@
-﻿@using StudyJunction.Core.ViewModels.Courses
-@model CreateCourseViewModel
+﻿@using StudyJunction.Core.ViewModels.Lectures
+@model AddLectureViewModel
 
 @{
-    ViewData["Title"] = "Create course";
+    ViewData["Title"] = "Add Lecture";
     // Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
 }
 
 <section class="page-section" style="margin-left: 160px; margin-right: 160px; margin-top:30px;">
 
-    <h2 style="margin-left:50px; margin-bottom:30px;">Create a New Post</h2>
+    <h2 style="margin-left:50px; margin-bottom:30px;">Add Lecture for Course: @Model.CourseTitle</h2>
 
-    <form asp-area="Student" asp-controller="Courses" asp-action="Create" method="post" enctype="multipart/form-data" style="max-width: 600px; margin-left: 70px" id="postForm">
+    <form asp-area="Teacher" asp-controller="Lectures" asp-action="Add" method="post" enctype="multipart/form-data" style="max-width: 600px; margin-left: 70px" id="postForm">
 
         <div class="form-group">
             <label asp-for="Title">Title</label>
-            <input type="text" asp-for="Title" class="form-control" maxlength="50" id="titleInput" oninput="updateCounter('titleInput', 'titleCounter', 20, 50)" />
+            <input type="text" asp-for="Title" class="form-control" maxlength="50" id="titleInput" oninput="updateCounter('titleInput', 'titleCounter', 3, 50)" />
             <div style="margin-top:10px;" id="titleCounter" class="text-muted">Characters: 0/50</div>
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 
         <div class="form-group" style="margin-top: 25px">
             <label asp-for="Description">Description</label>
-            <textarea asp-for="Description" class="form-control" style="width: 160%; height: 300px" maxlength="3000" id="contentInput" oninput="updateCounter('contentInput', 'contentCounter', 100, 3000)"></textarea>
-            <div style="margin-top:10px;" id="contentCounter" class="text-muted">Characters: 0/3000</div>
+            <textarea asp-for="Description" class="form-control" style="width: 160%; height: 300px" maxlength="1000" id="contentInput" oninput="updateCounter('contentInput', 'contentCounter', 100, 1000)"></textarea>
+            <div style="margin-top:10px;" id="contentCounter" class="text-muted">Characters: 0/1000</div>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
-        <div class="mb-3 form-group">
-            <label asp-for="CategoryName" class="form-label">Category</label>
-            <select asp-for="CategoryName" class="form-control">                    
-                @foreach (var kvp in Model.ParentChildCategories)
-                {
-                    <optgroup label="@kvp.Key">
-                        @foreach(var childCategories in kvp.Value)
-                        {
-                            <option value="@childCategories">@childCategories</option>
-                        }
-                    </optgroup>
-                }
-            </select>
+        <div>
+            <input asp-for="Video" type="file" class="custom-file-input" id="customFile1">
+            <label asp-for="Video" class="custom-file-label" for="customFile1">Choose Video</label>
         </div>
 
         <div>
-            <input asp-for="Thumbnail" class="custom-file-input" id="customFile">
-            <label asp-for="Thumbnail" class="custom-file-label" for="customFile">Choose File</label>
+            <input asp-for="Assignment" type="file"  class="custom-file-input" id="customFile2">
+            <label asp-for="Assignment" class="custom-file-label" for="customFile2">Choose Assignment</label>
         </div>
 
+        <input asp-for="CourseTitle" name="CourseTitle" type="hidden" value="@Model.CourseTitle" />
+
         <div class="form-group" style="margin-top: 25px">
-            <button type="button" value="CourseCreation" class="btn btn-primary" onclick="validateAndSubmit()">Create Course</button>
+            <button type="submit" value="AddLecture" class="btn btn-primary">Add lecture</button>
         </div>
 
 
@@ -74,7 +66,7 @@
                 const titleInput = document.getElementById('titleInput');
                 const contentInput = document.getElementById('contentInput');
 
-                if (titleInput.value.length < 20 || contentInput.value.length < 100) {
+                if (titleInput.value.length < 3 || contentInput.value.length < 50) {
                     alert('Minimum length not reached. Please fill in all required fields.');
                     return;
                 }
