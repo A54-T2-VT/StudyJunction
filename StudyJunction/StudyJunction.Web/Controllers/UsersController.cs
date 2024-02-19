@@ -50,15 +50,15 @@ namespace StudyJunction.Web.Controllers
 
                 var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
-                //setting up session variables
-                HttpContext.Session.SetString("user", user.UserName);
-                HttpContext.Session.SetString("email", user.Email);
-                HttpContext.Session.SetString("id", user.Id.ToString());
-
                 if (!result.Succeeded)
                 {
                     throw new InvalidCredentialsException(string.Format(ExceptionMessages.INVALID_CREDENTIALS_MESSAGE));
                 }
+
+                //setting up session variables
+                HttpContext.Session.SetString("user", user.UserName);
+                HttpContext.Session.SetString("email", user.Email);
+                HttpContext.Session.SetString("id", user.Id.ToString());
 
                 var roles = await userManager.GetRolesAsync(user);
 
@@ -84,7 +84,8 @@ namespace StudyJunction.Web.Controllers
             }
             catch(InvalidCredentialsException ex)
             {
-                throw new NotImplementedException(ex.Message);
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("Login");
             }
         }
 
@@ -123,7 +124,9 @@ namespace StudyJunction.Web.Controllers
             }
             catch(NameDuplicationException ex) 
             {
-                throw new NotImplementedException(ex.Message);
+                Console.WriteLine(ex.Message);
+
+                return RedirectToAction("Register");
             }
         }
     }

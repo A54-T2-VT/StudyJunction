@@ -45,27 +45,35 @@ namespace StudyJunction.Web.Areas.Student.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCourseViewModel viewModel)
         {
-            if (!ModelState.IsValid)
-            { 
-                return View(viewModel);
-            }
-
-            string username = HttpContext.Session.GetString("user");
-
-            var course = mapper.Map<AddCourseRequestDto>(viewModel);
-
-            _ = await courseService.Create(course, username);
-
-            var routeValues = new RouteValueDictionary
+            try
             {
-                { "controller", "Courses" },
-                { "action", "Details" },
-                { "title", viewModel.Title }
-            };
+                if (!ModelState.IsValid)
+                { 
+                    return View(viewModel);
+                }
 
-            var redirectResult = new RedirectToActionResult("Details", "Courses", routeValues);
+                string username = HttpContext.Session.GetString("user");
 
-            return redirectResult;
+                var course = mapper.Map<AddCourseRequestDto>(viewModel);
+
+                _ = await courseService.Create(course, username);
+
+                var routeValues = new RouteValueDictionary
+                {
+                    { "controller", "Courses" },
+                    { "action", "Details" },
+                    { "title", viewModel.Title }
+                };
+
+                var redirectResult = new RedirectToActionResult("Details", "Courses", routeValues);
+
+                return redirectResult;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("Create");
+            }
         }
 
         public async Task<IActionResult> Index()
