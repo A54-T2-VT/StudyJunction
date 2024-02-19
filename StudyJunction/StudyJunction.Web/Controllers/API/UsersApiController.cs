@@ -13,6 +13,7 @@ using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 using StudyJunction.Web.CustomAttributes;
 using System.Data;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace StudyJunction.Web.Controllers.API
@@ -122,7 +123,7 @@ namespace StudyJunction.Web.Controllers.API
 				return BadRequest(ex.Message);
 			}
 		}
-
+		//Bug, role when calling IncreaseRole should not be hardcoded, but should take role form JWT
 		[HttpPut("increaseRole/{targetUserId}")]
 		[JwtAuthorization(ClearedRoles = new string[] { RolesConstants.Admin, RolesConstants.God })]
 		public async Task<IActionResult> IncreaseRole(string targetUserId)
@@ -137,7 +138,7 @@ namespace StudyJunction.Web.Controllers.API
 					throw new Exception("User can not increase his own role.");
 				}
 
-				string newRole = await userService.IncreaseRole(targetUserId);
+                string newRole = await userService.IncreaseRole(targetUserId, RolesConstants.Admin);
 
 				return Ok(newRole);
 			}
@@ -268,5 +269,6 @@ namespace StudyJunction.Web.Controllers.API
 				return BadRequest(e.Message);
 			}
 		}
-	}
+       
+    }
 }

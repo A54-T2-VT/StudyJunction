@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 
-namespace StudyJunction.Web.Areas.God.Controllers
+namespace StudyJunction.Web.Areas.Admin.Controllers
 {
-    [Area(RolesConstants.God)]
-    [Authorize(Roles = RolesConstants.God)]
+    [Area(RolesConstants.Admin)]
+    [Authorize(Roles = RolesConstants.Admin)]
     public class UsersController : Controller
     {
         private readonly IUserService userService;
@@ -33,7 +32,7 @@ namespace StudyJunction.Web.Areas.God.Controllers
 
                 var currUserEmail = HttpContext.Session.GetString("email");
 
-                usersWithHighestRoles.RemoveAll(ur => ur.RoleName == RolesConstants.God || ur.Email == currUserEmail);
+                usersWithHighestRoles.RemoveAll(ur => ur.RoleName == RolesConstants.God || ur.RoleName == RolesConstants.Admin || ur.Email == currUserEmail);
 
                 usersWithHighestRoles = usersWithHighestRoles.OrderBy(u => u.Email).ToList();
 
@@ -41,8 +40,8 @@ namespace StudyJunction.Web.Areas.God.Controllers
             }
             catch (Exception ex)
             {
-				return RedirectToAction("Error", "Home", new { area = RolesConstants.God });
-			}
+                return RedirectToAction("Error", "Home", new { area = RolesConstants.Admin });
+            }
         }
 
         [HttpPost]
@@ -52,31 +51,31 @@ namespace StudyJunction.Web.Areas.God.Controllers
             {
                 var targetUser = await userManager.FindByEmailAsync(email);
 
-                _ = await userService.IncreaseRole(targetUser.Id, RolesConstants.God);
+                _ = await userService.IncreaseRole(targetUser.Id, RolesConstants.Admin);
 
-                return RedirectToAction("UsersRoles", "Users", new { area = RolesConstants.God });
+                return RedirectToAction("UsersRoles", "Users", new { area = RolesConstants.Admin });
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Error", "Home", new { area = RolesConstants.God });
+                return RedirectToAction("Error", "Home", new { area = RolesConstants.Admin });
             }
         }
 
-		[HttpPost]
-		public async Task<IActionResult> Demote(string email)
-		{
-			try
-			{
-				var targetUser = await userManager.FindByEmailAsync(email);
+        [HttpPost]
+        public async Task<IActionResult> Demote(string email)
+        {
+            try
+            {
+                var targetUser = await userManager.FindByEmailAsync(email);
 
-				_ = await userService.DecreaseRole(targetUser.Id);
+                _ = await userService.DecreaseRole(targetUser.Id);
 
-				return RedirectToAction("UsersRoles", "Users", new { area = RolesConstants.God });
-			}
-			catch (Exception ex)
-			{
-				return RedirectToAction("Error", "Home", new { area = RolesConstants.God });
-			}
-		}
-	}
+                return RedirectToAction("UsersRoles", "Users", new { area = RolesConstants.Admin });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Home", new { area = RolesConstants.Admin });
+            }
+        }
+    }
 }

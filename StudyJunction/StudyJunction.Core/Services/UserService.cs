@@ -243,7 +243,7 @@ namespace StudyJunction.Core.Services
 
         }
 
-        public async Task<string> IncreaseRole(string targetUserId)
+        public async Task<string> IncreaseRole(string targetUserId, string currUserRole)
         {
             var user = await userManager.FindByIdAsync(targetUserId);
 
@@ -252,6 +252,11 @@ namespace StudyJunction.Core.Services
             string highestRole = await GetHighestRoleAsync(user);
 
 			if (userRoles.Contains(RolesConstants.God) || userRoles.Contains(RolesConstants.Admin)) 
+            {
+                return highestRole;
+            }
+
+            if(currUserRole == RolesConstants.Admin && userRoles.Contains(RolesConstants.Teacher))
             {
                 return highestRole;
             }
