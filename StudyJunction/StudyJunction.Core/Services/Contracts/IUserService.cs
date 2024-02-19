@@ -11,7 +11,8 @@ namespace StudyJunction.Core.Services.Contracts
         Task<List<UserAndHighestRoleViewModel>> GetUsersAndTheirHighestRole();
         Task<UserResponseDTO> GetById(string id);
 		Task<UserResponseDTO> GetByUsername(string username);
-		Task<UserResponseDTO> GetByEmail(string email);
+        Task<UserResponseDTO> GetByUsernameIncludeCourses(string username);
+        Task<UserResponseDTO> GetByEmail(string email);
         Task<UserResponseDTO> Register(RegisterUserRequestDto newUser);
         Task<string> Login(LoginUserRequestDto loginUserDto);
 		Task<UserResponseDTO> UpdateProfilePicture(string userID, IFormFile image);
@@ -20,5 +21,7 @@ namespace StudyJunction.Core.Services.Contracts
 		Task<string> IncreaseRole(string targetUserId);
         Task<string> DecreaseRole(string targetUserId);
         Task<UserResponseDTO> Delete(string id, string username);
-	}
+       
+
+    }
 }

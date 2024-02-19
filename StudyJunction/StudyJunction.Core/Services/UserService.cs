@@ -140,6 +140,18 @@ namespace StudyJunction.Core.Services
             return mapper.Map<UserResponseDTO>(user);
         }
 
+        public async Task<UserResponseDTO> GetByUsernameIncludeCourses(string username)
+        {
+            var user = await userRepository.GetByUsernameIncludeCourses(username);
+
+            if (user is null)
+            {
+                throw new EntityNotFoundException(string.Format(ExceptionMessages.USER_WITH_USERNAME_NOT_FOUND_MESSAGE, username));
+            }
+
+            return mapper.Map<UserResponseDTO>(user);
+        }
+
         public async  Task<UserResponseDTO> GetByEmail(string email)
         {
             var user = await userManager.FindByEmailAsync(email);
