@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using RestSharp;
 using StudyJunction.Core.RequestDTOs.Category;
 using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.RequestDTOs.Lecture;
@@ -18,6 +19,18 @@ namespace StudyJunction.Core.Helpers
         {
             //Db -> DTO
             this.CreateMap<UserDb, UserResponseDTO>();
+
+            this.CreateMap<UsersCoursesDb, CourseResponseDTO>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Course.Title))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Course.Description))
+                .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.Course.CreatedBy.UserName))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Course.Category.Name))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Course.StartDate))
+                .ForMember(dest => dest.ThumbnailCloudinaryUri, opt => opt.MapFrom(src => src.Course.ThumbnailCloudinaryUri))
+                .ForMember(dest => dest.EnrolledStudents, opt => opt.MapFrom(src => src.Course.EnrolledUsers))
+                .ForMember(dest => dest.Lectures, opt => opt.MapFrom(src => src.Course.Lectures));
+
+
             this.CreateMap<CategoryDb, CategoryResponseDTO>();
             this.CreateMap<CourseDb, CourseResponseDTO>()
                 .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.CreatedBy.UserName))
