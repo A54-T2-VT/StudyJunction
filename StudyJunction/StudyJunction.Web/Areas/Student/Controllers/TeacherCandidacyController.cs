@@ -8,7 +8,7 @@ using StudyJunction.Infrastructure.Data.Models;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
-	[Area("Student")]
+	[Area(RolesConstants.Student)]
     [Authorize(Roles = RolesConstants.Student)]
     public class TeacherCandidacyController : Controller
 	{

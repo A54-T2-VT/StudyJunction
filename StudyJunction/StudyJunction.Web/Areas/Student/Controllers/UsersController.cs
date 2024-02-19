@@ -11,7 +11,7 @@ using StudyJunction.Infrastructure.Exceptions;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
-    [Area("Student")]
+    [Area(RolesConstants.Student)]
     [Authorize(Roles = RolesConstants.Student)]
     public class UsersController : Controller
     {

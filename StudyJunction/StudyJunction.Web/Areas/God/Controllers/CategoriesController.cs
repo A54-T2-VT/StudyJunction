@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.Categories;
 using StudyJunction.Infrastructure.Constants;
@@ -6,6 +7,7 @@ using StudyJunction.Infrastructure.Constants;
 namespace StudyJunction.Web.Areas.God.Controllers
 {
 	[Area(RolesConstants.God)]
+	[Authorize(Roles = RolesConstants.God)]
 	public class CategoriesController : Controller
 	{
 		private readonly ICategoryService categoryService;

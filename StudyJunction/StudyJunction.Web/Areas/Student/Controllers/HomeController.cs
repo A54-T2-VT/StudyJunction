@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
-    [Area("Student")]
+    [Area(RolesConstants.Student)]
     [Authorize(Roles = RolesConstants.Student)]
     public class HomeController : Controller
     {
