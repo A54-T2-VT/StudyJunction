@@ -94,14 +94,21 @@ namespace StudyJunction.Web.Areas.Student.Controllers
         [HttpGet()]
         public async Task<IActionResult> MyCourses()
         {
-            var user = await userService.GetByUsername(User.Identity.Name);
-            var viewmodel = new MyCoursesViewModel()
+            try
             {
-                CurrentUser = user,
-                Service = cloudinaryService
-            };
+                var user = await userService.GetByUsernameIncludeCourses(User.Identity.Name);
+                var viewmodel = new MyCoursesViewModel()
+                {
+                    CurrentUser = user,
+                    Service = cloudinaryService
+                };
 
-            return View(viewmodel);
+                return View(viewmodel);
+            }
+            catch(Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpPost]
@@ -124,6 +131,28 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             {
                 return View("Details", viewModel);
             }
+        }
+
+        [HttpGet("Courses/EnrolledCourseView/{title}")]
+        public async Task<IActionResult> EnrolledCourseView([FromRoute] string title)
+        {
+            var viewModel = new EnrolledCourseViewModel()
+            {
+                Course = await courseService.GetCourse(title),
+                Service = cloudinaryService,
+
+                Username = User.Identity.Name
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLectureVideo()
+        {
+            return BadRequest();
+            
+
         }
     }
 }
