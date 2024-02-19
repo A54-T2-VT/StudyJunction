@@ -10,11 +10,11 @@
 
     <h2 style="margin-left:50px; margin-bottom:30px;">Create a New Post</h2>
 
-    <form asp-controller="Courses" asp-action="Create" method="post" enctype="multipart/form-data" style="max-width: 600px; margin-left: 70px" id="postForm">
+    <form asp-area="Student" asp-controller="Courses" asp-action="Create" method="post" enctype="multipart/form-data" style="max-width: 600px; margin-left: 70px" id="postForm">
 
         <div class="form-group">
             <label asp-for="Title">Title</label>
-            <input type="text" asp-for="Title" class="form-control" maxlength="100" id="titleInput" oninput="updateCounter('titleInput', 'titleCounter', 20, 50)" />
+            <input type="text" asp-for="Title" class="form-control" maxlength="50" id="titleInput" oninput="updateCounter('titleInput', 'titleCounter', 20, 50)" />
             <div style="margin-top:10px;" id="titleCounter" class="text-muted">Characters: 0/50</div>
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>

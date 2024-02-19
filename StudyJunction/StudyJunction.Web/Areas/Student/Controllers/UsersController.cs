@@ -11,7 +11,8 @@ using StudyJunction.Infrastructure.Exceptions;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
-    [Area("Student")]
+    [Area(RolesConstants.Student)]
+    [Authorize(Roles = RolesConstants.Student)]
     public class UsersController : Controller
     {
         private readonly IUserService userService;
@@ -50,22 +51,22 @@ namespace StudyJunction.Web.Areas.Student.Controllers
 
                 var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
-                //setting up session variables
-                HttpContext.Session.SetString("user", user.UserName);
-                HttpContext.Session.SetString("email", user.Email);
-                HttpContext.Session.SetString("id", user.Id.ToString());
-
                 if (!result.Succeeded)
                 {
                     throw new InvalidCredentialsException(string.Format(ExceptionMessages.INVALID_CREDENTIALS_MESSAGE));
                 }
 
+                //setting up session variables
+                HttpContext.Session.SetString("user", user.UserName);
+                HttpContext.Session.SetString("email", user.Email);
+                HttpContext.Session.SetString("id", user.Id.ToString());
 
                 return RedirectToAction("Index", "Home");
             }
             catch (InvalidCredentialsException ex)
             {
-                throw new NotImplementedException(ex.Message);
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("Login");
             }
         }
 
@@ -105,7 +106,8 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             }
             catch (NameDuplicationException ex)
             {
-                throw new NotImplementedException(ex.Message);
+                Console.WriteLine(ex.Message);
+                return RedirectToAction("Register");
             }
         }
     }

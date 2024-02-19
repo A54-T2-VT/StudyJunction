@@ -98,7 +98,29 @@ namespace StudyJunction.Core.Services
                 .ToList();
         }
 
-        public async Task<CourseResponseDTO> GetCourse(Guid courseId)
+		public async Task<IEnumerable<CreatedCoursesViewModel>> GetCoursesCreatedByUserAsync(string userId)
+        {
+            var coursesDb = await courseRepository.GetCoursesCreatedByUserAsync(userId);
+
+            var models = new List<CreatedCoursesViewModel>(); 
+
+            foreach(CourseDb courseDb in coursesDb)
+            {
+                var model = new CreatedCoursesViewModel();
+
+                model.Title = courseDb.Title;
+                model.IsApproved = courseDb.IsApproved;
+                model.NumberOfLectures = courseDb.Lectures.Count;
+                model.NumberOfEnrolledStudents = courseDb.EnrolledUsers.Count;
+
+                models.Add(model);
+            }
+
+            return models;
+        }
+
+
+		public async Task<CourseResponseDTO> GetCourse(Guid courseId)
         {
             return mapper.Map<CourseResponseDTO>
                 (await courseRepository.GetByIdAsync(courseId));

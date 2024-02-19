@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.TeacherCandidacy;
@@ -7,8 +8,9 @@ using StudyJunction.Infrastructure.Data.Models;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
-	[Area("Student")]
-	public class TeacherCandidacyController : Controller
+	[Area(RolesConstants.Student)]
+    [Authorize(Roles = RolesConstants.Student)]
+    public class TeacherCandidacyController : Controller
 	{
 		private readonly ITeacherCandidacyService teacherCandidacyService;
 		private readonly UserManager<UserDb> userManager;

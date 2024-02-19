@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using StudyJunction.Infrastructure.Exceptions;
 using System.Net;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace StudyJunction.Core.ExternalApis
 {
@@ -92,9 +93,37 @@ namespace StudyJunction.Core.ExternalApis
                 // Handle the error as needed
             }
         }
-        public string[] UploadVideoToCloudinary()
+        public string[] UploadVideoToCloudinary(IFormFile video, string publicId = null)
         {
-            throw new NotImplementedException ();
+            try
+            {
+                var uploadParams = new RawUploadParams
+                {
+                    File = new FileDescription(video.FileName, video.OpenReadStream()),
+                    PublicId = publicId,
+                };
+
+                var uploadResult =  cloudinary.Upload(uploadParams);
+
+                var result = new string[] { uploadResult.PublicId, uploadResult.SecureUrl.ToString() };
+
+
+
+                Console.WriteLine($"Thumbnail uploaded to Cloudinary. Public ID: {uploadResult.PublicId}");
+                Console.WriteLine($"Thumbnail URL: {uploadResult.SecureUri}");
+
+                //var result = cloudinary.GetResourceByAssetId("04d2877623961049b41b4925869b760c");
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during Thumbnail upload: {ex.Message}");
+
+                throw new CloudinaryFileUploadException(ex.Message);
+                // Handle the error as needed
+            }
         }
 
         public string GetResource(string thumbnailURL)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.ResponseDTOs;
+using StudyJunction.Core.ViewModels.Lectures;
 
 namespace StudyJunction.Core.Services.Contracts
 {
@@ -10,7 +11,9 @@ namespace StudyJunction.Core.Services.Contracts
         Task<LectureResponseDTO> Get(string title);
 		Task<ICollection<LectureResponseDTO>> GetAll();
 		Task<LectureResponseDTO> Create(AddLectureRequestDto newLecture, string username);
-		Task<LectureResponseDTO> AddAssignmentAsync(string lectureId, IFormFile assignment, string userId);
+		Task<LectureResponseDTO> CreateWithVideoAndAssignmentFromViewModel(AddLectureViewModel model, string username);
+
+        Task<LectureResponseDTO> AddAssignmentAsync(string lectureId, IFormFile assignment, string userId);
         Task<LectureResponseDTO> Update(Guid toUpdate, LectureRequestDto newData, string username);
 		Task<LectureResponseDTO> Delete(Guid id, string username);
 	}

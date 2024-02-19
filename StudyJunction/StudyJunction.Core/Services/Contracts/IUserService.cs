@@ -18,7 +18,7 @@ namespace StudyJunction.Core.Services.Contracts
 		Task<UserResponseDTO> UpdateProfilePicture(string userID, IFormFile image);
 		Task<UserResponseDTO> Update(UpdateUserDataRequestDto updatedUser, string username);
         Task<UserResponseDTO> Update(UpdateUserPasswordRequestDto passData, string username);
-		Task<string> IncreaseRole(string targetUserId);
+		Task<string> IncreaseRole(string targetUserId, string currUserRole);
         Task<string> DecreaseRole(string targetUserId);
         Task<UserResponseDTO> Delete(string id, string username);
        

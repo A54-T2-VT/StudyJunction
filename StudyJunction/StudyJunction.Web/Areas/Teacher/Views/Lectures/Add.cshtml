@@ -1,0 +1,84 @@
+﻿@using StudyJunction.Core.ViewModels.Lectures
+@model AddLectureViewModel
+
+@{
+    ViewData["Title"] = "Add Lecture";
+    // Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+<section class="page-section" style="margin-left: 160px; margin-right: 160px; margin-top:30px;">
+
+    <h2 style="margin-left:50px; margin-bottom:30px;">Add Lecture for Course: @Model.CourseTitle</h2>
+
+    <form asp-area="Teacher" asp-controller="Lectures" asp-action="Add" method="post" enctype="multipart/form-data" style="max-width: 600px; margin-left: 70px" id="postForm">
+
+        <div class="form-group">
+            <label asp-for="Title">Title</label>
+            <input type="text" asp-for="Title" class="form-control" maxlength="50" id="titleInput" oninput="updateCounter('titleInput', 'titleCounter', 3, 50)" />
+            <div style="margin-top:10px;" id="titleCounter" class="text-muted">Characters: 0/50</div>
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" style="margin-top: 25px">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" class="form-control" style="width: 160%; height: 300px" maxlength="1000" id="contentInput" oninput="updateCounter('contentInput', 'contentCounter', 100, 1000)"></textarea>
+            <div style="margin-top:10px;" id="contentCounter" class="text-muted">Characters: 0/1000</div>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div>
+            <input asp-for="Video" type="file" class="custom-file-input" id="customFile1">
+            <label asp-for="Video" class="custom-file-label" for="customFile1">Choose Video</label>
+        </div>
+
+        <div>
+            <input asp-for="Assignment" type="file"  class="custom-file-input" id="customFile2">
+            <label asp-for="Assignment" class="custom-file-label" for="customFile2">Choose Assignment</label>
+        </div>
+
+        <input asp-for="CourseTitle" name="CourseTitle" type="hidden" value="@Model.CourseTitle" />
+
+        <div class="form-group" style="margin-top: 25px">
+            <button type="submit" value="AddLecture" class="btn btn-primary">Add lecture</button>
+        </div>
+
+
+        <script>
+            // Function to update character counters
+            function updateCounter(inputId, counterId, minChars, maxChars) {
+                const input = document.getElementById(inputId);
+                const counter = document.getElementById(counterId);
+                const currentChars = input.value.length;
+                const remainingChars = maxChars - currentChars;
+
+                counter.textContent = `Characters: ${currentChars}/${maxChars}`;
+
+                // Change text color to red if the limit is exceeded or below the minimum length
+                if (remainingChars <= 0 || currentChars < minChars) {
+                    counter.style.color = 'red';
+                } else {
+                    counter.style.color = '';
+                }
+            }
+
+            function validateAndSubmit() {
+                // Check minimum length conditions
+                const titleInput = document.getElementById('titleInput');
+                const contentInput = document.getElementById('contentInput');
+
+                if (titleInput.value.length < 3 || contentInput.value.length < 50) {
+                    alert('Minimum length not reached. Please fill in all required fields.');
+                    return;
+                }
+
+                // If conditions are met, submit the form
+                document.getElementById('postForm').submit();
+            }
+        </script>
+    </form>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

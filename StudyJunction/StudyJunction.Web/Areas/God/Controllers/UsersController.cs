@@ -8,7 +8,7 @@ using StudyJunction.Infrastructure.Data.Models;
 
 namespace StudyJunction.Web.Areas.God.Controllers
 {
-    [Area("God")]
+    [Area(RolesConstants.God)]
     [Authorize(Roles = RolesConstants.God)]
     public class UsersController : Controller
     {
@@ -34,6 +34,9 @@ namespace StudyJunction.Web.Areas.God.Controllers
                 var currUserEmail = HttpContext.Session.GetString("email");
 
                 usersWithHighestRoles.RemoveAll(ur => ur.RoleName == RolesConstants.God || ur.Email == currUserEmail);
+
+                usersWithHighestRoles = usersWithHighestRoles.OrderBy(u => u.Email).ToList();
+
                 return View(usersWithHighestRoles);
             }
             catch (Exception ex)
@@ -49,7 +52,7 @@ namespace StudyJunction.Web.Areas.God.Controllers
             {
                 var targetUser = await userManager.FindByEmailAsync(email);
 
-                _ = await userService.IncreaseRole(targetUser.Id);
+                _ = await userService.IncreaseRole(targetUser.Id, RolesConstants.God);
 
                 return RedirectToAction("UsersRoles", "Users", new { area = RolesConstants.God });
             }
