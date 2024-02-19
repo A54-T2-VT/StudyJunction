@@ -34,6 +34,9 @@ namespace StudyJunction.Web.Areas.God.Controllers
                 var currUserEmail = HttpContext.Session.GetString("email");
 
                 usersWithHighestRoles.RemoveAll(ur => ur.RoleName == RolesConstants.God || ur.Email == currUserEmail);
+
+                usersWithHighestRoles = usersWithHighestRoles.OrderBy(u => u.Email).ToList();
+
                 return View(usersWithHighestRoles);
             }
             catch (Exception ex)
