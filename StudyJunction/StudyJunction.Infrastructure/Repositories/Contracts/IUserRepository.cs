@@ -6,7 +6,9 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 	{
 		Task<UserDb> GetByIdAsync(string id);
 		Task<UserDb> GetByEmailAsync(string email);
-		Task<ICollection<UserDb>> GetAllAsync();
+		Task<UserDb> GetByUsernameIncludeCourses(string username);
+
+        Task<ICollection<UserDb>> GetAllAsync();
 		Task<Dictionary<string, List<string>>> GetAllWithTheirRolesAsync();
         Task<UserDb> CreateAsync(UserDb user);
 		Task<UserDb> UpdateAsync(string toUpdateid, UserDb newData);
