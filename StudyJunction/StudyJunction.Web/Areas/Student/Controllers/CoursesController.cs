@@ -87,7 +87,7 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             return View(courses);
         }
 
-        [HttpGet("Courses/Details/{title}")]
+        [HttpGet("Student/Courses/Details/{title}")]
         public async Task<IActionResult> Details([FromRoute] string title)
         {
             DetailsViewModel detailsViewModel = new DetailsViewModel()
