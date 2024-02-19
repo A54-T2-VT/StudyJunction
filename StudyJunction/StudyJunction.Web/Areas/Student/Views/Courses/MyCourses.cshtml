@@ -53,9 +53,15 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <img src="@Model.Service.GetResource(currCourse.ThumbnailCloudinaryUri)" class="img-fluid" alt="Course thumbnail">
-                            <h5 class="card-title">@currCourse.Title</h5>
-                            <p class="card-text">@currCourse.Description</p>
+                            @{
+                                string[] splitted = currCourse.Title.Split();
+                                string url = "http://localhost:5205/Courses/EnrolledCourseView/" + String.Join("%20", splitted);
+                            }
+                            <a href="@url">
+								<img src="@Model.Service.GetResource(currCourse.ThumbnailCloudinaryUri)" class="img-fluid" alt="Course thumbnail">
+								<h5 class="card-title">@currCourse.Title</h5>
+								<p class="card-text">@currCourse.Description</p>
+                            </a>
                         </div>
                     </div>
                 </div>
