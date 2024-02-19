@@ -7,6 +7,8 @@
 
 @{
     ViewData["Title"] = "Enrolled course details";
+    // var demoplayer = Model.cloudinary.videoPlayer('video', { cloudName: 'dxhiilbyu' });
+    // demoplayer.source("https://res.cloudinary.com/dxhiilbyu/video/upload/v1708366024/q3pucfonami6e3n4iuzt.mp4");
 }
 
 <!-- Cloudinary video player reference -->
@@ -19,10 +21,33 @@
         <div class="container" data-aos="fade-up">
 
             <div class="row">
-                <div class="col-lg-8">
-                    <video controls width="480">
-                        
-                    </video>
+                <div class="col-lg-8 style=" max-width: 800px"">
+                    @* <video id="demo-player"
+                           controls
+                           autoplay
+                           class="cld-video-player">                       
+                    </video> *@
+                    <link rel="stylesheet"
+                          href="https://cdn.jsdelivr.net/npm/cloudinary-video-player/dist/cld-video-player.min.css" />
+                    <script src="https://cdn.jsdelivr.net/npm/cloudinary-video-player/dist/cld-video-player.min.js"></script>
+
+                    <video id="player" class="cld-video-player cld-fluid" muted controls></video>
+
+                    <script>
+                        const player = cloudinary.videoPlayer('player', {
+                            cloudName: 'dxhiilbyu',
+                            fluid: true,
+                            controls: true,
+                            floatingWhenNotVisible: false,
+                            showJumpControls: true,
+                            pictureInPictureToggle: false,
+                            hideContextMenu: true
+                        });
+
+                        player.source('ycymreqxxfz5e9cmbdg6', {
+                            sourceTypes: ['webm/vp9', 'mp4/h265', 'mp4/h264']
+                        });
+                    </script>
                 </div>
                 
                 <div class="col-lg-4">
@@ -157,6 +182,6 @@
 <script src="~/assets/js/main.js"></script>
 
 <scirpt>
-    const demoplayer = cloudinary.videoPlayer('video', { cloudName: 'dxhiilbyu' });
-    demoplayer.source("https://res.cloudinary.com/dxhiilbyu/video/upload/v1708366024/q3pucfonami6e3n4iuzt.mp4");
+        const demoplayer = cloudinary.videoPlayer('video', { cloudName: 'dxhiilbyu' });
+        demoplayer.source("https://res.cloudinary.com/dxhiilbyu/video/upload/v1708366024/q3pucfonami6e3n4iuzt.mp4");
 </scirpt>

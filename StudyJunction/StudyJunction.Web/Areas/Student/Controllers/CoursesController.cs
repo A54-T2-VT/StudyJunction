@@ -142,7 +142,7 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             }
         }
 
-        [HttpGet("Courses/EnrolledCourseView/{title}")]
+        [HttpGet("Student/Courses/EnrolledCourseView/{title}")]
         public async Task<IActionResult> EnrolledCourseView([FromRoute] string title)
         {
             var viewModel = new EnrolledCourseViewModel()
