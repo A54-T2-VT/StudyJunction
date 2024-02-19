@@ -111,6 +111,7 @@ namespace StudyJunction.Core.Services
                 model.Title = courseDb.Title;
                 model.IsApproved = courseDb.IsApproved;
                 model.NumberOfLectures = courseDb.Lectures.Count;
+                model.NumberOfEnrolledStudents = courseDb.EnrolledUsers.Count;
 
                 models.Add(model);
             }

@@ -49,7 +49,7 @@ namespace StudyJunction.Infrastructure.Repositories
 
 		public async Task<IEnumerable<CourseDb>> GetCoursesCreatedByUserAsync(string userId)
 		{
-			var courses = await context.Courses.Include(c => c.Lectures).Where(c => c.CreatorId == userId).ToListAsync();
+			var courses = await context.Courses.Include(c => c.Lectures).Include(c => c.EnrolledUsers).Where(c => c.CreatorId == userId).ToListAsync();
 
 			return courses;
 		}

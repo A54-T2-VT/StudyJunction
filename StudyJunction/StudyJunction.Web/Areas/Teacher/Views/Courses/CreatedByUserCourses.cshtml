@@ -220,6 +220,7 @@
 			<tr>
 				<th><span>Course Title</span></th>
 				<th><span>Number Of Lectures</span></th>
+				<th><span>Enrolled Students</span></th>
 				<th><span>Is Approved</span></th>
 				<th><span>Action</span></th>
 			</tr>
@@ -233,6 +234,9 @@
 					</td>
 					<td>
 						<div>@course.NumberOfLectures</div>
+					</td>
+					<td>
+						<div>@course.NumberOfEnrolledStudents</div>
 					</td>
 					<td>
 						@if (course.IsApproved)
