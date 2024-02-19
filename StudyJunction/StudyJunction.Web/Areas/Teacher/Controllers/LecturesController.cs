@@ -4,6 +4,7 @@ using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.Lectures;
 using StudyJunction.Infrastructure.Constants;
+using StudyJunction.Infrastructure.Exceptions;
 using StudyJunction.Infrastructure.Repositories.Contracts;
 
 namespace StudyJunction.Web.Areas.Teacher.Controllers
@@ -41,9 +42,19 @@ namespace StudyJunction.Web.Areas.Teacher.Controllers
         [RequestSizeLimit(long.MaxValue)]
         public async Task<IActionResult> Add(AddLectureViewModel model) 
         {
-            _ = cloudService.UploadVideoToCloudinary(model.Video);
+            try
+            {
+                string username = HttpContext.Session.GetString("user") ?? throw new EntityNotFoundException("String in session with key 'user' does not exists");
 
-            throw new NotImplementedException();
+                _ = await lectureService.CreateWithVideoAndAssignmentFromViewModel(model, username);
+
+                return RedirectToAction("GetCoursesCreatedByUser", "Courses", new { area = RolesConstants.Teacher });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("GetCoursesCreatedByUser", "Courses", new { area = RolesConstants.Teacher });
+            }
+
         }
     }
 }

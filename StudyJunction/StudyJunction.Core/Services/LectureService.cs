@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.RequestDTOs.Lecture;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
+using StudyJunction.Core.ViewModels.Lectures;
 using StudyJunction.Infrastructure.Constants;
 using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
@@ -63,6 +65,46 @@ namespace StudyJunction.Core.Services
 			var lec = mapper.Map<LectureDb>(newLecture);
             return mapper.Map<LectureResponseDTO>(await lectureRepository.CreateAsync(lec));
 		}
+
+        public async Task<LectureResponseDTO> CreateWithVideoAndAssignmentFromViewModel(AddLectureViewModel model, string username)
+        {
+            var course = await courseRepository.GetByTitleAsync(model.CourseTitle);
+
+            if (course.Lectures.Any(x => x.Title == model.Title))
+            {
+                throw new NameDuplicationException(
+                    String.Format(ExceptionMessages.NAME_DUPLICATION_MESSAGE, model.Title));
+            }
+
+            var user = await userManager.FindByNameAsync(username);
+
+            if (!userRepository.HasCreatedCourse(user, course.Title))
+            {
+                throw new UnauthorizedUserException(
+                    String.Format(ExceptionMessages.UNAUTHORIZED_USER_MESSAGE, username));
+            }
+
+            var courseDb = await courseRepository.GetByTitleAsync(model.CourseTitle);
+
+            var courseId = courseDb.Id;
+
+            var videoData = cloudinaryService.UploadVideoToCloudinary(model.Video);
+            var assignmentData = cloudinaryService.UploadPdfToCloudinary(model.Assignment);
+
+            var lectureDb = new LectureDb()
+            {
+                Title = model.Title,
+                Description = model.Description,
+                CourseId = courseId,
+                VideoLinkCloudinaryId = videoData[0],
+                VideoLinkCloudinaryUri = videoData[1],
+                AssignmentCloudinaryId = assignmentData[0],
+                AssignmentCloudinaryUri = assignmentData[1]
+            };
+
+
+            return mapper.Map<LectureResponseDTO>(await lectureRepository.CreateAsync(lectureDb));
+        }
 
         public async Task<LectureResponseDTO> AddAssignmentAsync(string lectureId, IFormFile assignment, string userId)
         {
