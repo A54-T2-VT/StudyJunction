@@ -127,17 +127,12 @@ namespace StudyJunction.Infrastructure.Repositories
 				?? throw new EntityNotFoundException
 				(String.Format(ExceptionMessages.USER_WITH_USERNAME_NOT_FOUND_MESSAGE, username));
 
-			//add course to user.MyEnrolledCourses
-			//add user to course.EnrolledUsers
 			UsersCoursesDb usersCoursesDb = new UsersCoursesDb()
 			{
 				CourseId = course.Id,
-				UserId = user.Id,
-				User = user,
-				Course = course
+				UserId = user.Id
 			};
-			user.MyEnrolledCourses.Add(usersCoursesDb);
-			course.EnrolledUsers.Add(usersCoursesDb);
+			await context.UsersCourses.AddAsync(usersCoursesDb);
 			await context.SaveChangesAsync();
 			return course;
         }
