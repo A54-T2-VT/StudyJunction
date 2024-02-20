@@ -126,6 +126,15 @@ namespace StudyJunction.Core.Services
             return mapper.Map<LectureResponseDTO>(await result);
         }
 
+        public async Task<string> GetAssignmentId(string lectureTitle)
+        {
+            var lectureDb = await lectureRepository.GetAsync(lectureTitle);
+
+            string assignmentId = lectureDb.AssignmentCloudinaryId;
+
+            return assignmentId;
+        }
+
         public async Task<LectureResponseDTO> Delete(Guid id, string username)
         {
             return mapper.Map<LectureResponseDTO>( await lectureRepository.DeleteAsync(id));
