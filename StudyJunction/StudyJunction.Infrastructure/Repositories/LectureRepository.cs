@@ -45,7 +45,7 @@ namespace StudyJunction.Infrastructure.Repositories
 
 		public async Task<LectureDb> GetAsync(string title)
 		{
-			var lec = await context.Lectures.FirstOrDefaultAsync(lec => lec.Title.Equals(title))
+			var lec = await context.Lectures.Include(l => l.Course).FirstOrDefaultAsync(lec => lec.Title.Equals(title))
 				?? throw new EntityNotFoundException
 				(String.Format(ExceptionMessages.LECTURE_WITH_TITLE_NOT_FOUND_MESSAGE, title));
 
@@ -59,7 +59,8 @@ namespace StudyJunction.Infrastructure.Repositories
 			return lecturesDb;
 		}
 
-		public async Task<ICollection<LectureDb>> GetAllAsync()
+
+        public async Task<ICollection<LectureDb>> GetAllAsync()
 		{
 			var lectures = await context.Lectures.ToListAsync();
 

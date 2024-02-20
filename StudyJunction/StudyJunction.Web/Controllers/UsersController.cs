@@ -82,7 +82,7 @@ namespace StudyJunction.Web.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            catch(InvalidCredentialsException ex)
+            catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return RedirectToAction("Login");

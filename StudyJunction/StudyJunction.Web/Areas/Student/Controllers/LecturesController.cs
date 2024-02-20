@@ -29,13 +29,15 @@ namespace StudyJunction.Web.Areas.Student.Controllers
 
             return View("CurrLecture", viewModel);
         }
-        //[HttpGet]
-        //public async Task<IActionResult> GetGivenLecture(string lectureTitle)
-        //{
-        //    var viewModel = await lectureService.GetAllLecturesOfCourse(title);
 
-        //    return View("CurrLecture", viewModel);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> GetGivenLecture(string lectureTitle)
+        {
+            var viewModel = await lectureService.GetAllLecturesAndSetTargetLectureAsCurrent(lectureTitle);
+
+            return View("CurrLecture", viewModel);
+        }
+
         [HttpPost]
         public  IActionResult SearchInWiki(string searchTerm)
         {
@@ -56,7 +58,7 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             {
                 Console.WriteLine(ex.Message);
 
-                return PartialView("_PartialSearchInWiki", new WikiResultViewModel() { Snippet = "Nothing found", FullWikiPageUri="#"});
+                return PartialView("_PartialSearchInWiki", new WikiResultViewModel() { Snippet = "Nothing found", FullWikiPageUri= "https://www.pointlesssites.com/" });
             }
         }
     }

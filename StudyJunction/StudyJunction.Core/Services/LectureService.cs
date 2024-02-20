@@ -177,6 +177,33 @@ namespace StudyJunction.Core.Services
             return model;
         }
 
+        public async Task<LectureViewModel> GetAllLecturesAndSetTargetLectureAsCurrent(string lectureTitle)
+        {
+            var targetLecture = await lectureRepository.GetAsync(lectureTitle);
+
+            IList<LectureDb> lecturesDb = await lectureRepository.GetAllLecturesFormCourse(targetLecture.Course.Title);
+
+
+            var model = new LectureViewModel();
+
+
+            model.Title = targetLecture.Title;
+            model.CourseTitle = targetLecture.Course.Title;
+            model.VideoUri = targetLecture.VideoLinkCloudinaryUri;
+            model.VideoId = targetLecture.VideoLinkCloudinaryId;
+            model.AssignmentId = targetLecture.AssignmentCloudinaryId;
+            model.AssignmentUri = targetLecture.AssignmentCloudinaryUri;
+            model.Description = targetLecture.Description;
+
+
+            foreach (var lectureDb in lecturesDb)
+            {
+                model.LecturesTitles.Add(lectureDb.Title);
+            }
+
+            return model;
+        }
+
         public async Task<ICollection<LectureResponseDTO>> GetAll()
 		{
 			throw new NotImplementedException();
