@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.Services;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.Courses;
 using StudyJunction.Core.ViewModels.Lectures;
+using StudyJunction.Core.ViewModels.WikiSearch;
 using StudyJunction.Infrastructure.Constants;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
@@ -26,6 +28,26 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             var viewModel = await lectureService.GetAllLecturesOfCourse(title);
 
             return View("CurrLecture", viewModel);
+        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetGivenLecture(string lectureTitle)
+        //{
+        //    var viewModel = await lectureService.GetAllLecturesOfCourse(title);
+
+        //    return View("CurrLecture", viewModel);
+        //}
+        [HttpPost]
+        public  IActionResult SearchInWiki(string searchTerm)
+        {
+            string[] result = MediaWikiActionService.MakeMediaWikiSearchRequest(searchTerm);// 0 = snippet, 1 = Uri
+
+            var model = new WikiResultViewModel() 
+            {
+                Snippet = result[0],
+                FullWikiPageUri = result[1]
+            };
+            
+            return PartialView("_PartialSearchInWiki", model);
         }
     }
 }

@@ -21,6 +21,8 @@
         </script>
 
 
+
+
 <main>
     <section>
         <div class="container" data-aos="fade-up">
@@ -61,11 +63,23 @@
 
                             @foreach (var lectureTitle in Model.LecturesTitles)
                             {
-                                <tr>                                    
-                                      <td>
-                                        <a href="https://www.example.com">@lectureTitle</a>
-                                      </td>                                      
-                                </tr>
+                                @if(lectureTitle == Model.Title)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a>@lectureTitle (Current)</a>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>                                    
+                                          <td>
+                                            <a href="https://www.example.com">@lectureTitle</a>
+                                          </td>                                      
+                                    </tr>
+                                    
+                                }
                             }
                         </tbody>
                     </table>
@@ -128,8 +142,9 @@
                             <div class="row">
                                 <div class="col-lg-8 details order-2 order-lg-1">
                                     <h3>Search in Wiki</h3>
-                                    <p class="fst-italic">Eos voluptatibus quo. Odio similique illum id quidem non enim fuga. Qui natus non sunt dicta dolor et. In asperiores velit quaerat perferendis aut</p>
-                                    <p>Iure officiis odit rerum. Harum sequi eum illum corrupti culpa veritatis quisquam. Neque necessitatibus illo rerum eum ut. Commodi ipsam minima molestiae sed laboriosam a iste odio. Earum odit nesciunt fugiat sit ullam. Soluta et harum voluptatem optio quae</p>
+                                    <input type="text" id="searchInput" placeholder="Enter your search term">
+                                    <button id="searchButton">Search</button>
+                                    <div id="searchResult"></div>
                                 </div>
                                 <div class="col-lg-4 text-center order-1 order-lg-2">
                                     <img src="~/assets/img/course-details-tab-3.png" alt="" class="img-fluid">
@@ -170,6 +185,29 @@
 
 
 </main>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#searchButton').click(function () {
+            var searchTerm = $('#searchInput').val();
+            console.log('aaaaaaaaaaaa');
+            // Make an AJAX request to the controller
+            $.ajax({
+                url: '@Url.Action("SearchInWiki", "Lectures")',
+                type: 'POST',
+                data: { searchTerm: searchTerm },
+                success: function (result) {
+                    // Update the search result div with the returned partial view
+                    $('#searchResult').html(result);
+                },
+                error: function () {
+                    alert('Error occurred during the search.');
+                }
+            });
+        });
+    });
+</script>
 
 
 <!-- Vendor JS Files -->
@@ -182,7 +220,3 @@
 <!-- Template Main JS File -->
 <script src="~/assets/js/main.js"></script>
 
-@* <scirpt>
-    const demoplayer = cloudinary.videoPlayer('video', { cloudName: 'dxhiilbyu' });
-    demoplayer.source("https://res.cloudinary.com/dxhiilbyu/video/upload/v1708366024/q3pucfonami6e3n4iuzt.mp4");
-</scirpt> *@
