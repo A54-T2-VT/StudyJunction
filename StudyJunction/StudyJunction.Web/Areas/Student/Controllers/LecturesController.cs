@@ -39,15 +39,25 @@ namespace StudyJunction.Web.Areas.Student.Controllers
         [HttpPost]
         public  IActionResult SearchInWiki(string searchTerm)
         {
-            string[] result = MediaWikiActionService.MakeMediaWikiSearchRequest(searchTerm);// 0 = snippet, 1 = Uri
-
-            var model = new WikiResultViewModel() 
+            try
             {
-                Snippet = result[0],
-                FullWikiPageUri = result[1]
-            };
+                string[] result = MediaWikiActionService.MakeMediaWikiSearchRequest(searchTerm);// 0 = snippet, 1 = Uri
+
+                var model = new WikiResultViewModel() 
+                {
+                    Snippet = result[0],
+                    FullWikiPageUri = result[1]
+                };
             
-            return PartialView("_PartialSearchInWiki", model);
+                return PartialView("_PartialSearchInWiki", model);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return PartialView("_PartialSearchInWiki", new WikiResultViewModel() { Snippet = "Nothing found", FullWikiPageUri="#"});
+            }
         }
     }
 }
