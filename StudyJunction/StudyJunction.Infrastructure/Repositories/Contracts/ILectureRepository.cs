@@ -7,7 +7,8 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 		Task<LectureDb> GetAsync(Guid id);
 		Task<LectureDb> GetAsync(string title);
 		Task<ICollection<LectureDb>> GetAllAsync();
-		Task<LectureDb> CreateAsync(LectureDb newLecture);
+		Task<IList<LectureDb>> GetAllLecturesFormCourse(string courseTitle);
+        Task<LectureDb> CreateAsync(LectureDb newLecture);
 		Task<LectureDb> UpdateAsync(Guid toUpdate, LectureDb newData);
 		Task<LectureDb> DeleteAsync(Guid id);
 		Task<bool> IsUserOwner(string userId, Guid lectureId);

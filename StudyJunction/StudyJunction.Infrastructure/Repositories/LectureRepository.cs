@@ -52,6 +52,13 @@ namespace StudyJunction.Infrastructure.Repositories
 			return lec;
 		}
 
+		public async Task<IList<LectureDb>> GetAllLecturesFormCourse(string courseTitle)
+		{
+			var lecturesDb = await context.Lectures.Include(l => l.Course).Where(l => l.Course.Title == courseTitle).ToListAsync();
+
+			return lecturesDb;
+		}
+
 		public async Task<ICollection<LectureDb>> GetAllAsync()
 		{
 			var lectures = await context.Lectures.ToListAsync();
