@@ -14,7 +14,7 @@
 
         <div class="form-group">
             <label asp-for="Title">Title</label>
-            <input type="text" asp-for="Title" class="form-control" maxlength="100" id="titleInput" oninput="updateCounter('titleInput', 'titleCounter', 20, 50)" />
+            <input type="text" asp-for="Title" class="form-control" maxlength="50" id="titleInput" oninput="updateCounter('titleInput', 'titleCounter', 5, 50)" />
             <div style="margin-top:10px;" id="titleCounter" class="text-muted">Characters: 0/50</div>
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
@@ -74,7 +74,7 @@
                 const titleInput = document.getElementById('titleInput');
                 const contentInput = document.getElementById('contentInput');
 
-                if (titleInput.value.length < 20 || contentInput.value.length < 100) {
+                if (titleInput.value.length < 5 || contentInput.value.length < 100) {
                     alert('Minimum length not reached. Please fill in all required fields.');
                     return;
                 }
