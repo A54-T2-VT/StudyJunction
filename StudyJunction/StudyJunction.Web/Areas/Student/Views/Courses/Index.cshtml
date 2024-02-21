@@ -21,19 +21,62 @@
 </div>
 
 
-<!-- Search bar -->
-<div class="col-2 m-4">
-    @using (Html.BeginForm("Index", "Courses", FormMethod.Get, new { @class="d-flex"}))
-    {
-        @Html.TextBox("searchValue", null, new { Class = "form-control", placeholder = "Search courses"})
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    }
-    @* <form class="d-flex my-2">
+<section id="filter" class="d-flex" style="padding: 10px">
+    <!-- Search bar -->
+    <div class="col-2 m-4">
+        @using (Html.BeginForm("Index", "Courses", FormMethod.Get, new { @class = "d-flex" }))
+        {
+            @Html.TextBox("searchbar", null, new { Class = "form-control", placeholder = "Search courses" })
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        }
+        @* <form class="d-flex my-2">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form> *@
-</div>
+        </form> *@
+    </div>
 
+    <div class="col-3 form-group mt-4 mr-4 mb-4">
+        <select class="form-control" id="categorySelect">
+            <option value="" disabled selected>Select Category</option> <!-- Default text -->
+            @foreach (var kvp in Model.ParentChildCategories)
+            {
+                <optgroup label="@kvp.Key">
+                    @foreach (var childCategory in kvp.Value)
+                    {
+                        <option value="@childCategory">@childCategory</option>
+                    }
+                </optgroup>
+            }
+        </select>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var categorySelect = document.getElementById("categorySelect");
+
+            
+            categorySelect.addEventListener("change", function () {
+                var selectedCategory = categorySelect.value;
+                
+                // Make AJAX request
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:5205/Student/Courses/Index?category=" + encodeURIComponent(selectedCategory), false);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            // Request successful, reload the page with the new view
+                            window.location.reload();
+                        } else {
+                            // Handle error
+                            console.error("Error occurred while fetching data.");
+                        }
+                    }
+                };
+                xhr.send();
+            });
+        });
+    </script>
+</section>
 
 
 <!-- ======= Courses Section ======= -->
@@ -90,7 +133,6 @@
             }
         </div>
     </section>
-
     <!-- End Courses Section -->
 }
 else

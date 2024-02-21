@@ -70,13 +70,13 @@
                 var loggedUser = UserManager.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
 
 
-                <div class="profile-dropdown">
-                    <div onclick="toggle()" class="profile-dropdown-btn" id="profileBtn">
-                        <div id="profile-img" class="profile-img" style="background-image: url(@loggedUser.ProfileImageCloudinaryUri)">
+                <div class="profile-dropdown" @* style="position: relative" *@>
+                    <div onclick="toggle()" class="profile-dropdown-btn">
+                        <div class="profile-img" style="background-image: url(@loggedUser.ProfileImageCloudinaryUri)">
                             <i class="fa-solid fa-circle"></i>
                         </div>
 
-                        <span id="profileName">
+                        <span>
                             @loggedUser.UserName
                             <i class="fa-solid fa-angle-down"></i>
                         </span>
@@ -126,24 +126,6 @@
                     window.addEventListener("click", function (e) {
                         if (!btn.contains(e.target)) classList.remove("active");
                     });
-
-                    function adjustProfileButtonWidth() {
-                        var profileName = document.getElementById('profileName');
-                        var profileBtn = document.getElementById('profileBtn');
-                        var profileImg = document.getElementById('profile-img');
-                        var profileNameWidth = profileName.offsetWidth;
-                        var profilePicWidth = profileImg.offsetWidth;
-                        var profileBtnWidth = profileBtn.offsetWidth;
-
-
-                        if (profileNameWidth + profilePicWidth > profileBtnWidth) {
-                            var newWidth = profileNameWidth + 60; // Adjust this value as needed for padding
-                            profileBtn.style.width = newWidth + 'px';
-                        }
-                    }
-
-                    // Call the function when the page loads or whenever the content changes
-                    window.onload = adjustProfileButtonWidth;
                 </script>
             }
             else
