@@ -34,5 +34,7 @@ namespace StudyJunction.Infrastructure.Constants
 		public const string INVALID_EMAIL_MESSAGE = "Invalid email.";
 
         public const string COURSE_NOT_STARTED_MESSAGE = "Course hasn't started yet.";
+
+		public const string NO_COURSES_FOUND_MESSAGE = "No such courses found.";
 	}
 }
