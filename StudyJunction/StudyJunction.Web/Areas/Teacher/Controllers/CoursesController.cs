@@ -58,15 +58,24 @@ namespace StudyJunction.Web.Areas.Teacher.Controllers
             return RedirectToAction("GetCoursesCreatedByUser", "Courses", new {area = RolesConstants.Teacher});
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string searchValue)
         {
-            CourseViewModel courses = new CourseViewModel()
+            CourseViewModel viewModel = new CourseViewModel()
             {
-                Courses = await courseService.GetAll(),
                 Service = cloudinaryService,
                 Users = await userService.GetAll()
             };
-            return View(courses);
+            if (searchValue != null)
+            {
+                viewModel.Courses = await courseService.FilterByTitle(searchValue);
+            }
+            else
+            {
+                viewModel.Courses = await courseService.GetAll();
+            }
+
+            return View(viewModel);
         }
 
         [HttpGet("Teacher/Courses/Details/{title}")]

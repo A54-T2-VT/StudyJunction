@@ -6,73 +6,100 @@
 @model CourseViewModel
 
 @{
-	ViewData["Title"] = "List of courses";
+    ViewData["Title"] = "List of courses";
 }
 
- <!-- ======= Breadcrumbs ======= -->
-<div class="align-self-center justify-content-center align-items-center" >
-    <div class="breadcrumbs" style="margin-top: 0">
+<!-- ======= Breadcrumbs ======= -->
+<div class="align-self-center justify-content-center align-items-center">
+    <div class="breadcrumbs" style="margin-top: 0; padding: 5px;">
         <div class="container">
             <h2>Courses</h2>
-            <p>Est dolorum ut non facere possimus quibusdam eligendi voluptatem. Quia id aut similique quia voluptas sit quaerat debitis. Rerum omnis ipsam aperiam consequatur laboriosam nemo harum praesentium. </p>
+            <p>
+                Choose amongst all our available courses.
+                Use the search bar for quick access and filter them by categories.
+            </p>
         </div>
     </div><!-- End Breadcrumbs -->
 </div>
 
 
+<!-- Search bar -->
+<div class="col-2 m-4">
+    @using (Html.BeginForm("Index", "Courses", FormMethod.Get, new { @class = "d-flex" }))
+    {
+        @Html.TextBox("searchValue", null, new { Class = "form-control", placeholder = "Search courses" })
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    }
+    @* <form class="d-flex my-2">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form> *@
+</div>
+
+
+
 <!-- ======= Courses Section ======= -->
-
-<section id="courses" class="courses">
-    <div data-aos="fade-up">
-        @for (int i = 0; i < Model.Courses.Count; i += 3)
-        {
-            <div class="row" data-aos="zoom-in" data-aos-delay="100"> 
-            @for (int j = i; j < i + 3; j++)
+@if (Model.Courses.Count() != 0)
+{
+    <section id="courses" class="courses m-3" style="padding: 0;">
+        <div data-aos="fade-up">
+            @for (int i = 0; i < Model.Courses.Count(); i += 3)
             {
-                @if (j >= Model.Courses.Count)
-                {
-                    break;
-                    }
-                    var currCourse = Model.Courses.ElementAt(j);
-                    var creator = Model.Users.FirstOrDefault(u => u.UserName == currCourse.CreatorName);
+                <div class="row" data-aos="zoom-in" data-aos-delay="100">
+                    @for (int j = i; j < i + 3; j++)
+                    {
+                        @if (j >= Model.Courses.Count())
+                        {
+                            break;
+                        }
+                        var currCourse = Model.Courses.ElementAt(j);
+                        var creator = Model.Users.FirstOrDefault(u => u.UserName == currCourse.CreatorName);
 
-                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-                        <div class="course-item">
-                            @{
-                                string[] splitted = currCourse.Title.Split();
-                                string url = "http://localhost:5205/Teacher/Courses/Details/" + String.Join("%20", splitted);
-                            }
-                            <a href=@url>
-                                <img src="@Model.Service.GetResource(currCourse.ThumbnailCloudinaryUri)" class="img-fluid" alt="Course thumbnail">
-                            </a>
-                            
-                            <div class="course-content">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h4>@currCourse.CategoryName</h4>
-                                    <p class="price">$169</p>
-                                </div>
+                        <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+                            <div class="course-item">
+                                @{
+                                    string[] splitted = currCourse.Title.Split();
+                                    string url = "http://localhost:5205/Student/Courses/Details/" + String.Join("%20", splitted);
+                                }
+                                <a href=@url>
+                                    <img src="@Model.Service.GetResource(currCourse.ThumbnailCloudinaryUri)" class="img-fluid" width="500" height="1100" alt="Course thumbnail">
+                                </a>
 
-                                <h3><a href=@url>@currCourse.Title</a></h3>
-                                <p>@currCourse.Description</p>
-                                <div class="trainer d-flex justify-content-between align-items-center">
-                                    <div class="trainer-profile d-flex align-items-center">
-                                        <img src="@Model.Service.GetResource(creator.ProfileImageCloudinaryUri)" class="img-fluid" alt="">
-                                        <span>@creator.FirstName @creator.LastName</span>
+                                <div class="course-content">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h4>@currCourse.CategoryName</h4>
+                                        <p class="price">$169</p>
                                     </div>
-                                    <div class="trainer-rank d-flex align-items-center">
-                                        <i class="bx bx-user"></i>&nbsp;50
-                                        &nbsp;&nbsp;
-                                        <i class="bx bx-heart"></i>&nbsp;65
+
+                                    <h3><a href=@url>@currCourse.Title</a></h3>
+                                    <p>@currCourse.Description</p>
+                                    <div class="trainer d-flex justify-content-between align-items-center">
+                                        <div class="trainer-profile d-flex align-items-center">
+                                            <img src="@Model.Service.GetResource(creator.ProfileImageCloudinaryUri)" class="img-fluid" alt="">
+                                            <span>@creator.FirstName @creator.LastName</span>
+                                        </div>
+                                        <div class="trainer-rank d-flex align-items-center">
+                                            <i class="bx bx-user"></i>&nbsp;50
+                                            &nbsp;&nbsp;
+                                            <i class="bx bx-heart"></i>&nbsp;65
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                    </div> 
-                </div> <!-- End Course Item-->
+                        </div> <!-- End Course Item-->
+                    }
+                </div> <!-- End row -->
             }
-            </div> <!-- End row -->
-        }
-    </div>
-</section><!-- End Courses Section -->
+        </div>
+    </section>
+
+    <!-- End Courses Section -->
+}
+else
+{
+    <h3 style="margin-left: 1.5rem">No courses found.</h3>
+}
+
 
 <!-- Vendor JS Files -->
 <script src="~/assets/vendor/purecounter/purecounter_vanilla.js"></script>
