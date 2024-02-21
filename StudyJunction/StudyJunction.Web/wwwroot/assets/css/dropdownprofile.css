@@ -19,11 +19,46 @@
     font-family: "Poppins", sans-serif;
 }
 
+body {
+    height: 100vh;
+    width: 100%;
+    background-color: var(--primary);
+}
+
+/*.navbar {
+    display: flex;
+    align-items: center;
+    height: 70px;
+    background-color: var(--white);
+    padding: 0 8%;
+    box-shadow: var(--shadow);
+}*/
+
+.navbar-logo {
+    cursor: pointer;
+}
+
+.navbar-list {
+    width: 100%;
+    text-align: right;
+    padding-right: 2rem;
+}
+
+    .navbar-list li {
+        display: inline-block;
+        margin: 0 1rem;
+    }
+
+        .navbar-list li a {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--black);
+            text-decoration: none;
+        }
+
 .profile-dropdown {
     position: relative;
-    margin-left: 50px;
-    min-width: 100px;
-    max-width: 300px;
+    margin-left: 30px;
 }
 
 .profile-dropdown-btn {
@@ -32,14 +67,14 @@
     justify-content: space-between;
     padding-right: 1rem;
     font-size: 0.9rem;
-    width: 150px;
-    height: 50px;
     font-weight: 500;
     border-radius: 50px;
     color: var(--black);
+    /* background-color: white;
+  box-shadow: var(--shadow); */
 
-    border: solid 1px;
     cursor: pointer;
+    border: 1px solid var(--secondary);
     transition: box-shadow 0.2s ease-in, background-color 0.2s ease-in, border 0.3s;
 }
 
@@ -53,7 +88,9 @@
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
+    background: url(./assets/img/trainers/trainer-1.jpg);
     background-size: cover;
+    overflow: hidden;
 }
 
     .profile-img i {
@@ -65,10 +102,11 @@
     }
 
 .profile-dropdown-btn span {
-    
-    
-    margin: 0 10px 0 40px;
+    margin: 0 0.5rem;
     margin-right: 0;
+    flex: 1; /* Allow the username to stretch */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
 }
 
 .profile-dropdown-list2 {
@@ -82,7 +120,6 @@
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: max-height 0.5s;
-    list-style-type: none;
 }
 
     .profile-dropdown-list2 hr {
