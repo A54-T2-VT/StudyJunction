@@ -5,10 +5,11 @@ StudyJunction is a education platform ment for those who want to learn something
 
 ## Features
 
-- Student/Teacher/Admin/God interfaces
+- Student/Teacher/Admin/God separate interfaces
 - WikiAction API integration
 - Cloudinary integration
-- Courses search bar 
+- Courses search bar, enrollment.
+- Lectures for each course in witch you can search in wiki, read description, do posted assignment.
 
 ## Installation and Setup
 
@@ -82,8 +83,9 @@ update-database
 ![Teacher Home Page](/ScreenShots/TeacherHomePage.png)
 
 - Apart from all the thing a student can do, teacher can create courses and lectures for said courses. When he thinks his course is ready, he can send it for approval.
+- For each course he has created he cad add lectures, which will have, video, description, assignment and wiki search window. You can see them when you watch lecture at bottom left of the screenshot.
 - He can also keep sort of statistic on all courses he has created, like enrollments, number of lectures and approval status.
-
+![Watch Lecture Page](/ScreenShots/WatchLecturePage.png)
 `USER: Admin`
 - Admins home page is the same, but he gets different set of actions.
 - ![Admin Home Page](/ScreenShots/AdminHomePage.png)
