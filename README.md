@@ -90,7 +90,7 @@ update-database
 - Admins home page is the same, but he gets different set of actions.
 - ![Admin Home Page](/ScreenShots/AdminHomePage.png)
   - In "UsersRoles" he can see and promote/demote all users up to teacher role included.
-  - In "Review Teacher Candidacies", you can guess what he can do, if your read that far you are obviously capable of thinking and breathing at the same time.
+  - In "Review Teacher Candidacies", you can guess what he can do, if you've read that far you are obviously capable of thinking and breathing at the same time.
   - In "Courses for Approval" he can approve courses submitet by teachers.
   - In "Add Category" he can add either parent or child category, to add parent category he must select from the drop dowm meny "None" option.
 
