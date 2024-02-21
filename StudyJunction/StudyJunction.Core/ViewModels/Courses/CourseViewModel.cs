@@ -12,7 +12,7 @@ namespace StudyJunction.Core.ViewModels.Courses
     public class CourseViewModel
     {
         public CloudinaryService Service { get; set; }
-        public ICollection<CourseResponseDTO> Courses { get; set; }
+        public IEnumerable<CourseResponseDTO> Courses { get; set; }
         public IEnumerable<UserResponseDTO> Users { get; set; }
     }
 }

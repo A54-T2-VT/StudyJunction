@@ -80,13 +80,12 @@ namespace StudyJunction.Core.Services
 
             return mapper.Map<CourseResponseDTO>(await result);
         }
-        public async Task<ICollection<CourseResponseDTO>> GetAll()
+        public async Task<IEnumerable<CourseResponseDTO>> GetAll()
         {
             var courses = await courseRepository.GetAllAsync();
 
             return courses
-                .Select(x => mapper.Map<CourseResponseDTO>(x))
-                .ToList();
+                .Select(x => mapper.Map<CourseResponseDTO>(x));
         }
 
         public async Task<ICollection<CourseApprovalViewModel>> GetAllNotApproved()
@@ -200,6 +199,13 @@ namespace StudyJunction.Core.Services
             var result = await courseRepository.AddUserToCourse(course, username);
 
             return mapper.Map<CourseResponseDTO>(result);
+        }
+
+        public async Task<IEnumerable<CourseResponseDTO>> FilterByTitle(string searchValue)
+        {
+            var result = await courseRepository.FilterBy(searchValue);
+
+            return result.Select(x => mapper.Map<CourseResponseDTO>(x));
         }
     }
 }

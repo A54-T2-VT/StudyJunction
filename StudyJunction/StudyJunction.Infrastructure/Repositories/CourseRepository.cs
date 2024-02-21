@@ -35,7 +35,11 @@ namespace StudyJunction.Infrastructure.Repositories
 
         public async Task<IEnumerable<CourseDb>> GetAllAsync()
         {
-			var courses = await context.Courses.Include(x => x.CreatedBy).Include(x => x.Category).Where(c => c.IsApproved).ToListAsync();
+			var courses = context.Courses
+				.Include(x => x.CreatedBy)
+				.Include(x => x.Category)
+				.Where(c => c.IsApproved)
+				.ToList();
 
 			return courses;
 		}
@@ -142,6 +146,16 @@ namespace StudyJunction.Infrastructure.Repositories
 			await context.UsersCourses.AddAsync(usersCoursesDb);
 			await context.SaveChangesAsync();
 			return course;
+        }
+
+        public async Task<IEnumerable<CourseDb>> FilterBy(string searchValue)
+        {
+			var result = context.Courses.Include(x => x.CreatedBy)
+				.Include(x => x.Category)
+				.Where(c => c.Title.Contains(searchValue.ToLower()))
+				.ToList();
+
+			return result;
         }
     }
 }
