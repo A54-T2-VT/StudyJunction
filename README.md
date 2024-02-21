@@ -13,7 +13,7 @@ StudyJunction is a education platform ment for those who want to learn something
 
 ## Installation and Setup
 
-After clonning the repo you would need to do few thing before you ca nrun the projects.
+After clonning the repo you would need to do few things before you can run the projects.
 
 - Make sure you have up and running SQLExpress server.
 - You will need registration in Cloudinary.com in order to ues their file managment services.
