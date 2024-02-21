@@ -2,13 +2,16 @@
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using StudyJunction.Core.ExternalApis;
 using StudyJunction.Core.RequestDTOs.Course;
 using StudyJunction.Core.ResponseDTOs;
 using StudyJunction.Core.Services.Contracts;
 using StudyJunction.Core.ViewModels.Courses;
 using StudyJunction.Infrastructure.Constants;
+using StudyJunction.Infrastructure.Data.Models;
 using StudyJunction.Infrastructure.Exceptions;
+using System.Collections.Specialized;
 
 namespace StudyJunction.Web.Areas.Student.Controllers
 {
@@ -77,24 +80,33 @@ namespace StudyJunction.Web.Areas.Student.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string searchValue)
+        public async Task<IActionResult> Index(string searchbar, [FromQuery] string? category)
         {
             CourseViewModel viewModel = new CourseViewModel()
             {
                 Service = cloudinaryService,
                 Users = await userService.GetAll()
             };
-            if(searchValue != null)
+            var parentChildCategoreis = await this.categoryService.GetAllParentChildCategoriesForSelectingCategory();
+
+            viewModel.ParentChildCategories = parentChildCategoreis.ParentChildCategories;
+
+            if(searchbar == null && category==null)
             {
-                viewModel.Courses = await courseService.FilterByTitle(searchValue);
+                viewModel.Courses = await courseService.GetAll();
+            }
+            else if(searchbar == null)
+            {
+                viewModel.Courses = await courseService.FilterByCategory(category);
             }
             else
             {
-                viewModel.Courses = await courseService.GetAll();
+                viewModel.Courses = await courseService.FilterByTitle(searchbar);
             }
 
             return View(viewModel);
         }
+
 
         [HttpGet("Student/Courses/Details/{title}")]
         public async Task<IActionResult> Details([FromRoute] string title)
@@ -165,11 +177,13 @@ namespace StudyJunction.Web.Areas.Student.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetLectureVideo()
+        public async Task<JsonResult> GetCourses()
         {
-            return BadRequest();
-            
+            var result = await courseService.GetAll();
 
+            string json = JsonConvert.SerializeObject(result, Formatting.Indented);
+
+            return Json(json);
         }
     }
 }
