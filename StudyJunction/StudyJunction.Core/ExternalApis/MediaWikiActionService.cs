@@ -7,7 +7,7 @@ namespace StudyJunction.Core.ExternalApis
 {
     public class MediaWikiActionService
     {
-        public static string[] MakeMediaWikiSearchRequest(string searchQuery)
+        public static async Task<string[]> MakeMediaWikiSearchRequest(string searchQuery)
         {
             // Specify the API endpoint and parameters
             string apiUrl = "https://en.wikipedia.org/w/api.php";
@@ -41,8 +41,10 @@ namespace StudyJunction.Core.ExternalApis
 
                 var snippet = result.Query.Search.Select(s => CleanSnippetFromHTMLTags(s.Snippet)).ToList();
 
+                var pageUrl = await GetPageUrl(apiUrl, result.Query.Search[0].PageId);
+
                 Console.WriteLine(snippet[0]);
-                var returnData = new string[] { snippet[0], response.ResponseUri.ToString() };
+                var returnData = new string[] { snippet[0], pageUrl };
                 return returnData;
             }
             else
@@ -50,6 +52,46 @@ namespace StudyJunction.Core.ExternalApis
                 Console.WriteLine($"Error: {response.StatusCode} - {response.StatusDescription}");
 
                 throw new MediaWikiException(response.StatusDescription);
+            }
+        }
+
+        static async Task<string> GetPageUrl(string apiUrl, int pageId)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                // Set up parameters for the API request
+                var parameters = new System.Collections.Generic.Dictionary<string, string>
+            {
+                { "action", "query" },
+                { "format", "json" },
+                { "prop", "info" },
+                { "pageids", pageId.ToString() },
+                { "inprop", "url" }
+            };
+
+                // Construct the API request URL
+                string requestUrl = $"{apiUrl}?{string.Join("&", parameters.Select(p => $"{p.Key}={p.Value}"))}";
+
+                // Send the GET request
+                HttpResponseMessage response = await client.GetAsync(requestUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Parse the JSON response and extract the page URL
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+                    // You may want to use a JSON parsing library (e.g., Newtonsoft.Json) here
+                    // For simplicity, we'll use a simple substring match for demonstration
+                    int urlStartIndex = jsonResponse.IndexOf("\"fullurl\":\"") + "\"fullurl\":\"".Length;
+                    int urlEndIndex = jsonResponse.IndexOf("\"", urlStartIndex);
+                    string pageUrl = jsonResponse.Substring(urlStartIndex, urlEndIndex - urlStartIndex);
+                    return pageUrl;
+                }
+                else
+                {
+                    // Handle the case when the API request is not successful
+                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    return null;
+                }
             }
         }
 

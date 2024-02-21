@@ -39,11 +39,11 @@ namespace StudyJunction.Web.Areas.Student.Controllers
         }
 
         [HttpPost]
-        public  IActionResult SearchInWiki(string searchTerm)
+        public async Task<IActionResult> SearchInWiki(string searchTerm)
         {
             try
             {
-                string[] result = MediaWikiActionService.MakeMediaWikiSearchRequest(searchTerm);// 0 = snippet, 1 = Uri
+                string[] result = await MediaWikiActionService.MakeMediaWikiSearchRequest(searchTerm);// 0 = snippet, 1 = Uri
 
                 var model = new WikiResultViewModel() 
                 {

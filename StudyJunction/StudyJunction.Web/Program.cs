@@ -78,6 +78,7 @@ namespace StudyJunction.Web
                     Type = SecuritySchemeType.ApiKey
                 });
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
 
 
