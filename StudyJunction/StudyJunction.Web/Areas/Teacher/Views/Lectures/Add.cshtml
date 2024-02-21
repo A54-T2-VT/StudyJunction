@@ -27,13 +27,13 @@
         </div>
 
         <div>
-            <input asp-for="Video" type="file" class="custom-file-input" id="customFile1">
-            <label asp-for="Video" class="custom-file-label" for="customFile1">Choose Video</label>
+            <input asp-for="Video" type="file" accept=".mp4" class="custom-file-input" id="customFile1">
+            <label asp-for="Video" class="custom-file-label" for="customFile1">Choose Video in .mp4 format</label>
         </div>
 
         <div>
-            <input asp-for="Assignment" type="file"  class="custom-file-input" id="customFile2">
-            <label asp-for="Assignment" class="custom-file-label" for="customFile2">Choose Assignment</label>
+            <input asp-for="Assignment" type="file" accept=".pdf" class="custom-file-input" id="customFile2">
+            <label asp-for="Assignment" class="custom-file-label" for="customFile2">Choose Assignment in .pdf format</label>
         </div>
 
         <input asp-for="CourseTitle" name="CourseTitle" type="hidden" value="@Model.CourseTitle" />
