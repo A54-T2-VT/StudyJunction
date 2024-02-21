@@ -9,7 +9,10 @@ namespace StudyJunction.Core.Services.Contracts
 	{
 		Task<LectureResponseDTO> Get(Guid id);
         Task<LectureResponseDTO> Get(string title);
-		Task<ICollection<LectureResponseDTO>> GetAll();
+        Task<string> GetAssignmentId(string lectureTitle);
+        Task<LectureViewModel> GetAllLecturesOfCourse(string courseTitle);
+        Task<LectureViewModel> GetAllLecturesAndSetTargetLectureAsCurrent(string lectureTitle);
+        Task<ICollection<LectureResponseDTO>> GetAll();
 		Task<LectureResponseDTO> Create(AddLectureRequestDto newLecture, string username);
 		Task<LectureResponseDTO> CreateWithVideoAndAssignmentFromViewModel(AddLectureViewModel model, string username);
 

@@ -11,7 +11,7 @@
         @* <input type="checkbox" id="check"> *@
         <div class="login form">
             <header>Login</header>
-            <form asp-controller="Users" asp-action="Login" method="post">
+            <form asp-area="" asp-controller="Users" asp-action="Login" method="post">
                 <div>
                     <label asp-for="Email"></label>
                     <input type="text" asp-for="Email" placeholder="Enter your email">

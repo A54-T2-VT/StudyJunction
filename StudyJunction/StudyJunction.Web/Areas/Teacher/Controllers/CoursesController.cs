@@ -54,17 +54,8 @@ namespace StudyJunction.Web.Areas.Teacher.Controllers
             var course = mapper.Map<AddCourseRequestDto>(viewModel);
 
             _ = await courseService.Create(course, username);
-
-            var routeValues = new RouteValueDictionary
-            {
-                { "controller", "Courses" },
-                { "action", "Details" },
-                { "title", viewModel.Title }
-            };
-
-            var redirectResult = new RedirectToActionResult("Details", "Courses", routeValues);
-
-            return redirectResult;
+            
+            return RedirectToAction("GetCoursesCreatedByUser", "Courses", new {area = RolesConstants.Teacher});
         }
 
         public async Task<IActionResult> Index()

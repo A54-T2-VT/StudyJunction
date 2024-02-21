@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
+using StudyJunction.Infrastructure.Exceptions;
 using System.Text.RegularExpressions;
 
 namespace StudyJunction.Core.ExternalApis
 {
     public class MediaWikiActionService
     {
-        public static void MakeMediaWikiSearchRequest(string searchQuery)
+        public static string[] MakeMediaWikiSearchRequest(string searchQuery)
         {
             // Specify the API endpoint and parameters
             string apiUrl = "https://en.wikipedia.org/w/api.php";
@@ -41,10 +42,14 @@ namespace StudyJunction.Core.ExternalApis
                 var snippet = result.Query.Search.Select(s => CleanSnippetFromHTMLTags(s.Snippet)).ToList();
 
                 Console.WriteLine(snippet[0]);
+                var returnData = new string[] { snippet[0], response.ResponseUri.ToString() };
+                return returnData;
             }
             else
             {
                 Console.WriteLine($"Error: {response.StatusCode} - {response.StatusDescription}");
+
+                throw new MediaWikiException(response.StatusDescription);
             }
         }
 

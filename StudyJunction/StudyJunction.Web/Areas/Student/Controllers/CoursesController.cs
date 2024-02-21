@@ -148,7 +148,6 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             var viewModel = new EnrolledCourseViewModel()
             {
                 Course = await courseService.GetCourse(title),
-                Service = cloudinaryService,
 
                 Username = User.Identity.Name
             };

@@ -43,7 +43,7 @@
                                 string url = "http://localhost:5205/Student/Courses/Details/" + String.Join("%20", splitted);
                             }
                             <a href=@url>
-                                <img src="@Model.Service.GetResource(currCourse.ThumbnailCloudinaryUri)" class="img-fluid" alt="Course thumbnail">
+                                <img src="@Model.Service.GetResource(currCourse.ThumbnailCloudinaryUri)" class="img-fluid" width="500" height="1100" alt="Course thumbnail">
                             </a>
                             
                             <div class="course-content">

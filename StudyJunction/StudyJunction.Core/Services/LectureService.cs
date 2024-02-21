@@ -126,6 +126,15 @@ namespace StudyJunction.Core.Services
             return mapper.Map<LectureResponseDTO>(await result);
         }
 
+        public async Task<string> GetAssignmentId(string lectureTitle)
+        {
+            var lectureDb = await lectureRepository.GetAsync(lectureTitle);
+
+            string assignmentId = lectureDb.AssignmentCloudinaryId;
+
+            return assignmentId;
+        }
+
         public async Task<LectureResponseDTO> Delete(Guid id, string username)
         {
             return mapper.Map<LectureResponseDTO>( await lectureRepository.DeleteAsync(id));
@@ -140,7 +149,62 @@ namespace StudyJunction.Core.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task<ICollection<LectureResponseDTO>> GetAll()
+        public async Task<LectureViewModel> GetAllLecturesOfCourse(string courseTitle)
+        {
+            IList<LectureDb> lecturesDb = await lectureRepository.GetAllLecturesFormCourse(courseTitle);
+
+            var model = new LectureViewModel();
+
+            var firstLectureDb = lecturesDb[0];
+
+            model.Title = firstLectureDb.Title;
+            model.CourseTitle = firstLectureDb.Course.Title;
+            model.VideoUri = firstLectureDb.VideoLinkCloudinaryUri;
+            model.VideoId = firstLectureDb.VideoLinkCloudinaryId;
+            model.AssignmentId = firstLectureDb.AssignmentCloudinaryId;
+            model.AssignmentUri = firstLectureDb.AssignmentCloudinaryUri;
+            model.Description = firstLectureDb.Description;
+
+            lecturesDb.Remove(firstLectureDb);
+
+            model.LecturesTitles.Add(firstLectureDb.Title);
+
+            foreach(var lectureDb in lecturesDb)
+            {
+                model.LecturesTitles.Add(lectureDb.Title);
+            }
+
+            return model;
+        }
+
+        public async Task<LectureViewModel> GetAllLecturesAndSetTargetLectureAsCurrent(string lectureTitle)
+        {
+            var targetLecture = await lectureRepository.GetAsync(lectureTitle);
+
+            IList<LectureDb> lecturesDb = await lectureRepository.GetAllLecturesFormCourse(targetLecture.Course.Title);
+
+
+            var model = new LectureViewModel();
+
+
+            model.Title = targetLecture.Title;
+            model.CourseTitle = targetLecture.Course.Title;
+            model.VideoUri = targetLecture.VideoLinkCloudinaryUri;
+            model.VideoId = targetLecture.VideoLinkCloudinaryId;
+            model.AssignmentId = targetLecture.AssignmentCloudinaryId;
+            model.AssignmentUri = targetLecture.AssignmentCloudinaryUri;
+            model.Description = targetLecture.Description;
+
+
+            foreach (var lectureDb in lecturesDb)
+            {
+                model.LecturesTitles.Add(lectureDb.Title);
+            }
+
+            return model;
+        }
+
+        public async Task<ICollection<LectureResponseDTO>> GetAll()
 		{
 			throw new NotImplementedException();
 		}
