@@ -76,15 +76,24 @@ namespace StudyJunction.Web.Areas.Student.Controllers
             }
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string searchValue)
         {
-            CourseViewModel courses = new CourseViewModel()
+            CourseViewModel viewModel = new CourseViewModel()
             {
-                Courses = await courseService.GetAll(),
                 Service = cloudinaryService,
                 Users = await userService.GetAll()
             };
-            return View(courses);
+            if(searchValue != null)
+            {
+                viewModel.Courses = await courseService.FilterByTitle(searchValue);
+            }
+            else
+            {
+                viewModel.Courses = await courseService.GetAll();
+            }
+
+            return View(viewModel);
         }
 
         [HttpGet("Student/Courses/Details/{title}")]
