@@ -8,6 +8,7 @@ namespace StudyJunction.Infrastructure.Repositories.Contracts
 		Task<IEnumerable<CourseDb>> GetAllNotApprovedCourses();
 		Task<IEnumerable<CourseDb>> GetCoursesCreatedByUserAsync(string userId);
 		Task<IEnumerable<CourseDb>> FilterBy(string searchValue);
+		Task<IEnumerable<CourseDb>> FilterByCategory(string categoryName);
         Task<CourseDb> GetByIdAsync(Guid id);
 		Task<CourseDb> GetByTitleAsync(string title);
 		Task<CourseDb> CreateAsync(CourseDb newCourse);

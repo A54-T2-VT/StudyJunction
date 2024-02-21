@@ -152,7 +152,18 @@ namespace StudyJunction.Infrastructure.Repositories
         {
 			var result = context.Courses.Include(x => x.CreatedBy)
 				.Include(x => x.Category)
-				.Where(c => c.Title.Contains(searchValue.ToLower()))
+				.Where(c => c.Title.Contains(searchValue.ToLower()) && c.IsApproved)
+				.ToList();
+
+			return result;
+        }
+
+        public async Task<IEnumerable<CourseDb>> FilterByCategory(string categoryName)
+        {
+			var result = context.Courses
+				.Include(c => c.Category)
+				.Include(c => c.CreatedBy)
+				.Where(c => c.Category.Name == categoryName && c.IsApproved)
 				.ToList();
 
 			return result;

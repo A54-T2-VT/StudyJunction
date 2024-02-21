@@ -207,5 +207,12 @@ namespace StudyJunction.Core.Services
 
             return result.Select(x => mapper.Map<CourseResponseDTO>(x));
         }
+
+        public async Task<IEnumerable<CourseResponseDTO>> FilterByCategory(string categoryName)
+        {
+            var result = await courseRepository.FilterByCategory(categoryName);
+
+            return result.Select(x => mapper.Map<CourseResponseDTO>(x));
+        }
     }
 }

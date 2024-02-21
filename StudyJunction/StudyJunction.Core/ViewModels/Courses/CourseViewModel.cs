@@ -14,5 +14,7 @@ namespace StudyJunction.Core.ViewModels.Courses
         public CloudinaryService Service { get; set; }
         public IEnumerable<CourseResponseDTO> Courses { get; set; }
         public IEnumerable<UserResponseDTO> Users { get; set; }
+        public Dictionary<string, List<string>> ParentChildCategories { get; set; }
+        public string CategoryName { get; set; }
     }
 }
