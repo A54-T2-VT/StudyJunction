@@ -60,7 +60,7 @@ update-database
 ```bash
   _ = await userManager.AddToRolesAsync(user, new string[] { RolesConstants.Student});
 ```
-    
+- For Cloudinary, there is a free account, but it has limitations of file upload size, so check those before uploading files, you would alsno need to go into Cloudinary settign and unable .pdf nas .zip upload.   
 ## Functionality
 `USER: Student and Anonymou`
 - Anonymous user Home page.
